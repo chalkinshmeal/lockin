@@ -1,7 +1,7 @@
 name: Lockout
 main: chalkinshmeal.lockout.Plugin
 version: 1.0.0
-api-version: 1.21.1
+api-version: 1.21.3
 author: chalkinshmeal
 commands:
   lockout:
