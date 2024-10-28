@@ -1,10 +1,10 @@
 #--------------------------------------------------------------------------------------------------
 # Global Settings
 #--------------------------------------------------------------------------------------------------
-# The number of tasks in a Lockout challenge
+# The number of tasks in a lockin challenge
 taskCount: 54
 
-# The number of tasks that will be punishments in a Lockout challenge
+# The number of tasks that will be punishments in a lockin challenge
 punishmentCount: 5
 
 # The number of seconds players are frozen before starting a game
