@@ -1,0 +1,12 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.codeGeneration.generateGetters": false,
+    "java.codeGeneration.generateSetters": false,
+    "java.configuration.updateBuildConfiguration": "never",
+    "java.errors.incompleteClasspath.severity": "ignore",
+    "java.errors.incompleteClasspath": false,
+    "java.deprecation": "ignore",
+    "java.compile.nullAnalysis.mode": "disabled",
+    "java.compile.legacyCompiler": true,
+    "java.compile.options.compilerArgs": ["-Xlint:-deprecation"]
+}

@@ -1,0 +1,7 @@
+name: Lockout
+main: chalkinshmeal.lockout.Plugin
+version: ${project.version}
+api-version: 1.21.1
+author: chalkinshmeal
+commands:
+  lockout:

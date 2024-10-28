@@ -1,0 +1,1373 @@
+#--------------------------------------------------------------------------------------------------
+# Global Settings
+#--------------------------------------------------------------------------------------------------
+# The number of tasks in a Lockout challenge
+taskCount: 54
+
+# The number of tasks that will be punishments in a Lockout challenge
+punishmentCount: 5
+
+# The number of seconds players are frozen before starting a game
+queueTime: 5
+
+# The number of seconds to countdown for a game before sudden death
+timeLimit: 2700
+
+#--------------------------------------------------------------------------------------------------
+# Task-Specific Settings
+#--------------------------------------------------------------------------------------------------
+# Task: Activate a block with redstone current. Possible items to activate
+activateBlockTask:
+  maxTaskCount: 1
+  materials:
+  - ACTIVATOR_RAIL
+  - COMPARATOR
+  - DAYLIGHT_DETECTOR
+  - DISPENSER
+  - DROPPER
+  - HOPPER
+  - NOTE_BLOCK
+  - OBSERVER
+  - PISTON
+  - POWERED_RAIL
+  - REDSTONE_LAMP
+  - REPEATER
+
+# Task: Break an item. Possible items to break, and how many to break
+breakItemsTask:
+  maxTaskCount: 3
+  materials:
+    ACACIA_LOG: 10
+    ACACIA_LEAVES: 64
+    AMETHYST_BLOCK: 3
+    ANDESITE: 32
+    ANDESITE_WALL: 1
+    AZALEA_LEAVES: 64
+    BAMBOO: 10
+    BAMBOO_MOSAIC: 1
+    BASALT: 10
+    BEE_NEST: 2
+    BELL: 1
+    BIG_DRIPLEAF: 1
+    BIRCH_BUTTON: 1
+    BIRCH_LOG: 10
+    BLACK_CARPET: 1
+    BLACKSTONE: 1
+    BLUE_CONCRETE: 1
+    BLUE_ICE: 1
+    BOOKSHELF: 5
+    BONE_BLOCK: 1
+    BOOKSHELF: 5
+    BRAIN_CORAL: 1
+    BRAIN_CORAL_FAN: 1
+    BREWING_STAND: 1
+    BRICKS: 5
+    BROWN_MUSHROOM: 1
+    CHISELED_STONE_BRICKS: 1
+    CLAY: 10
+    COAL_ORE: 10
+    COBBLESTONE: 128
+    COBWEB: 1
+    CRIMSON_NYLIUM: 1
+    DANDELION: 5
+    DIAMOND_ORE: 1
+    DIRT: 128
+    DARK_OAK_LOG: 10
+    DEAD_BUSH: 10
+    EMERALD_ORE: 1
+    GLOW_LICHEN: 10
+    GLOWSTONE: 5
+    GOLD_ORE: 2
+    GRASS_BLOCK: 128
+    GRAVEL: 64
+    HAY_BLOCK: 10
+    ICE: 10
+    IRON_ORE: 1
+    JUNGLE_LOG: 10
+    LAPIS_ORE: 1
+    LIGHT_GRAY_STAINED_GLASS: 1
+    MELON: 3
+    SPAWNER: 1
+    MOSSY_COBBLESTONE: 1
+    NETHERRACK: 64
+    OAK_LEAVES: 64
+    OAK_PLANKS: 64
+    OBSIDIAN: 1
+    PINK_PETALS: 20
+    PRISMARINE: 1
+    POPPY: 5
+    RED_SANDSTONE: 32
+    RED_MUSHROOM_BLOCK: 20
+    SAND: 64
+    SEA_LANTERN: 1
+    SEAGRASS: 20
+    SHORT_GRASS: 30
+    SLIME_BLOCK: 1
+    SNOW_BLOCK: 64
+    STONE: 64
+    TALL_GRASS: 10
+    TNT: 1
+    WHITE_CONCRETE: 1
+    YELLOW_TERRACOTTA: 1
+  punishmentMaterials:
+    COAL_ORE: 1
+    CRAFTING_TABLE: 1
+    FURNACE: 1
+    STONE: 30
+    DIAMOND_ORE: 1
+    DIRT: 5
+
+# Task: Breed some animals. Possible EntityTypes to breed, and how many to breed
+breedEntitiesTask:
+  maxTaskCount: 1
+  entityTypes:
+    BEE: 1
+    CHICKEN: 3
+    COW: 3
+    GOAT: 1
+    PIG: 3
+    RABBIT: 1
+    SHEEP: 3
+    TURTLE: 1
+    WOLF: 1
+
+# Task: Craft an item. List of possible items to craft
+craftItemTask:
+  maxTaskCount: 3
+  materials:
+  - ANVIL
+  - BRUSH
+  - BOOKSHELF
+  - BOW
+  - CLOCK
+  - CRIMSON_SIGN
+  - DAYLIGHT_DETECTOR
+  - DISPENSER
+  - FIREWORK_ROCKET
+  - FISHING_ROD
+  - GLASS_PANE
+  - GOLDEN_CARROT
+  - HAY_BLOCK
+  - HOPPER
+  - IRON_AXE
+  - JACK_O_LANTERN
+  - JUKEBOX
+  - LEATHER_BOOTS
+  - MOSSY_COBBLESTONE
+  - NOTE_BLOCK
+  - PAINTING
+  - PISTON
+  - POLISHED_ANDESITE
+  - POWERED_RAIL
+  - REDSTONE_TORCH
+  - TNT
+  - WRITTEN_BOOK
+  punishmentMaterials:
+  - SHIELD
+  - STICK
+  - WOODEN_PICKAXE
+
+# Task: Create an entity. List of entities to create
+createEntityTask:
+  maxTaskCount: 1
+  entityTypes:
+  - IRON_GOLEM
+  - SNOW_GOLEM
+
+# Task: Eat an item. List of possible items you can eat
+destroyItemTask:
+  maxTaskCount: 1
+  materials:
+  - FISHING_ROD
+  - FLINT_AND_STEEL
+  - GOLDEN_AXE
+  - GOLDEN_HOE
+  - GOLDEN_PICKAXE
+  - GOLDEN_SHOVEL
+  - GOLDEN_SWORD
+  - IRON_AXE
+  - IRON_HOE
+  - IRON_PICKAXE
+  - IRON_SHOVEL 
+  - LEATHER_BOOTS
+  - LEATHER_CHESTPLATE
+  - LEATHER_HELMET
+  - LEATHER_LEGGINGS
+  - SHEARS
+  - SHIELD
+  - STONE_AXE
+  - STONE_HOE
+  - STONE_PICKAXE
+  - STONE_SHOVEL
+  - STONE_SWORD
+  - WOODEN_AXE
+  - WOODEN_HOE
+  - WOODEN_PICKAXE
+  - WOODEN_SHOVEL
+  - WOODEN_SWORD
+
+# Task: Die. Min and max deaths to have for this given task
+dieTask:
+  maxTaskCount: 1
+  minDeaths: 1
+  maxDeaths: 2
+  punishmentMinDeaths: 5 
+  punishmentMaxDeaths: 15
+
+# Task: Eat N items. Min and max items to eat for this given task
+eatTask:
+  maxTaskCount: 1
+  minConsumes: 10
+  maxConsumes: 50
+  punishmentMinConsumes: 1
+  punishmentMaxConsumes: 10
+
+# Task: Eat an item. List of possible items you can eat (Updated to 1.21)
+eatItemTask:
+  maxTaskCount: 3
+  materials:
+  - APPLE
+  - BAKED_POTATO
+  - BEEF
+  - BEETROOT
+  - BEETROOT_SOUP
+  - BREAD
+  - CARROT
+  - COOKED_CHICKEN
+  - COOKED_COD
+  - COOKED_MUTTON
+  - COOKED_PORKCHOP
+  - COOKED_RABBIT
+  - COOKED_SALMON
+  - COOKIE
+  - DRIED_KELP
+  - GLOW_BERRIES
+  - GOLDEN_APPLE
+  - GOLDEN_CARROT
+  - HONEY_BOTTLE
+  - MELON_SLICE
+  - MUSHROOM_STEW
+  - POISONOUS_POTATO
+  - PUFFERFISH
+  - PUMPKIN_PIE
+  - RABBIT_STEW
+  - ROTTEN_FLESH
+  - SWEET_BERRIES
+  - SUSPICIOUS_STEW
+  punishmentMaterials:
+  - BREAD
+
+# Task: Enter a biome. List of possible biomes to enter, and the material that appears in with the task
+enterBiomeTask:
+  maxTaskCount: 2
+  biomes:
+    BADLANDS: RED_SAND
+    BAMBOO_JUNGLE: BAMBOO
+    BASALT_DELTAS: BASALT
+    CHERRY_GROVE: CHERRY_SAPLING
+    CRIMSON_FOREST: CRIMSON_FUNGUS
+    DARK_FOREST: RED_MUSHROOM
+    DEEP_DARK: SCULK_SENSOR
+    DESERT: SAND
+    ERODED_BADLANDS: ORANGE_GLAZED_TERRACOTTA
+    FROZEN_PEAKS: ICE
+    ICE_SPIKES: PACKED_ICE
+    JUNGLE: JUNGLE_SAPLING
+    LUSH_CAVES: FLOWERING_AZALEA_LEAVES 
+    MEADOW: GRASS_BLOCK
+    MUSHROOM_FIELDS: MYCELIUM
+    SNOWY_TAIGA: SNOW_BLOCK
+    STONY_PEAKS: STONE
+    SWAMP: VINE
+    WARPED_FOREST: WARPED_FUNGUS
+  punishmentBiomes:
+    BADLANDS: RED_SAND
+    BAMBOO_JUNGLE: BAMBOO
+    BASALT_DELTAS: BASALT
+    CHERRY_GROVE: CHERRY_SAPLING
+    CRIMSON_FOREST: CRIMSON_FUNGUS
+    DARK_FOREST: RED_MUSHROOM
+    DEEP_DARK: SCULK_SENSOR
+    DESERT: SAND
+    ERODED_BADLANDS: ORANGE_GLAZED_TERRACOTTA
+    FROZEN_PEAKS: ICE
+    ICE_SPIKES: PACKED_ICE
+    JUNGLE: JUNGLE_SAPLING
+    LUSH_CAVES: FLOWERING_AZALEA_LEAVES 
+    MEADOW: GRASS_BLOCK
+    MUSHROOM_FIELDS: MYCELIUM
+    SNOWY_TAIGA: SNOW_BLOCK
+    STONY_PEAKS: STONE
+    SWAMP: VINE
+    WARPED_FOREST: WARPED_FUNGUS
+
+# Task: Equip an item. List of possible items to equip (Updated to 1.21)
+equipItemTask:
+  maxTaskCount: 1
+  materials:
+  - CARVED_PUMPKIN
+  - GOLDEN_HELMET
+  - GOLDEN_CHESTPLATE
+  - GOLDEN_LEGGINGS
+  - GOLDEN_BOOTS
+  - LEATHER_HELMET
+  - LEATHER_CHESTPLATE
+  - LEATHER_LEGGINGS
+  - LEATHER_BOOTS
+
+# Task: Get a certain EXP level. Is a random level, up to the max level specified here
+getExpLevelTask:
+  maxLevel: 10
+  punishmentMinLevel: 1
+  punishmentMaxLevel: 5
+
+# Task: Get a specific number of health (in half hearts). Randomly chooses target health between minHealth and maxHealth
+getSpecificHealthTask:
+  minHealth: 1
+  maxHealth: 10
+
+# Task: Hold an item. List of possible items to hold
+holdItemTask:
+  maxTaskCount: 1
+  punishmentMaterials:
+  - COAL
+  - COBBLESTONE
+  - DIRT
+  - IRON_INGOT
+
+# Task: Interact with an item. List of possible items to interact with
+interactItemTask:
+  maxTaskCount: 2
+  materials:
+  - BELL
+  - COMPARATOR
+  - LEVER
+  - LIGHT_WEIGHTED_PRESSURE_PLATE
+  - NOTE_BLOCK
+  - OAK_BUTTON 
+  - REPEATER
+  - STONE_BUTTON
+  - STONE_PRESSURE_PLATE
+  - TRAPPED_CHEST
+
+# Task: Jump N times. Range of how many jumps to jump
+jumpTask:
+  maxTaskCount: 1
+  minJumps: 1000
+  maxJumps: 1000
+  minPunishmentJumps: 50
+  maxPunishmentJumps: 50
+
+# Task: Kill N entities. Possible entities to kill, and how many to kill
+killEntitiesTask:
+  maxTaskCount: 3
+  entityTypes:
+    AXOLOTL: 1
+    BAT: 1
+    BEE: 1
+    BLAZE: 1
+    CHICKEN: 10
+    COD: 5
+    COW: 10
+    CREEPER: 10
+    DOLPHIN: 1
+    DONKEY: 1
+    DROWNED: 10
+    ENDERMAN: 1
+    FOX: 1
+    GHAST: 1
+    GLOW_SQUID: 1
+    HOGLIN: 3
+    HUSK: 1
+    PARROT: 1
+    PIG: 10
+    PIGLIN: 5
+    PILLAGER: 3
+    RABBIT: 1
+    SALMON: 5
+    SHEEP: 10
+    SLIME: 1
+    SNOW_GOLEM: 1
+    SPIDER: 10
+    SQUID: 3
+    TROPICAL_FISH: 1
+    VILLAGER: 1
+    WITCH: 1
+    ZOMBIE: 15
+    ZOMBIE_VILLAGER: 1
+  punishmentEntityTypes:
+    CHICKEN: 1
+    CREEPER: 1
+    COD: 1
+    COW: 1
+    PIG: 1
+    SALMON: 1
+    SKELETON: 1
+    SHEEP: 1
+    SPIDER: 1
+    ZOMBIE: 1
+
+# Task: Kill an entity with an item. Possible entities to kill, and the items to kill them with
+killEntityWithItemTask:
+  maxTaskCount: 1
+  entityTypes:
+  - ARMADILLO
+  - AXOLOTL
+  - BAT
+  - BEE
+  - CAMEL
+  - DOLPHIN
+  - DONKEY
+  - DROWNED
+  - ENDERMAN
+  - GLOW_SQUID
+  - GOAT
+  - HUSK
+  - IRON_GOLEM
+  - LLAMA
+  - OCELOT
+  - PARROT
+  - PIGLIN
+  - POLAR_BEAR
+  - PUFFERFISH
+  - SNOW_GOLEM
+  - STRAY
+  - TURTLE
+  - VILLAGER
+  - WITCH
+  - WOLF
+  materials: # Food themed
+  - APPLE
+  - BAKED_POTATO
+  - BEEF
+  - BEETROOT
+  - BEETROOT_SOUP
+  - BREAD
+  - CARROT
+  - COOKED_CHICKEN
+  - COOKED_COD
+  - COOKED_MUTTON
+  - COOKED_PORKCHOP
+  - COOKED_RABBIT
+  - COOKED_SALMON
+  - COOKIE
+  - DRIED_KELP
+  - GLOW_BERRIES
+  - GOLDEN_APPLE
+  - GOLDEN_CARROT
+  - HONEY_BOTTLE
+  - MELON_SLICE
+  - MUSHROOM_STEW
+  - POISONOUS_POTATO
+  - PUFFERFISH
+  - PUMPKIN_PIE
+  - RABBIT_STEW
+  - ROTTEN_FLESH
+  - SWEET_BERRIES
+  - SUSPICIOUS_STEW
+
+
+# Task: Obtain a group of item. List of item groups to obtain, including:
+# - Description: What is displayed as description for the task
+# - Materials: Materials that count as part of the description's group
+# - Amount: Required amount of items from the materials needed to complete the task
+obtainItemGroupTask:
+  maxTaskCount: 2
+  materials:
+    APPLE:
+      description: "Obtain 2 types of raw fruit"
+      amount: 2
+      materials:
+      - APPLE
+      - CHORUS_FRUIT
+      - GLOW_BERRIES
+      - MELON_SLICE
+      - PUMPKIN
+      - SWEET_BERRIES
+    BONE:
+      description: "Obtain 4 items that typically drop from Overworld mobs"
+      amount: 4
+      materials:
+      - ARROW
+      - BONE
+      - ENDER_PEARL
+      - GUNPOWDER
+      - PHANTOM_MEMBRANE
+      - ROTTEN_FLESH
+      - SLIME_BALL
+      - SPIDER_EYE
+      - STRING
+    CACTUS:
+      description: "Obtain 3 blocks that hurt you when touched"
+      amount: 3
+      materials:
+      - CACTUS
+      - CAMPFIRE
+      - LAVA_BUCKET
+      - MAGMA_BLOCK
+      - SOUL_CAMPFIRE
+      - WITHER_ROSE
+    CHEST:
+      description: "Obtain 3 types of items with chests in them"
+      amount: 3
+      materials:
+      - ACACIA_CHEST_BOAT
+      - BAMBOO_CHEST_RAFT
+      - BIRCH_CHEST_BOAT
+      - CHERRY_CHEST_BOAT
+      - CHEST_MINECART
+      - DARK_OAK_CHEST_BOAT
+      - JUNGLE_CHEST_BOAT
+      - MANGROVE_CHEST_BOAT
+      - OAK_CHEST_BOAT
+      - SPRUCE_CHEST_BOAT
+    COD:
+      description: "Obtain 4 types of raw fish"
+      amount: 4
+      materials:
+      - COD
+      - PUFFERFISH
+      - SALMON
+      - TROPICAL_FISH
+    COD_BUCKET:
+      description: "Obtain 3 types of fish in a bucket"
+      amount: 3
+      materials:
+      - AXOLOTL_BUCKET
+      - COD_BUCKET
+      - PUFFERFISH_BUCKET
+      - SALMON_BUCKET
+      - TADPOLE_BUCKET
+      - TROPICAL_FISH_BUCKET
+    COOKED_BEEF:
+      description: "Obtain 4 types of cooked meat or fish"
+      amount: 4
+      materials:
+      - COOKED_BEEF
+      - COOKED_CHICKEN
+      - COOKED_COD
+      - COOKED_MUTTON
+      - COOKED_PORKCHOP
+      - COOKED_RABBIT
+      - COOKED_SALMON
+    DIAMOND:
+      description: "Obtain 4 types of ore in its most refined state"
+      amount: 4
+      materials:
+      - COAL
+      - COPPER_INGOT
+      - DIAMOND
+      - EMERALD
+      - GOLD_INGOT
+      - IRON_INGOT
+      - LAPIS_LAZULI
+      - NETHERITE_INGOT
+      - QUARTZ
+      - REDSTONE
+    DIAMOND_PICKAXE:
+      description: "Obtain 2 types of diamond tools"
+      amount: 2
+      materials:
+      - DIAMOND_AXE
+      - DIAMOND_HOE
+      - DIAMOND_PICKAXE
+      - DIAMOND_SHOVEL
+      - DIAMOND_SWORD
+    DIRT:
+      description: "Obtain 3 types of dirt blocks"
+      amount: 3
+      materials:
+      - COARSE_DIRT
+      - DIRT
+      - DIRT_PATH
+      - FARMLAND
+      - GRASS_BLOCK
+      - MYCELIUM
+      - PODZOL
+      - ROOTED_DIRT
+    GOLDEN_PICKAXE:
+      description: "Obtain a complete set of golden tools"
+      amount: 5
+      materials:
+      - GOLDEN_AXE
+      - GOLDEN_HOE
+      - GOLDEN_PICKAXE
+      - GOLDEN_SHOVEL
+      - GOLDEN_SWORD
+    IRON_INGOT:
+      description: "Obtain 6 non-tool, non-armor items made with iron"
+      amount: 6
+      materials:
+      - ACTIVATOR_RAIL
+      - ANVIL
+      - BLAST_FURNACE
+      - BUCKET
+      - CAULDRON
+      - CHAIN
+      - COMPASS
+      - CROSSBOW
+      - DETECTOR_RAIL
+      - FLINT_AND_STEEL
+      - HEAVY_WEIGHTED_PRESSURE_PLATE
+      - HOPPER
+      - IRON_BARS
+      - IRON_BLOCK
+      - IRON_DOOR
+      - IRON_HORSE_ARMOR
+      - IRON_NUGGET
+      - IRON_TRAPDOOR
+      - LANTERN
+      - LIGHTNING_ROD
+      - MINECART
+      - POWERED_RAIL
+      - RAIL
+      - SHEARS
+      - SHIELD
+      - SMITHING_TABLE
+      - SOUL_LANTERN
+      - TRIPWIRE_HOOK
+    IRON_PICKAXE:
+      description: "Obtain a complete set of iron tools"
+      amount: 5
+      materials:
+      - IRON_AXE
+      - IRON_HOE
+      - IRON_PICKAXE
+      - IRON_SHOVEL
+      - IRON_SWORD
+    MUSIC_DISC_13:
+      description: "Obtain a music disc"
+      amount: 1
+      materials:
+        - MUSIC_DISC_11
+        - MUSIC_DISC_13
+        - MUSIC_DISC_BLOCKS
+        - MUSIC_DISC_CAT
+        - MUSIC_DISC_CHIRP
+        - MUSIC_DISC_FAR
+        - MUSIC_DISC_MALL
+        - MUSIC_DISC_MELLOHI
+        - MUSIC_DISC_PIGSTEP
+        - MUSIC_DISC_STAL
+        - MUSIC_DISC_STRAD
+        - MUSIC_DISC_WARD
+    OAK_LOG:
+      description: "Obtain 4 types of wooden logs"
+      amount: 4
+      materials:
+      - ACACIA_LOG
+      - BIRCH_LOG
+      - CHERRY_LOG
+      - DARK_OAK_LOG
+      - JUNGLE_LOG
+      - MANGROVE_LOG
+      - OAK_LOG
+      - SPRUCE_LOG
+    OAK_SAPLING:
+      description: "Obtain 4 types of saplings"
+      amount: 4
+      materials:
+      - ACACIA_SAPLING
+      - BIRCH_SAPLING
+      - CHERRY_SAPLING
+      - DARK_OAK_SAPLING
+      - JUNGLE_SAPLING
+      - MANGROVE_PROPAGULE
+      - OAK_SAPLING
+      - SPRUCE_SAPLING
+    POPPY:
+      description: "Obtain 6 types of flowers"
+      amount: 6
+      materials:
+      - ALLIUM
+      - AZURE_BLUET
+      - BLUE_ORCHID
+      - CORNFLOWER
+      - DANDELION
+      - LILAC
+      - LILY_OF_THE_VALLEY
+      - ORANGE_TULIP
+      - OXEYE_DAISY
+      - PEONY
+      - PINK_TULIP
+      - POPPY
+      - RED_TULIP
+      - ROSE_BUSH
+      - SUNFLOWER
+      - TORCHFLOWER
+      - WHITE_TULIP
+      - WITHER_ROSE
+    STONE_PICKAXE:
+      description: "Obtain a complete set of stone tools"
+      amount: 5
+      materials:
+      - STONE_AXE
+      - STONE_HOE
+      - STONE_PICKAXE
+      - STONE_SHOVEL
+      - STONE_SWORD
+    TORCH:
+      description: "Obtain 3 types of light sources (when placed or held, they emit light)"
+      amount: 3
+      materials:
+      - BEACON
+      - CAMPFIRE
+      - CONDUIT
+      - END_ROD
+      - GLOWSTONE
+      - GLOW_BERRIES
+      - GLOW_INK_SAC
+      - GLOW_ITEM_FRAME
+      - JACK_O_LANTERN
+      - LANTERN
+      - LAVA_BUCKET
+      - MAGMA_BLOCK
+      - REDSTONE_TORCH
+      - SEA_LANTERN
+      - SHROOMLIGHT
+      - SOUL_CAMPFIRE
+      - SOUL_LANTERN
+      - TORCH
+    SOUL_TORCH:
+      description: "Obtain 3 types of torches"
+      amount: 3
+      materials:
+      - REDSTONE_TORCH
+      - SOUL_TORCH
+      - TORCH
+  punishmentMaterials:
+    IRON_INGOT:
+      description: "Obtain 2 types of ore in its most refined state"
+      amount: 2
+      materials:
+      - COAL
+      - COPPER_INGOT
+      - DIAMOND
+      - EMERALD
+      - GOLD_INGOT
+      - IRON_INGOT
+      - LAPIS_LAZULI
+      - NETHERITE_INGOT
+      - QUARTZ
+      - REDSTONE
+
+
+# Task: Obtain an item. Possible items to obtain and the amount to obtain
+obtainItemsTask:
+  maxTaskCount: 3
+  suddenDeathTaskCount: 5
+  materials:
+    ACACIA_HANGING_SIGN: 1
+    ACACIA_SAPLING: 1
+    ACTIVATOR_RAIL: 1
+    APPLE: 5
+    AXOLOTL_BUCKET: 1
+    AZALEA_LEAVES: 1
+    BAKED_POTATO: 1
+    BARREL: 1
+    BELL: 1
+    BIG_DRIPLEAF: 10
+    BIRCH_HANGING_SIGN: 1
+    BIRCH_LEAVES: 1
+    BLACK_BANNER: 1
+    BLACK_BED: 1
+    BLUE_BANNER: 1
+    BREWING_STAND: 1
+    CARROT_ON_A_STICK: 1
+    CAULDRON: 1
+    CHAIN: 1
+    CHERRY_BOAT: 1
+    CHERRY_SAPLING: 1
+    CLOCK: 1
+    COAL: 64
+    COBBLESTONE: 5
+    CRYING_OBSIDIAN: 1
+    DARK_OAK_LEAVES: 1
+    DETECTOR_RAIL: 1
+    DIAMOND: 1
+    DIRT: 320
+    FEATHER: 1
+    FIREWORK_ROCKET: 1
+    GHAST_TEAR: 1
+    GLOW_INK_SAC: 1
+    GOAT_HORN: 1
+    HEART_OF_THE_SEA: 1
+    LANTERN: 1
+    LAVA_BUCKET: 1
+    LIGHT_BLUE_BED: 1
+    LIME_BED: 1
+    MAGENTA_CANDLE: 1
+    MANGROVE_BOAT: 1
+    MELON_SLICE: 64
+    MILK_BUCKET: 1
+    NAUTILUS_SHELL: 1
+    NETHERRACK: 640
+    NETHER_WART: 1
+    OAK_HANGING_SIGN: 1
+    OAK_LEAVES: 1
+    OBSIDIAN: 5
+    PINK_CANDLE: 1
+    PINK_WOOL: 10
+    POWERED_RAIL: 1
+    PUFFERFISH_BUCKET: 1
+    RABBIT_FOOT: 1
+    RABBIT_HIDE: 1
+    REDSTONE_TORCH: 1
+    RED_BANNER: 1
+    SADDLE: 1
+    SALMON_BUCKET: 1
+    SAND: 128
+    SEA_PICKLE: 10
+    SLIME_BLOCK: 1
+    SNOWBALL: 1
+    SPONGE: 1
+    SPRUCE_SAPLING: 1
+    TROPICAL_FISH_BUCKET: 1
+    TURTLE_SCUTE: 1
+    WARPED_HANGING_SIGN: 1
+    WHITE_BANNER: 1
+    WHITE_BED: 1
+    WHITE_CANDLE: 1
+    YELLOW_BANNER: 1
+  punishmentMaterials:
+    BONE: 1
+    COAL: 1
+    COBBLESTONE: 10
+    DIRT: 10
+    FEATHER: 1
+    GRAVEL: 1
+    OAK_SAPLING: 1
+    ROTTEN_FLESH: 1
+    STRING: 1
+    WHEAT_SEEDS: 1
+  suddenDeathMaterials:
+    CHEST: 1
+    CLAY: 10
+    COAL: 10
+    COBBLESTONE: 10
+    CRAFTING_TABLE: 1
+    DIRT: 10
+    FURNACE: 1
+    GRAVEL: 10
+    LADDER: 10
+    LEVER: 10
+    OAK_LOG: 10
+    SAND: 10
+    STICK: 10
+    STONE_PICKAXE: 1
+    TORCH: 10
+    WOODEN_PICKAXE: 1
+
+# Task: Obtain N items with a string in their name. List of item groups to obtain, including:
+# - String: String glob to search in its name
+# - Amount: Required amount of items from the materials needed to complete the task
+obtainItemWithStringTask:
+  maxTaskCount: 1
+  materials:
+    BLACK_WOOL:
+      string: 'black'
+      amount: 4
+    BOOK:
+      string: 'book'
+      amount: 2
+    BRAIN_CORAL:
+      string: 'coral'
+      amount: 2
+    BRICK:
+      string: 'brick'
+      amount: 3
+    CARROT:
+      string: 'carrot'
+      amount: 2
+    COBBLESTONE:
+      string: 'cobblestone'
+      amount: 4
+    DEEPSLATE:
+      string: 'deepslate'
+      amount: 4
+    DIAMOND_BOOTS:
+      string: 'boots'
+      amount: 2
+    DIAMOND_CHESTPLATE:
+      string: 'chestplate'
+      amount: 2
+    DIAMOND_HELMET:
+      string: 'helmet'
+      amount: 2
+    DIAMOND_LEGGINGS:
+      string: 'leggings'
+      amount: 2
+    DIAMOND_SWORD:
+      string: 'sword'
+      amount: 4
+    DIRT:
+      string: 'dirt'
+      amount: 2
+    FIRE_CHARGE:
+      string: 'fire'
+      amount: 2
+    GLOWSTONE:
+      string: 'glow'
+      amount: 2
+    NETHERITE_BLOCK:
+      string: 'block of'
+      amount: 3
+    OAK_LEAVES:
+      string: 'leaves'
+      amount: 3
+    OAK_PRESSURE_PLATE:
+      string: 'plate'
+      amount: 4
+    RED_DYE:
+      string: 'red'
+      amount: 3
+    SAND:
+      string: 'sand'
+      amount: 4
+    SNOWBALL:
+      string: 'ball'
+      amount: 1
+    STICK:
+      string: 'stick'
+      amount: 2
+    STONE:
+      string: 'stone'
+      amount: 6
+    WHEAT_SEEDS:
+      string: 'seed'
+      amount: 3 
+    WHITE_WOOL:
+      string: 'wool'
+      amount: 5
+  punishmentMaterials:
+    DIRT:
+      string: 'dirt'
+      amount: 1
+    
+# Task: Place a flower in a pot. Possible items to place in pot
+placeFlowerInPotTask:
+  maxTaskCount: 1
+  materials:
+  - ALLIUM
+  - AZURE_BLUET
+  - BLUE_ORCHID
+  - CORNFLOWER
+  - DANDELION
+  - LILAC
+  - LILY_OF_THE_VALLEY
+  - ORANGE_TULIP
+  - OXEYE_DAISY
+  - PEONY
+  - PINK_TULIP
+  - POPPY
+  - RED_TULIP
+  - ROSE_BUSH
+  - SUNFLOWER
+  - WHITE_TULIP
+  - WITHER_ROSE
+
+# Task: Place an item in an item frame. Possible items to place in the frame
+placeItemInItemFrameTask:
+  maxTaskCount: 1
+  materials:
+  - AMETHYST_SHARD
+  - COAL
+  - COPPER_INGOT
+  - DIAMOND
+  - EMERALD
+  - GOLD_INGOT
+  - IRON_INGOT
+  - LAPIS_LAZULI
+  - QUARTZ
+
+# Task: Place N items. Possible items to place, and the amount to place
+placeItemsTask:
+  maxTaskCount: 3
+  materials:
+    ANDESITE_WALL: 1
+    BLACK_STAINED_GLASS: 1
+    BLUE_STAINED_GLASS: 1
+    BLACKSTONE_WALL: 1
+    BONE_BLOCK: 1
+    BRICK_WALL: 1
+    COBBLED_DEEPSLATE_WALL: 1
+    COBBLESTONE_WALL: 1
+    COMPARATOR: 1
+    CRIMSON_FUNGUS: 1
+    DIORITE_WALL: 1
+    DRIED_KELP_BLOCK: 1
+    FERN: 1
+    GLOWSTONE: 1
+    GOLD_BLOCK: 1
+    GRANITE_WALL: 1
+    HONEYCOMB_BLOCK: 1
+    HOPPER: 1
+    JACK_O_LANTERN: 1
+    LANTERN: 1
+    LIGHT_GRAY_GLAZED_TERRACOTTA: 1
+    OBSERVER: 1
+    NETHER_BRICKS: 1
+    POLISHED_ANDESITE_STAIRS:
+    QUARTZ_PILLAR: 1
+    SANDSTONE_WALL: 1
+    STONE_BRICK_WALL: 1
+    RED_GLAZED_TERRACOTTA: 1
+    RED_SANDSTONE_SLAB:
+    RED_STAINED_GLASS: 1
+    REDSTONE_BLOCK: 1
+    REDSTONE_LAMP: 1
+    TUFF_WALL: 1
+    WARPED_FENCE_GATE: 1
+    WARPED_FUNGUS: 1
+    WHITE_BANNER: 1
+    WHITE_CARPET: 5
+    WHITE_STAINED_GLASS: 1
+    YELLOW_STAINED_GLASS: 1
+  punishmentMaterials:
+    FURNACE: 1
+
+# Task: Punch an entity with an item. Possible entities to punch, and the items to punch them with
+punchAnEntityWithItemTask:
+  maxTaskCount: 3
+  entityTypes:
+  - ARMADILLO
+  - AXOLOTL
+  - BAT
+  - BEE
+  - CAMEL
+  - DOLPHIN
+  - DONKEY
+  - DROWNED
+  - ENDERMAN
+  - GLOW_SQUID
+  - GOAT
+  - HUSK
+  - IRON_GOLEM
+  - LLAMA
+  - OCELOT
+  - PARROT
+  - PIGLIN
+  - POLAR_BEAR
+  - PUFFERFISH
+  - SNOW_GOLEM
+  - STRAY
+  - TURTLE
+  - VILLAGER
+  - WITCH
+  - WOLF
+  materials:
+  - APPLE
+  - BEETROOT
+  - COD
+  - COOKIE
+  - GLOW_BERRIES
+  - PUFFERFISH
+  - SALMON
+  - SWEET_BERRIES
+  - TROPICAL_FISH
+
+# Task: Reach a velocity of N blocks/second. Define the min/max of the random number generator for target max velocity
+reachVelocityTask:
+  maxTaskCount: 1
+  minVelocity: 25
+  maxVelocity: 50
+
+# Task: Receive a type of potion effect. List of possible PotionEffectTypes to receive
+receivePotionEffectTypeTask:
+  maxTaskCount: 1
+  potionEffectTypes:
+  - BAD_OMEN
+  - DOLPHINS_GRACE
+  - HUNGER
+  - POISON
+
+# Task: Ride an entity. List of possible EntityTypes to ride
+rideAnEntityTask:
+  maxTaskCount: 1
+  entityTypes:
+  - CAMEL
+  - DONKEY
+  - HORSE
+  - PIG
+  - MULE
+  - STRIDER
+  - MINECART
+
+# Task: Shear a sheep of a certain DyeColor. List of possible DyeColors to shear
+shearColoredSheepTask:
+  maxTaskCount: 1
+  dyeColors:
+  - BLACK
+  - BLUE
+  - BROWN
+  - CYAN
+  - GRAY
+  - GREEN
+  - ORANGE
+  - LIGHT_BLUE
+  - LIGHT_GRAY
+  - LIME
+  - MAGENTA
+  - PINK
+  - PURPLE
+  - RED
+  - WHITE
+  - YELLOW
+
+# Task: Shear N sheep. Min and max shears needed for this task
+shearSheepTask:
+  maxTaskCount: 1
+  minShears: 1
+  maxShears: 15
+
+# Task: Sleep in a bed of a certain DyeColor. List of possible DyeColors to sleep in
+sleepInColoredBedTask:
+  maxTaskCount: 1
+  dyeColors:
+  - BLACK
+  - BLUE
+  - BROWN
+  - CYAN
+  - GRAY
+  - GREEN
+  - ORANGE
+  - LIGHT_BLUE
+  - LIGHT_GRAY
+  - LIME
+  - MAGENTA
+  - PINK
+  - PURPLE
+  - RED
+  - WHITE
+  - YELLOW
+
+# Task: Shoot a projectile at a block. Possible blocks to shoot a projectile with
+shootBlockTask:
+  maxTaskCount: 1
+  materials:
+  - ACACIA_STAIRS
+  - ANDESITE
+  - ANVIL
+  - BARREL
+  - BEE_NEST
+  - BELL
+  - BIRCH_FENCE_GATE
+  - BLACK_CONCRETE
+  - BLACK_WOOL
+  - BLAST_FURNACE
+  - BOOKSHELF
+  - BRICKS
+  - CAMPFIRE
+  - CARTOGRAPHY_TABLE
+  - CAULDRON
+  - CHISELED_QUARTZ_BLOCK
+  - CHISELED_SANDSTONE
+  - COBBLESTONE_WALL
+  - COMPOSTER
+  - CRIMSON_SLAB
+  - DARK_OAK_TRAPDOOR
+  - DIORITE
+  - DISPENSER
+  - EMERALD_BLOCK
+  - FARMLAND
+  - FLETCHING_TABLE
+  - GILDED_BLACKSTONE
+  - GLASS_PANE
+  - GLOWSTONE
+  - GOLD_ORE
+  - GRANITE
+  - GRINDSTONE
+  - HAY_BLOCK
+  - IRON_BARS
+  - JACK_O_LANTERN
+  - JUKEBOX
+  - JUNGLE_PLANKS
+  - LANTERN
+  - LAPIS_BLOCK
+  - LECTERN
+  - LIME_CONCRETE
+  - MELON
+  - MOSSY_COBBLESTONE
+  - NETHERRACK
+  - OAK_LOG
+  - PINK_CONCRETE
+  - PISTON
+  - QUARTZ_BLOCK
+  - REDSTONE_BLOCK
+  - SANDSTONE_STAIRS
+  - SMITHING_TABLE
+  - STONE_BRICKS
+  - STONE_SLAB
+  - STRIPPED_ACACIA_LOG
+  - TARGET
+  - TNT
+  - YELLOW_WOOL
+
+# Task: Shoot a projectile with an item. Possible items to shoot a projectile with
+shootProjectileTask:
+  maxTaskCount: 1
+  materials:
+  - BOW
+  - CROSSBOW
+
+# Task: Smelt N items. Possible items to smelt
+smeltItemsTask:
+  maxTaskCount: 1
+  materials:
+    BEEF: 10
+    BRICK: 64
+    CHARCOAL: 10
+    COOKED_COD: 10
+    COOKED_CHICKEN: 10
+    COOKED_MUTTON: 10
+    COOKED_PORKCHOP: 10
+    COOKED_RABBIT: 10
+    COOKED_SALMON: 10
+    COPPER_INGOT: 20
+    DRIED_KELP: 64
+    GLASS: 32
+    GOLD_INGOT: 10
+    GREEN_DYE: 1
+    IRON_INGOT: 64
+    SMOOTH_BASALT: 10
+    SMOOTH_QUARTZ: 1
+    SMOOTH_SANDSTONE: 32
+    SMOOTH_STONE: 64
+    STONE: 64
+
+
+# Task: Sneak on a block. Possible items to sneak on
+sneakOnBlockTask:
+  maxTaskCount: 1
+  materials:
+  - CAMPFIRE
+  - CACTUS
+  - CRYING_OBSIDIAN
+  - DEEPSLATE_DIAMOND_ORE
+  - MAGMA_BLOCK
+  - POINTED_DRIPSTONE
+  - PRISMARINE
+  - SCULK
+  - SOUL_SAND
+  - SPAWNER
+
+# Task: Die a specific way. Possible DamageCauses to die from
+specificDeathTask:
+  maxTaskCount: 2 
+  damageCauses:
+    CAMPFIRE:
+      material: CAMPFIRE
+      explanation: Die by burning in a campfire
+    CONTACT:
+      material: CACTUS
+      explanation: Die from a prickly block (Cactus, Dripstone, Berry Bush)
+    DROWNING:
+      material: WATER_BUCKET
+      explanation: Die via drowning
+    ENTITY_EXPLOSION:
+      material: CREEPER_HEAD
+      explanation: Die from an entity's explosion (Creeper)
+    FALL: 
+      material: FEATHER
+      explanation: Fall to your death
+    FALLING_BLOCK:
+      material: ANVIL
+      explanation: Die by getting crushed by a falling block
+    HOT_FLOOR:
+      material: MAGMA_BLOCK
+      explanation: Die by stepping on a magma block
+    LAVA:
+      material: LAVA_BUCKET
+      explanation: Die by burning in lava
+    PROJECTILE:
+      material: ARROW
+      explanation: Die to a projectile
+    STARVATION:
+      material: CARROT
+      explanation: Starve to death
+    SUFFOCATION:
+      material: SAND
+      explanation: Suffocate to death
+  punishmentDamageCauses:
+    ENTITY_EXPLOSION:
+      material: CREEPER_HEAD
+      explanation: Die from an entity's explosion (Creeper)
+    PROJECTILE:
+      material: ARROW
+      explanation: Die to a projectile
+
+# Task: Stand on a block. Possible items to stand on
+standOnBlockTask:
+  maxTaskCount: 3
+  materials:
+  - AMETHYST_BLOCK
+  - BEDROCK
+  - BEE_NEST
+  - BLACKSTONE
+  - BLAST_FURNACE
+  - BLUE_ICE
+  - CACTUS
+  - CLAY
+  - CRYING_OBSIDIAN
+  - COAL_ORE
+  - COPPER_ORE
+  - DEEPSLATE_GOLD_ORE
+  - DEEPSLATE_IRON_ORE
+  - DIORITE
+  - ICE
+  - IRON_BARS
+  - MUSHROOM_STEM
+  - NETHERRACK
+  - SMALL_DRIPLEAF
+  - SMOOTH_BASALT
+  - SNOW_BLOCK
+  - SOUL_SAND
+  - STRIPPED_BIRCH_LOG
+  - STRIPPED_DARK_OAK_LOG
+  - TUFF
+  punishmentMaterials:
+  - ANDESITE
+  - COAL_BLOCK
+  - COBBLESTONE
+  - DIORITE
+  - DIRT
+  - GRAVEL
+  - SAND
+
+# Task: Stand on coordinate task. Set bounds of possible radius away from spawn location the coordinate is at
+standOnCoordinateTask:
+  maxTaskCount: 1
+  minRadius: 100
+  maxRadius: 1000
+
+# Task: Stay above a specific number of health (in half hearts). Randomly chooses target health between minHealth and maxHealth
+stayAboveHealthTask:
+  minHealth: 4
+  maxHealth: 16
+
+# Task: Stay above a specific number of hunger (in half hunger thingies). Randomly chooses target hunger between minHunger and maxHunger
+stayAboveHungerTask:
+  minHunger: 6
+  maxHunger: 10
+
+# Task: Stay still for N seconds. Min and max range of seconds for this given task
+stayStillTask:
+  maxTaskCount: 1
+  minSeconds: 60
+  maxSeconds: 240
+  punishmentMinSeconds: 5
+  punishmentMaxSeconds: 20
+
+# Task: Touch a block. Possible items to touch
+touchBlockTask:
+  maxTaskCount: 1
+  materials:
+  - BEDROCK
+  - COBWEB
+  - FIRE
+  - GLOW_LICHEN
+  - KELP
+  - LAVA
+  - WATER
+  punishmentMaterials:
+  - WATER
