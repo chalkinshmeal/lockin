@@ -11,13 +11,13 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class StayAboveHungerTask extends lockinTask {
+public class StayAboveHungerTask extends LockinTask {
     private static final String configKey = "stayAboveHungerTask";
     private static final String normalKey1 = "minHunger";
     private static final String normalKey2 = "maxHunger";
@@ -26,8 +26,8 @@ public class StayAboveHungerTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public StayAboveHungerTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, int targetHunger) {
+    public StayAboveHungerTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, int targetHunger) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetHunger = targetHunger;
         this.name = "Let your hunger fall to " + ((float) this.targetHunger / 2);
@@ -39,8 +39,6 @@ public class StayAboveHungerTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        this.configHandler.getInt(configKey + "." + normalKey1, 1);
-        this.configHandler.getInt(configKey + "." + normalKey2, 1);
     }
 
     public void addListeners() {
@@ -50,8 +48,8 @@ public class StayAboveHungerTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<StayAboveHungerTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<StayAboveHungerTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<StayAboveHungerTask> tasks = new ArrayList<>();
         int minHunger = configHandler.getInt(configKey + "." + normalKey1, 1);
         int maxHunger = configHandler.getInt(configKey + "." + normalKey2, 20);

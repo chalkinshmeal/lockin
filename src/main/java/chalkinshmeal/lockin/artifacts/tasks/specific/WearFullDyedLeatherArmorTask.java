@@ -12,17 +12,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class WearFullDyedLeatherArmorTask extends lockinTask {
+public class WearFullDyedLeatherArmorTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public WearFullDyedLeatherArmorTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler, lockinRewardHandler lockinRewardHandler) {
+    public WearFullDyedLeatherArmorTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.name = "Wear a full set of dyed leather armor";
         this.item = new ItemStack(Material.LEATHER_CHESTPLATE);
@@ -39,7 +39,7 @@ public class WearFullDyedLeatherArmorTask extends lockinTask {
     }
 
     public static List<WearFullDyedLeatherArmorTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
-                                                              lockinTaskHandler lockinTaskHandler, lockinRewardHandler lockinRewardHandler) {
+                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
         List<WearFullDyedLeatherArmorTask> tasks = new ArrayList<>();
         tasks.add(new WearFullDyedLeatherArmorTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

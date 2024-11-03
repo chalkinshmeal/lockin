@@ -8,12 +8,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import chalkinshmeal.lockin.artifacts.rewards.punishments.BlowUpPunishment;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class lockinRewardHandler {
+public class LockinRewardHandler {
     public final JavaPlugin plugin;
-    public List<lockinReward> rewards = new ArrayList<>();
-    public List<lockinReward> punishments = new ArrayList<>();
+    public List<LockinReward> rewards = new ArrayList<>();
+    public List<LockinReward> punishments = new ArrayList<>();
 
-    public lockinRewardHandler(JavaPlugin plugin) {
+    public LockinRewardHandler(JavaPlugin plugin) {
         this.plugin = plugin;
         this.createRewardsList();
         this.createPunishmentList();
@@ -60,12 +60,12 @@ public class lockinRewardHandler {
     //---------------------------------------------------------------------------------------------
     // Reward methods
     //---------------------------------------------------------------------------------------------
-    public lockinReward getRandomReward() {
+    public LockinReward getRandomReward() {
         if (this.rewards.size() == 0) return null;
         return this.rewards.remove(Utils.getRandNum(0, this.rewards.size() - 1));
     }
 
-    public lockinReward getRandomPunishment() {
+    public LockinReward getRandomPunishment() {
         if (this.punishments.size() == 0) return null;
         return this.punishments.remove(Utils.getRandNum(0, this.punishments.size() - 1));
     }

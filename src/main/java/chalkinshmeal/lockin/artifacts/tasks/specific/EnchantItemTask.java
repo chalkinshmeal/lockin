@@ -11,19 +11,19 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 
 
 
-public class EnchantItemTask extends lockinTask {
+public class EnchantItemTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public EnchantItemTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                          lockinRewardHandler lockinRewardHandler) {
+    public EnchantItemTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                          LockinRewardHandler lockinRewardHandler) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.name = "Enchant an item";
         this.item = new ItemStack(Material.ENCHANTING_TABLE);
@@ -41,8 +41,8 @@ public class EnchantItemTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<EnchantItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<EnchantItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<EnchantItemTask> tasks = new ArrayList<>();
         tasks.add(new EnchantItemTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

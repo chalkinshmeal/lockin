@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.team.lockinTeamHandler;
+import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.utils.cmdframework.argument.ArgType;
 import chalkinshmeal.lockin.utils.cmdframework.argument.ArgValue;
 import chalkinshmeal.lockin.utils.cmdframework.argument.Argument;
@@ -21,10 +21,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class TeamCommand extends ArgCommand {
-    private final lockinTeamHandler lockinTeamHandler;
+    private final LockinTeamHandler lockinTeamHandler;
 
     // Constructor
-    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, lockinTeamHandler lockinTeamHandler) {
+    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, LockinTeamHandler lockinTeamHandler) {
         super("team", false);
         this.setPlayerRequired(true);
         this.setHelpMsg(Component.text()

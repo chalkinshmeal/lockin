@@ -12,13 +12,13 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class GetSpecificHealthTask extends lockinTask {
+public class GetSpecificHealthTask extends LockinTask {
     private static final String configKey = "getSpecificHealthTask";
     private static final String normalKey1 = "minHealth";
     private static final String normalKey2 = "maxHealth";
@@ -27,8 +27,8 @@ public class GetSpecificHealthTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public GetSpecificHealthTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, int targetHealth) {
+    public GetSpecificHealthTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, int targetHealth) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetHealth = targetHealth;
         this.name = "Have your health be exactly " + ((float) this.targetHealth / 2) + " hearts";
@@ -39,8 +39,6 @@ public class GetSpecificHealthTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        this.configHandler.getInt(configKey + "." + normalKey1, 1);
-        this.configHandler.getInt(configKey + "." + normalKey2, 1);
     }
 
     public void addListeners() {
@@ -51,8 +49,8 @@ public class GetSpecificHealthTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<GetSpecificHealthTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<GetSpecificHealthTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<GetSpecificHealthTask> tasks = new ArrayList<>();
         int minHealth = configHandler.getInt(configKey + "." + normalKey1, 1);
         int maxHealth = configHandler.getInt(configKey + "." + normalKey2, 20);

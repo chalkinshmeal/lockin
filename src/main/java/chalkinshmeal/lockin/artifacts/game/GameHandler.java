@@ -19,11 +19,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import chalkinshmeal.lockin.artifacts.compass.lockinCompass;
+import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.countdown.CountdownBossBar;
-import chalkinshmeal.lockin.artifacts.scoreboard.lockinScoreboard;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
-import chalkinshmeal.lockin.artifacts.team.lockinTeamHandler;
+import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
@@ -33,22 +33,24 @@ import net.kyori.adventure.title.Title;
 public class GameHandler {
     private final JavaPlugin plugin;
     private final ConfigHandler configHandler;
-    private final lockinCompass lockinCompass;
-    private final lockinTaskHandler lockinTaskHandler;
+    private final LockinCompass lockinCompass;
+    private final LockinTaskHandler lockinTaskHandler;
     private final CountdownBossBar countdownBossBar;
-    private final lockinScoreboard lockinScoreboard;
-    public final lockinTeamHandler lockinTeamHandler;
+    private final LockinScoreboard lockinScoreboard;
+    public final LockinTeamHandler lockinTeamHandler;
     private final int queueTime;
     private final int gameTime;
+    private final int maxTier;
 
     // Temporary status
     public boolean isActive = false;
     public GameState state = GameState.INACTIVE;
+    public int currentTier = 0;
 
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public GameHandler(JavaPlugin plugin, ConfigHandler configHandler, lockinCompass lockinCompass, lockinTaskHandler lockinTaskHandler, lockinScoreboard lockinScoreboard, lockinTeamHandler lockinTeamHandler) {
+    public GameHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass, LockinTaskHandler lockinTaskHandler, LockinScoreboard lockinScoreboard, LockinTeamHandler lockinTeamHandler) {
         this.plugin = plugin;
         this.configHandler = configHandler;
         this.lockinCompass = lockinCompass;
@@ -57,6 +59,7 @@ public class GameHandler {
         this.lockinTeamHandler = lockinTeamHandler;
         this.queueTime = this.configHandler.getInt("queueTime", 120);
         this.gameTime = this.configHandler.getInt("timeLimit", 600);
+        this.maxTier = 10;
         this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.gameTime);
     }
 
@@ -68,11 +71,27 @@ public class GameHandler {
     //---------------------------------------------------------------------------------------------
     // Game methods
     //---------------------------------------------------------------------------------------------
+    public void incrementTier(int tier)
+    {
+        for (Player player : this.lockinTeamHandler.getAllPlayers()) {
+            player.sendMessage("Moving to tier " + tier);
+
+        }
+        // Create task list
+        if (!this.lockinTaskHandler.CreateTaskList(tier)) {
+            System.out.println("Something went wrong with tier " + tier);
+        }
+
+        // Register listeners for tasks
+        this.lockinTaskHandler.registerListeners();
+
+        // Update compass with tasks
+        this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
+    }
+
     public void queue() {
         this.state = GameState.QUEUE;
-
-        // Create task list first, in case there are any problems with the config
-        if (!this.lockinTaskHandler.CreateTaskList()) return;
+        this.currentTier = 1;
 
         this.isActive = true;
         this.lockinScoreboard.init(this.lockinTeamHandler);
@@ -87,7 +106,8 @@ public class GameHandler {
 
         this.resetWorldState();
         this.lockinCompass.SetIsActive(true);
-        this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
+
+        this.incrementTier(this.currentTier);
         this.delayStartTask(this.plugin, this, this.queueTime);
     }
 
@@ -97,8 +117,8 @@ public class GameHandler {
         // Global operations
         this.countdownBossBar.start();
         this.lockinTaskHandler.registerListeners();
-        this.checkAllTasksDoneTask(plugin, lockinTaskHandler);
-        this.delayStopTask(this.plugin, this, this.gameTime);
+        this.checkAllTasksDoneTask(plugin, this, lockinTaskHandler);
+        //this.delayStopTask(this.plugin, this, this.gameTime);
         this.destroySpawnCage();
 
         // Per-player operations
@@ -152,7 +172,7 @@ public class GameHandler {
         // Global operations
         this.countdownBossBar.update(Component.text("Overtime", NamedTextColor.RED));
         this.lockinTaskHandler.unRegisterListeners();
-        this.lockinTaskHandler.CreateSuddenDeathTaskList();
+        //this.lockinTaskHandler.CreateSuddenDeathTaskList();
         this.lockinTaskHandler.registerListeners();
         this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
         this.checkSuddenDeathTasksDoneTask(plugin, lockinTaskHandler);
@@ -383,7 +403,7 @@ public class GameHandler {
         }.runTaskTimer(plugin, 0, 20); // Run the task every 20 ticks (1 second)
     }
 
-    private void checkAllTasksDoneTask(JavaPlugin plugin, lockinTaskHandler lockinTaskHandler) {
+    private void checkAllTasksDoneTask(JavaPlugin plugin, GameHandler gameHandler, LockinTaskHandler lockinTaskHandler) {
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -392,15 +412,21 @@ public class GameHandler {
                     return;
                 }
                 if (lockinTaskHandler.areAllTasksDone()) {
-                    stop();
-                    this.cancel();
-                    return;
+                    if (gameHandler.currentTier == gameHandler.maxTier) {
+                        stop();
+                        this.cancel();
+                        return;
+                    }
+                    else {
+                        gameHandler.currentTier += 1;
+                        gameHandler.incrementTier(gameHandler.currentTier);
+                    }
                 }
             }
         }.runTaskTimer(plugin, 0, 20); // Run the task every 20 ticks (1 second)
     }
 
-    private void checkSuddenDeathTasksDoneTask(JavaPlugin plugin, lockinTaskHandler lockinTaskHandler) {
+    private void checkSuddenDeathTasksDoneTask(JavaPlugin plugin, LockinTaskHandler lockinTaskHandler) {
         new BukkitRunnable() {
             @Override
             public void run() {

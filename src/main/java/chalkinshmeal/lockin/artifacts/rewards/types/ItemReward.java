@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinReward;
+import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class ItemReward extends lockinReward {
+public class ItemReward extends LockinReward {
     private final Material material;
     private final int amount;
 

@@ -4,17 +4,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.compass.lockinCompass;
+import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.utils.cmdframework.command.BaseCommand;
 import chalkinshmeal.lockin.utils.cmdframework.handler.CommandHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class CompassCommand extends BaseCommand {
-    private final lockinCompass lockinCompass;
+    private final LockinCompass lockinCompass;
 
     // Constructor
-    public CompassCommand(JavaPlugin plugin, CommandHandler cmdHandler, lockinCompass lockinCompass) {
+    public CompassCommand(JavaPlugin plugin, CommandHandler cmdHandler, LockinCompass lockinCompass) {
         super("compass");
         this.setPlayerRequired(false);
         this.setHelpMsg(Component.text()

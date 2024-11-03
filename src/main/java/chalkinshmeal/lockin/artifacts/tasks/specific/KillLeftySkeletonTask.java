@@ -12,19 +12,19 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 
 
 
-public class KillLeftySkeletonTask extends lockinTask {
+public class KillLeftySkeletonTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public KillLeftySkeletonTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                          lockinRewardHandler lockinRewardHandler) {
+    public KillLeftySkeletonTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                          LockinRewardHandler lockinRewardHandler) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.name = "Kill a lefty skeleton";
         this.item = new ItemStack(Material.SKELETON_SKULL);
@@ -42,8 +42,8 @@ public class KillLeftySkeletonTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<KillLeftySkeletonTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<KillLeftySkeletonTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<KillLeftySkeletonTask> tasks = new ArrayList<>();
         tasks.add(new KillLeftySkeletonTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

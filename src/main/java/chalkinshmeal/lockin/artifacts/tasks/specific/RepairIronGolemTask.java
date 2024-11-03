@@ -12,18 +12,18 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 
 
-public class RepairIronGolemTask extends lockinTask {
+public class RepairIronGolemTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public RepairIronGolemTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                          lockinRewardHandler lockinRewardHandler) {
+    public RepairIronGolemTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                          LockinRewardHandler lockinRewardHandler) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.name = "Repair an iron golem";
         this.item = new ItemStack(Material.IRON_BLOCK);
@@ -41,8 +41,8 @@ public class RepairIronGolemTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<RepairIronGolemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<RepairIronGolemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<RepairIronGolemTask> tasks = new ArrayList<>();
         tasks.add(new RepairIronGolemTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

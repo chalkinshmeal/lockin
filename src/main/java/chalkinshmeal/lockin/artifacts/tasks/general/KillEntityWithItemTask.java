@@ -13,13 +13,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class KillEntityWithItemTask extends lockinTask {
+public class KillEntityWithItemTask extends LockinTask {
     private static final String configKey = "killEntityWithItemTask";
     private static final String normalKey1 = "entityTypes";
     private static final String normalKey2 = "materials";
@@ -29,8 +29,8 @@ public class KillEntityWithItemTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public KillEntityWithItemTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                     lockinRewardHandler lockinRewardHandler, EntityType entityType, Material material) {
+    public KillEntityWithItemTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                     LockinRewardHandler lockinRewardHandler, EntityType entityType, Material material) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.entityType = entityType;
         this.material = material;
@@ -43,11 +43,15 @@ public class KillEntityWithItemTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String entityTypeStr : this.configHandler.getListFromKey(configKey + "." + normalKey1)) {
-            EntityType.valueOf(entityTypeStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey1)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey1 + "." + tierStr)) {
+                EntityType.valueOf(valueStr);
+            }
         }
-        for (String materialStr : this.configHandler.getListFromKey(configKey + "." + normalKey2)) {
-            Material.valueOf(materialStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey2)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey2 + "." + tierStr)) {
+                Material.valueOf(valueStr);
+            }
         }
     }
 
@@ -58,8 +62,8 @@ public class KillEntityWithItemTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<KillEntityWithItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<KillEntityWithItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<KillEntityWithItemTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey1), taskCount);

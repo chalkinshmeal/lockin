@@ -14,15 +14,15 @@ import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 
 
-public class BreedEntitiesTask extends lockinTask {
+public class BreedEntitiesTask extends LockinTask {
     private static final String configKey = "breedEntitiesTask";
     private static final String normalKey = "entityTypes";
     private final EntityType entityType;
@@ -32,8 +32,8 @@ public class BreedEntitiesTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public BreedEntitiesTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                            lockinRewardHandler lockinRewardHandler, EntityType entityType, int amount) {
+    public BreedEntitiesTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                            LockinRewardHandler lockinRewardHandler, EntityType entityType, int amount) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.entityType = entityType;
         this.amount = amount;
@@ -46,8 +46,10 @@ public class BreedEntitiesTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String entityTypeStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            EntityType.valueOf(entityTypeStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                EntityType.valueOf(valueStr);
+            }
         }
     }
 
@@ -58,8 +60,8 @@ public class BreedEntitiesTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<BreedEntitiesTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<BreedEntitiesTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<BreedEntitiesTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey), taskCount);

@@ -5,16 +5,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import chalkinshmeal.lockin.artifacts.compass.lockinCompass;
+import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.game.GameHandler;
-import chalkinshmeal.lockin.artifacts.scoreboard.lockinScoreboard;
+import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 
 public class PlayerJoinListener implements Listener {
-    private final lockinCompass lockinCompass;
-    private final lockinScoreboard lockinScoreboard;
+    private final LockinCompass lockinCompass;
+    private final LockinScoreboard lockinScoreboard;
     private final GameHandler gameHandler;
 
-    public PlayerJoinListener(lockinCompass lockinCompass, lockinScoreboard lockinScoreboard, GameHandler gameHandler) {
+    public PlayerJoinListener(LockinCompass lockinCompass, LockinScoreboard lockinScoreboard, GameHandler gameHandler) {
         this.lockinCompass = lockinCompass;
         this.lockinScoreboard = lockinScoreboard;
         this.gameHandler = gameHandler;

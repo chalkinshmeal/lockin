@@ -14,13 +14,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class JumpTask extends lockinTask {
+public class JumpTask extends LockinTask {
     private static final String configKey = "jumpTask";
     private static final String normalKey1 = "minJumps";
     private static final String normalKey2 = "maxJumps";
@@ -32,8 +32,8 @@ public class JumpTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public JumpTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, int targetJumps, boolean isPunishment) {
+    public JumpTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, int targetJumps, boolean isPunishment) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetJumps = targetJumps;
         this.name = "Jump " + this.targetJumps + " times";
@@ -46,8 +46,6 @@ public class JumpTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        this.configHandler.getInt(configKey + "." + normalKey1, 1);
-        this.configHandler.getInt(configKey + "." + normalKey2, 1);
     }
 
     public void addListeners() {
@@ -57,8 +55,8 @@ public class JumpTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<JumpTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+    public static List<JumpTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
         List<JumpTask> tasks = new ArrayList<>();
         int targetJumps = -1;
         if (isPunishment) {

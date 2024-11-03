@@ -3,9 +3,9 @@ package chalkinshmeal.lockin.artifacts.rewards.punishments;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinReward;
+import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 
-public class BlowUpPunishment extends lockinReward {
+public class BlowUpPunishment extends LockinReward {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------

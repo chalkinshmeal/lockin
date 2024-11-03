@@ -4,12 +4,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import chalkinshmeal.lockin.artifacts.compass.lockinCompass;
+import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 
 public class PlayerInteractListener implements Listener {
-    private final lockinCompass lockinCompass;
+    private final LockinCompass lockinCompass;
 
-    public PlayerInteractListener(lockinCompass lockinCompass) {
+    public PlayerInteractListener(LockinCompass lockinCompass) {
         this.lockinCompass = lockinCompass;
     }
 

@@ -4,12 +4,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import chalkinshmeal.lockin.artifacts.compass.lockinCompass;
+import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 
 public class InventoryClickListener implements Listener {
-    private final lockinCompass lockinCompass;
+    private final LockinCompass lockinCompass;
 
-    public InventoryClickListener(lockinCompass lockinCompass) {
+    public InventoryClickListener(LockinCompass lockinCompass) {
         this.lockinCompass = lockinCompass;
     }
 

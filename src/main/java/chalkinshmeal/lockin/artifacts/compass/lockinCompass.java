@@ -14,31 +14,31 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
-import chalkinshmeal.lockin.artifacts.team.lockinTeamHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
-public class lockinCompass {
-    private final lockinTeamHandler lockinTeamHandler;
+public class LockinCompass {
+    private final LockinTeamHandler lockinTeamHandler;
     private final Inventory teamsInv;
     private final Inventory tasksInv; 
     private final int taskCount;
     private boolean isActive;
 
     private final Component compassDisplayName = Component.text(
-        "lockin", NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.ITALIC, false);
-    private final String teamsInvName = "lockin Teams";
-    private final String tasksInvName = "lockin Tasks";
+        "Lockin", NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.ITALIC, false);
+    private final String teamsInvName = "Lockin Teams";
+    private final String tasksInvName = "Lockin Tasks";
 
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public lockinCompass(ConfigHandler configHandler, lockinTeamHandler lockinTeamHandler) {
+    public LockinCompass(ConfigHandler configHandler, LockinTeamHandler lockinTeamHandler) {
         this.lockinTeamHandler = lockinTeamHandler;
         this.taskCount = Utils.getHighestMultiple((int) configHandler.getInt("taskCount", 27), 9);
         this.teamsInv = Bukkit.createInventory(null, 9, Component.text(this.teamsInvName, NamedTextColor.LIGHT_PURPLE));
@@ -54,8 +54,8 @@ public class lockinCompass {
     //---------------------------------------------------------------------------------------------
     public int getMaxTeams() { return this.lockinTeamHandler.getNumTeams(); }
     public String getInvName() { return (this.isActive) ? Utils.stripColor(this.tasksInvName) : Utils.stripColor(this.teamsInvName); }
-    public void SetIsActive(boolean isActive) { this.isActive = isActive; }
     public int getMaxSlots() {return (this.isActive) ? this.taskCount : this.lockinTeamHandler.getNumTeams(); }
+    public void SetIsActive(boolean isActive) { this.isActive = isActive; }
 
     //---------------------------------------------------------------------------------------------
     // Inventory methods
@@ -68,11 +68,11 @@ public class lockinCompass {
         }
     }
 
-    public void updateTasksInventory(lockinTaskHandler lockinTaskHandler) {
+    public void updateTasksInventory(LockinTaskHandler lockinTaskHandler) {
         this.tasksInv.clear();
         if (lockinTaskHandler == null) return;
 
-        for (lockinTask task : lockinTaskHandler.GetTasks()) {
+        for (LockinTask task : lockinTaskHandler.GetTasks()) {
             this.tasksInv.addItem(task.getItem());
         }
     }

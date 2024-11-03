@@ -9,16 +9,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 
-public class DrinkMilkToCurePoisonTask extends lockinTask {
+public class DrinkMilkToCurePoisonTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public DrinkMilkToCurePoisonTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler, lockinRewardHandler lockinRewardHandler) {
+    public DrinkMilkToCurePoisonTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.name = "Drink milk to cure the poison effect";
         this.item = new ItemStack(Material.MILK_BUCKET);

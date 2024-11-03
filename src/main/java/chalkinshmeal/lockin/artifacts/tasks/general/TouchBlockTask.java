@@ -12,13 +12,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class TouchBlockTask extends lockinTask {
+public class TouchBlockTask extends LockinTask {
     private static final String configKey = "touchBlockTask";
     private static final String normalKey = "materials";
     private static final String punishmentKey = "punishmentMaterials";
@@ -27,8 +27,8 @@ public class TouchBlockTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public TouchBlockTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                         lockinRewardHandler lockinRewardHandler, Material material, boolean isPunishment) {
+    public TouchBlockTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                         LockinRewardHandler lockinRewardHandler, Material material, boolean isPunishment) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.name = "Touch " + Utils.getReadableMaterialName(material) + " (Standing on or be within)";
@@ -45,8 +45,10 @@ public class TouchBlockTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String materialStr : this.configHandler.getListFromKey(configKey + "." + normalKey)) {
-            Material.valueOf(materialStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                Material.valueOf(valueStr);
+            }
         }
     }
 
@@ -57,8 +59,8 @@ public class TouchBlockTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<TouchBlockTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+    public static List<TouchBlockTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
         List<TouchBlockTask> tasks = new ArrayList<>();
         int taskCount = (isPunishment) ? 10000 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = (isPunishment) ? punishmentKey : normalKey;

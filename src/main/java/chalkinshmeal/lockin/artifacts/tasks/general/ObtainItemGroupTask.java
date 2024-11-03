@@ -12,13 +12,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class ObtainItemGroupTask extends lockinTask {
+public class ObtainItemGroupTask extends LockinTask {
     private static final String configKey = "obtainItemGroupTask";
     private static final String normalKey = "materials";
     private static final String punishmentKey = "punishmentMaterials";
@@ -29,8 +29,8 @@ public class ObtainItemGroupTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ObtainItemGroupTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, Material material, String description, int amount, 
+    public ObtainItemGroupTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, Material material, String description, int amount, 
                            List<Material> validMaterials, boolean isPunishment) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
@@ -45,10 +45,12 @@ public class ObtainItemGroupTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String materialStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            Material.valueOf(materialStr);
-            for (String validMaterialStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + materialStr + ".materials")) {
-                Material.valueOf(validMaterialStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String materialStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey + tierStr)) {
+                Material.valueOf(materialStr);
+                for (String validMaterialStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr + "." + materialStr + ".materials")) {
+                    Material.valueOf(validMaterialStr);
+                }
             }
         }
     }
@@ -61,8 +63,8 @@ public class ObtainItemGroupTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ObtainItemGroupTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+    public static List<ObtainItemGroupTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
         List<ObtainItemGroupTask> tasks = new ArrayList<>();
         int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = (isPunishment) ? punishmentKey : normalKey;

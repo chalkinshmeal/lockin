@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinReward;
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
@@ -21,12 +21,12 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
-public abstract class lockinTask {
+public abstract class LockinTask {
     public static String maxTaskCount = "maxTaskCount";
     protected final JavaPlugin plugin;
     protected final ConfigHandler configHandler;
-    private final lockinTaskHandler lockinTaskHandler;
-    private final lockinRewardHandler lockinRewardHandler;
+    private final LockinTaskHandler lockinTaskHandler;
+    private final LockinRewardHandler lockinRewardHandler;
     protected List<Listener> listeners;
     private boolean completed;
     public NamedTextColor nameColor;
@@ -35,7 +35,8 @@ public abstract class lockinTask {
     protected ItemStack item;
     protected TextComponent itemDisplayName;
     protected int value;
-    protected lockinReward reward;
+    protected int tier;
+    protected LockinReward reward;
     protected boolean isPunishment;
     protected boolean isSuddenDeath;
     protected boolean applyAAnRules;
@@ -43,7 +44,7 @@ public abstract class lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public lockinTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler, lockinRewardHandler lockinRewardHandler) {
+    public LockinTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
         this.plugin = plugin;
         this.configHandler = configHandler;
         this.lockinTaskHandler = lockinTaskHandler;
@@ -53,6 +54,7 @@ public abstract class lockinTask {
         this.name = "NotImplemented";
         this.item = new ItemStack(Material.DIRT);
         this.value = 1;
+        this.tier = -1;
         this.reward = null;
         this.isPunishment = false;
         this.isSuddenDeath = false;

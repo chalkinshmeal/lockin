@@ -11,7 +11,7 @@ taskCount: 9
 punishmentCount: 1
 
 # The number of seconds players are frozen before starting a game
-queueTime: 30
+queueTime: 2
 
 # The number of seconds to countdown after a player has completed a round's tasks before a round is locked out
 timeLimit: 600
@@ -35,11 +35,12 @@ timeLimit: 600
 activateBlockTask:
   maxTaskCount: 1
   materials:
-    2:
+    1:
     - HOPPER
+    2:
+    - DISPENSER
     3:
     - ACTIVATOR_RAIL
-    - DISPENSER
     - DROPPER
     - NOTE_BLOCK
     - PISTON
@@ -54,8 +55,9 @@ activateBlockTask:
     - DAYLIGHT_DETECTOR
     - OBSERVER
     - REDSTONE_LAMP
-    7: 
+    6:
     - COPPER_BULB
+    7: 
     - STICKY_PISTON
 
 # Task: Break an item. Possible items to break, and how many to break

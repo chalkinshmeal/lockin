@@ -12,13 +12,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class SneakOnBlockTask extends lockinTask {
+public class SneakOnBlockTask extends LockinTask {
     private static final String configKey = "sneakOnBlockTask";
     private static final String normalKey = "materials";
     private final Material material;
@@ -26,8 +26,8 @@ public class SneakOnBlockTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public SneakOnBlockTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                         lockinRewardHandler lockinRewardHandler, Material material) {
+    public SneakOnBlockTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                         LockinRewardHandler lockinRewardHandler, Material material) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.name = "Sneak on " + Utils.getReadableMaterialName(material);
@@ -38,8 +38,10 @@ public class SneakOnBlockTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String materialStr : this.configHandler.getListFromKey(configKey + "." + normalKey)) {
-            Material.valueOf(materialStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                Material.valueOf(valueStr);
+            }
         }
     }
 
@@ -50,8 +52,8 @@ public class SneakOnBlockTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<SneakOnBlockTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<SneakOnBlockTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<SneakOnBlockTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey), taskCount);

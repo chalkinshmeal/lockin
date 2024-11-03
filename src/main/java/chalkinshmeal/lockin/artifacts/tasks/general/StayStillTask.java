@@ -15,13 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class StayStillTask extends lockinTask {
+public class StayStillTask extends LockinTask {
     private static final String configKey = "stayStillTask";
     private static final String normalKey1 = "minSeconds";
     private static final String normalKey2 = "maxSeconds";
@@ -34,8 +34,8 @@ public class StayStillTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public StayStillTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, int targetSeconds, boolean isPunishment) {
+    public StayStillTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, int targetSeconds, boolean isPunishment) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetSeconds = targetSeconds;
         this.name = "Stay still for " + this.targetSeconds + " seconds.";
@@ -49,10 +49,6 @@ public class StayStillTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        this.configHandler.getInt(configKey + "." + normalKey1, 1);
-        this.configHandler.getInt(configKey + "." + normalKey2, 1);
-        this.configHandler.getInt(configKey + "." + punishmentKey1, 1);
-        this.configHandler.getInt(configKey + "." + punishmentKey2, 1);
     }
 
     public void addListeners() {
@@ -67,8 +63,8 @@ public class StayStillTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<StayStillTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+    public static List<StayStillTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
         List<StayStillTask> tasks = new ArrayList<>();
         int targetSeconds = -1;
         if (isPunishment) {

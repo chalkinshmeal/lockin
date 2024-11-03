@@ -12,13 +12,13 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class SleepInColoredBedTask extends lockinTask {
+public class SleepInColoredBedTask extends LockinTask {
     private static final String configKey = "sleepInColoredBedTask";
     private static final String normalKey = "dyeColors";
     private final DyeColor dyeColor;
@@ -26,8 +26,8 @@ public class SleepInColoredBedTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public SleepInColoredBedTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                          lockinRewardHandler lockinRewardHandler, DyeColor dyeColor) {
+    public SleepInColoredBedTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                          LockinRewardHandler lockinRewardHandler, DyeColor dyeColor) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.dyeColor = dyeColor;
         this.name = "Sleep in a " + Utils.getReadableDyeColorName(this.dyeColor) + " colored bed";
@@ -39,8 +39,10 @@ public class SleepInColoredBedTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String dyeColorStr : this.configHandler.getListFromKey(configKey + "." + normalKey)) {
-            DyeColor.valueOf(dyeColorStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                DyeColor.valueOf(valueStr);
+            }
         }
     }
 
@@ -51,8 +53,8 @@ public class SleepInColoredBedTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<SleepInColoredBedTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<SleepInColoredBedTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<SleepInColoredBedTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> dyeColorStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey), taskCount);

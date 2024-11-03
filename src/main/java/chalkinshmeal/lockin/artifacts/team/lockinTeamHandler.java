@@ -10,12 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class lockinTeamHandler {
+public class LockinTeamHandler {
     private JavaPlugin plugin;
     private LinkedHashMap<String, HashSet<UUID>> teams = new LinkedHashMap<>();
     private LinkedHashMap<String, Material> teamMaterials = new LinkedHashMap<>();
 
-    public lockinTeamHandler(JavaPlugin plugin) {
+    public LockinTeamHandler(JavaPlugin plugin) {
         this.plugin = plugin;
 
         // Initialize default teams

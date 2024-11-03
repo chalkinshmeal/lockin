@@ -14,13 +14,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class StandOnCoordinateTask extends lockinTask {
+public class StandOnCoordinateTask extends LockinTask {
     private static final String configKey = "standOnCoordinateTask";
     private static final String normalKey1 = "minRadius";
     private static final String normalKey2 = "maxRadius";
@@ -29,8 +29,8 @@ public class StandOnCoordinateTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public StandOnCoordinateTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, Location targetLocation) {
+    public StandOnCoordinateTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, Location targetLocation) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetLocation = targetLocation;
         this.name = "Be at coordinates X=" + (int) this.targetLocation.getX() + ", Z=" + (int) this.targetLocation.getZ();
@@ -41,8 +41,6 @@ public class StandOnCoordinateTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        this.configHandler.getInt(configKey + "." + normalKey1, 100);
-        this.configHandler.getInt(configKey + "." + normalKey2, 1000);
     }
 
     public void addListeners() {
@@ -52,8 +50,8 @@ public class StandOnCoordinateTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<StandOnCoordinateTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<StandOnCoordinateTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<StandOnCoordinateTask> tasks = new ArrayList<>();
         int minRadius = configHandler.getInt(configKey + "." + normalKey1, 100);
         int maxRadius = configHandler.getInt(configKey + "." + normalKey2, 1000);

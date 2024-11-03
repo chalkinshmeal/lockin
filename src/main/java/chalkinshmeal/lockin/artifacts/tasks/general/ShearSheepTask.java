@@ -14,13 +14,13 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class ShearSheepTask extends lockinTask {
+public class ShearSheepTask extends LockinTask {
     private static final String configKey = "shearSheepTask";
     private static final String normalKey1 = "minShears";
     private static final String normalKey2 = "maxShears";
@@ -30,8 +30,8 @@ public class ShearSheepTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ShearSheepTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, int targetShears) {
+    public ShearSheepTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, int targetShears) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetShears = targetShears;
         this.shearCounts = new HashMap<>();
@@ -43,8 +43,6 @@ public class ShearSheepTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        this.configHandler.getInt(configKey + "." + normalKey1, 1);
-        this.configHandler.getInt(configKey + "." + normalKey2, 1);
     }
 
     public void addListeners() {
@@ -54,8 +52,8 @@ public class ShearSheepTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ShearSheepTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler) {
+    public static List<ShearSheepTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler) {
         List<ShearSheepTask> tasks = new ArrayList<>();
         int minShears = configHandler.getInt(configKey + "." + normalKey1, 1);
         int maxShears = configHandler.getInt(configKey + "." + normalKey2, 20);

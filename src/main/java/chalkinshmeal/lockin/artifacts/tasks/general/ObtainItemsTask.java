@@ -12,13 +12,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class ObtainItemsTask extends lockinTask {
+public class ObtainItemsTask extends LockinTask {
     private static final String configKey = "obtainItemsTask";
     private static final String normalKey = "materials";
     private static final String punishmentKey = "punishmentMaterials";
@@ -30,8 +30,8 @@ public class ObtainItemsTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ObtainItemsTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                           lockinRewardHandler lockinRewardHandler, Material material, int amount, boolean isPunishment, boolean isSuddenDeath) {
+    public ObtainItemsTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                           LockinRewardHandler lockinRewardHandler, Material material, int amount, boolean isPunishment, boolean isSuddenDeath) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.amount = amount;
@@ -45,14 +45,10 @@ public class ObtainItemsTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String materialStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            Material.valueOf(materialStr);
-        }
-        for (String materialStr : this.configHandler.getKeyListFromKey(configKey + "." + punishmentKey)) {
-            Material.valueOf(materialStr);
-        }
-        for (String materialStr : this.configHandler.getKeyListFromKey(configKey + "." + suddenDeathKey)) {
-            Material.valueOf(materialStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                Material.valueOf(valueStr);
+            }
         }
     }
 
@@ -64,8 +60,8 @@ public class ObtainItemsTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ObtainItemsTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler, boolean isPunishment, boolean isSuddenDeath) {
+    public static List<ObtainItemsTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment, boolean isSuddenDeath) {
         List<ObtainItemsTask> tasks = new ArrayList<>();
         int taskCount = (isSuddenDeath | isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = (isSuddenDeath) ? suddenDeathKey : (isPunishment) ? punishmentKey : normalKey;

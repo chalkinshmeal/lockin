@@ -16,19 +16,19 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import chalkinshmeal.lockin.artifacts.team.lockinTeamHandler;
+import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class lockinScoreboard {
+public class LockinScoreboard {
     private final JavaPlugin plugin;
     private final Scoreboard scoreboard;
     private final Objective objective;
     private final Map<String, Score> teamScores;
-    private lockinTeamHandler lockinTeamHandler;
+    private LockinTeamHandler lockinTeamHandler;
 
     @SuppressWarnings("deprecation")
-    public lockinScoreboard(JavaPlugin plugin) {
+    public LockinScoreboard(JavaPlugin plugin) {
         this.plugin = plugin;
 
         ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -42,7 +42,7 @@ public class lockinScoreboard {
         this.teamScores = new HashMap<>();
     }
 
-    public void init(lockinTeamHandler lockinTeamHandler) {
+    public void init(LockinTeamHandler lockinTeamHandler) {
         this.lockinTeamHandler = lockinTeamHandler;
 
         for (String teamName : this.lockinTeamHandler.getTeamNames()) {

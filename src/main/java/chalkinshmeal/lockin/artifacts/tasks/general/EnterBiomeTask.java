@@ -12,13 +12,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class EnterBiomeTask extends lockinTask {
+public class EnterBiomeTask extends LockinTask {
     private static final String configKey = "enterBiomeTask";
     private static final String normalKey = "biomes";
     private static final String punishmentKey = "punishmentBiomes";
@@ -27,8 +27,8 @@ public class EnterBiomeTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public EnterBiomeTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                          lockinRewardHandler lockinRewardHandler, Biome biome, Material material, boolean isPunishment) {
+    public EnterBiomeTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                          LockinRewardHandler lockinRewardHandler, Biome biome, Material material, boolean isPunishment) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.biome = biome;
         this.name = "Enter a " + Utils.getReadableBiomeName(biome) + " biome";
@@ -40,10 +40,13 @@ public class EnterBiomeTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String biomeStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            Biome.valueOf(biomeStr);
-            String materialStr = this.configHandler.getString(configKey + "." + normalKey + "." + biomeStr, "NotAvailable");
-            Material.valueOf(materialStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                Material.valueOf(valueStr);
+                Biome.valueOf(valueStr);
+                String materialStr = this.configHandler.getString(configKey + "." + normalKey + "." + valueStr, "NotAvailable");
+                Material.valueOf(materialStr);
+            }
         }
     }
 
@@ -54,8 +57,8 @@ public class EnterBiomeTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<EnterBiomeTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+    public static List<EnterBiomeTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
         List<EnterBiomeTask> tasks = new ArrayList<>();
         int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = (isPunishment) ? punishmentKey : normalKey;

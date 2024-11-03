@@ -4,11 +4,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.compass.lockinCompass;
+import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.game.GameHandler;
-import chalkinshmeal.lockin.artifacts.scoreboard.lockinScoreboard;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
-import chalkinshmeal.lockin.artifacts.team.lockinTeamHandler;
+import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.commands.CompassCommand;
 import chalkinshmeal.lockin.commands.HelpCommand;
 import chalkinshmeal.lockin.commands.StartCommand;
@@ -30,10 +30,10 @@ public class Plugin extends JavaPlugin implements Listener {
 	private CommandHandler cmdHandler;
     private ConfigHandler configHandler;
     private GameHandler gameHandler;
-    private lockinTaskHandler lockinTaskHandler;
-    private lockinTeamHandler lockinTeamHandler;
-    private lockinCompass lockinCompass;
-    private lockinScoreboard lockinScoreboard;
+    private LockinTaskHandler lockinTaskHandler;
+    private LockinTeamHandler lockinTeamHandler;
+    private LockinCompass lockinCompass;
+    private LockinScoreboard lockinScoreboard;
 
 
 	@Override
@@ -41,10 +41,10 @@ public class Plugin extends JavaPlugin implements Listener {
 		super.onEnable();
 		this.cmdHandler = new CommandHandler(this);
         this.configHandler = new ConfigHandler(this);
-        this.lockinTeamHandler = new lockinTeamHandler(this);
-        this.lockinScoreboard = new lockinScoreboard(this);
-        this.lockinCompass = new lockinCompass(this.configHandler, this.lockinTeamHandler);
-        this.lockinTaskHandler = new lockinTaskHandler(this, this.configHandler, this.lockinCompass, this.lockinScoreboard);
+        this.lockinTeamHandler = new LockinTeamHandler(this);
+        this.lockinScoreboard = new LockinScoreboard(this);
+        this.lockinCompass = new LockinCompass(this.configHandler, this.lockinTeamHandler);
+        this.lockinTaskHandler = new LockinTaskHandler(this, this.configHandler, this.lockinCompass, this.lockinScoreboard);
         this.gameHandler = new GameHandler(this, this.configHandler, this.lockinCompass, this.lockinTaskHandler, this.lockinScoreboard, this.lockinTeamHandler);
 
 		// Register commands + listeners

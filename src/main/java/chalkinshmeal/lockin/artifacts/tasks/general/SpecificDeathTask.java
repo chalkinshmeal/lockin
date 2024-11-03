@@ -12,14 +12,14 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.lockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 
-public class SpecificDeathTask extends lockinTask {
+public class SpecificDeathTask extends LockinTask {
     private static final String configKey = "specificDeathTask";
     private static final String normalKey = "damageCauses";
     private static final String punishmentKey = "punishmentDamageCauses";
@@ -31,8 +31,8 @@ public class SpecificDeathTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public SpecificDeathTask(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                            lockinRewardHandler lockinRewardHandler, DamageCause damageCause, Material material, String explanation, boolean isPunishment) {
+    public SpecificDeathTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                            LockinRewardHandler lockinRewardHandler, DamageCause damageCause, Material material, String explanation, boolean isPunishment) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.damageCause = damageCause;
         this.material = material;
@@ -45,8 +45,10 @@ public class SpecificDeathTask extends lockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String damageCauseStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            DamageCause.valueOf(damageCauseStr);
+        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                DamageCause.valueOf(valueStr);
+            }
         }
     }
 
@@ -57,8 +59,8 @@ public class SpecificDeathTask extends lockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<SpecificDeathTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, lockinTaskHandler lockinTaskHandler,
-                                                          lockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+    public static List<SpecificDeathTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
         List<SpecificDeathTask> tasks = new ArrayList<>();
         int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = (isPunishment) ? punishmentKey : normalKey;
