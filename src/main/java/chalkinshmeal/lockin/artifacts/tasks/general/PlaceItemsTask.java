@@ -11,12 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 
@@ -31,9 +27,8 @@ public class PlaceItemsTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public PlaceItemsTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler, Material material, int amount) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public PlaceItemsTask(Material material, int amount) {
+        super();
         this.material = material;
         this.amount = amount;
         this.placedItems = new HashMap<>();
@@ -45,8 +40,8 @@ public class PlaceItemsTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 Material.valueOf(valueStr);
             }
         }
@@ -59,8 +54,7 @@ public class PlaceItemsTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<PlaceItemsTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<PlaceItemsTask> getTasks(int tier) {
         List<PlaceItemsTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
@@ -75,7 +69,7 @@ public class PlaceItemsTask extends LockinTask {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
             int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr, 1);
-            tasks.add(new PlaceItemsTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, amount));
+            tasks.add(new PlaceItemsTask(material, amount));
         }
         return tasks;
     }

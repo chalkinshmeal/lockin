@@ -10,12 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class ObtainItemGroupTask extends LockinTask {
@@ -28,10 +24,8 @@ public class ObtainItemGroupTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ObtainItemGroupTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, Material material, String description, int amount, 
-                           List<Material> validMaterials) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public ObtainItemGroupTask(Material material, String description, int amount, List<Material> validMaterials) {
+        super();
         this.material = material;
         this.amount = amount;
         this.validMaterials = validMaterials;
@@ -43,10 +37,10 @@ public class ObtainItemGroupTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String materialStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String materialStr : configHandler.getKeyListFromKey(configKey + "." + normalKey + tierStr)) {
                 Material.valueOf(materialStr);
-                for (String validMaterialStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr + "." + materialStr + ".materials")) {
+                for (String validMaterialStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr + "." + materialStr + ".materials")) {
                     Material.valueOf(validMaterialStr);
                 }
             }
@@ -61,8 +55,7 @@ public class ObtainItemGroupTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ObtainItemGroupTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<ObtainItemGroupTask> getTasks(int tier) {
         List<ObtainItemGroupTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
@@ -79,7 +72,7 @@ public class ObtainItemGroupTask extends LockinTask {
             String description = configHandler.getString(configKey + "." + subKey + "." + tier + "." + materialStr + ".description", "Not found");
             int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr + ".amount", 1);
             List<Material> validMaterials = configHandler.getMaterialsFromKey(configKey + "." + subKey + "." + tier + "." + materialStr + ".materials");
-            tasks.add(new ObtainItemGroupTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, description, amount, validMaterials));
+            tasks.add(new ObtainItemGroupTask(material, description, amount, validMaterials));
         }
         return tasks;
     }

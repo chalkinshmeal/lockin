@@ -11,12 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class DieTask extends LockinTask {
     private static final String configKey = "deathTask";
@@ -27,9 +23,8 @@ public class DieTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public DieTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetDeaths) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public DieTask(int targetDeaths) {
+        super();
         this.targetDeaths = targetDeaths;
         this.name = "Die " + this.targetDeaths + " times";
         this.item = new ItemStack(Material.TOTEM_OF_UNDYING);
@@ -49,11 +44,10 @@ public class DieTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<DieTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<DieTask> getTasks(int tier) {
         List<DieTask> tasks = new ArrayList<>();
         int targetDeaths = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
-        tasks.add(new DieTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetDeaths));
+        tasks.add(new DieTask(targetDeaths));
         return tasks;
     }
 

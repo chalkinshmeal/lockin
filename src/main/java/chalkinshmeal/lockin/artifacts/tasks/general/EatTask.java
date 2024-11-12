@@ -11,12 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class EatTask extends LockinTask {
     private static final String configKey = "eatTask";
@@ -27,9 +23,8 @@ public class EatTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public EatTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetConsumes) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public EatTask(int targetConsumes) {
+        super();
         this.targetConsumes = targetConsumes;
         this.name = "Eat " + this.targetConsumes + " items";
         this.item = new ItemStack(Material.COOKED_BEEF);
@@ -49,11 +44,10 @@ public class EatTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<EatTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<EatTask> getTasks(int tier) {
         List<EatTask> tasks = new ArrayList<>();
         int targetConsumes = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
-        tasks.add(new EatTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetConsumes));
+        tasks.add(new EatTask(targetConsumes));
         return tasks;
     }
 

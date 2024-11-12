@@ -24,9 +24,8 @@ public class StayAboveHungerTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public StayAboveHungerTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetHunger) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public StayAboveHungerTask(int targetHunger) {
+        super();
         this.targetHunger = targetHunger;
         this.name = "Let your hunger fall to " + ((float) this.targetHunger / 2);
         this.item = new ItemStack(Material.GOLDEN_CARROT);
@@ -50,7 +49,7 @@ public class StayAboveHungerTask extends LockinTask {
                                                           LockinRewardHandler lockinRewardHandler, int tier) {
         List<StayAboveHungerTask> tasks = new ArrayList<>();
         int targetHunger = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
-        tasks.add(new StayAboveHungerTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetHunger));
+        tasks.add(new StayAboveHungerTask(targetHunger));
         return tasks;
     }
 

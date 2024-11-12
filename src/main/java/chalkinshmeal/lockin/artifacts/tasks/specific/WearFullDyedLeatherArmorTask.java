@@ -8,22 +8,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class WearFullDyedLeatherArmorTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public WearFullDyedLeatherArmorTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public WearFullDyedLeatherArmorTask() {
+        super();
         this.name = "Wear a full set of dyed leather armor";
         this.item = new ItemStack(Material.LEATHER_CHESTPLATE);
         this.value = 1;
@@ -38,10 +34,9 @@ public class WearFullDyedLeatherArmorTask extends LockinTask {
 		this.listeners.add(new WearFullDyedLeatherArmorTaskPlayerArmorChangeListener(this));
     }
 
-    public static List<WearFullDyedLeatherArmorTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
-                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<WearFullDyedLeatherArmorTask> getTasks(int tier) {
         List<WearFullDyedLeatherArmorTask> tasks = new ArrayList<>();
-        tasks.add(new WearFullDyedLeatherArmorTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new WearFullDyedLeatherArmorTask());
         return tasks;
     }
 

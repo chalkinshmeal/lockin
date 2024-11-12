@@ -11,22 +11,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
-
-
 
 public class PlaceBookOnLecternTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public PlaceBookOnLecternTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public PlaceBookOnLecternTask() {
+        super();
         this.name = "Place a book on a lectern";
         this.item = new ItemStack(Material.LECTERN);
     }
@@ -43,10 +36,9 @@ public class PlaceBookOnLecternTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<PlaceBookOnLecternTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<PlaceBookOnLecternTask> getTasks(int tier) {
         List<PlaceBookOnLecternTask> tasks = new ArrayList<>();
-        tasks.add(new PlaceBookOnLecternTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new PlaceBookOnLecternTask());
         return tasks;
     }
 

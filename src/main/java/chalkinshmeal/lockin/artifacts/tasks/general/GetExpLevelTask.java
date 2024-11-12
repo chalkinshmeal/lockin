@@ -9,12 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class GetExpLevelTask extends LockinTask {
     private static final String configKey = "getExpLevelTask";
@@ -24,9 +20,8 @@ public class GetExpLevelTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public GetExpLevelTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int maxLevel) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public GetExpLevelTask(int maxLevel) {
+        super();
         this.maxLevel = maxLevel;
         this.name = "Get to level " + this.maxLevel;
         this.item = new ItemStack(Material.EXPERIENCE_BOTTLE);
@@ -45,11 +40,10 @@ public class GetExpLevelTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<GetExpLevelTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<GetExpLevelTask> getTasks(int tier) {
         List<GetExpLevelTask> tasks = new ArrayList<>();
         int targetLevel = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
-        tasks.add(new GetExpLevelTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetLevel));
+        tasks.add(new GetExpLevelTask(targetLevel));
         return tasks;
     }
 

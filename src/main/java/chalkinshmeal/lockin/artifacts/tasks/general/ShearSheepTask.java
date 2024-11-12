@@ -12,12 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class ShearSheepTask extends LockinTask {
     private static final String configKey = "shearSheepTask";
@@ -28,9 +24,8 @@ public class ShearSheepTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ShearSheepTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetShears) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public ShearSheepTask(int targetShears) {
+        super();
         this.targetShears = targetShears;
         this.shearCounts = new HashMap<>();
         this.name = "Shear " + this.targetShears + " sheep";
@@ -50,11 +45,10 @@ public class ShearSheepTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ShearSheepTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<ShearSheepTask> getTasks(int tier) {
         List<ShearSheepTask> tasks = new ArrayList<>();
         int targetShears = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
-        tasks.add(new ShearSheepTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetShears));
+        tasks.add(new ShearSheepTask(targetShears));
         return tasks;
     }
 

@@ -10,20 +10,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class UseEyeOfEnderTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public UseEyeOfEnderTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public UseEyeOfEnderTask() {
+        super();
         this.name = "Use an eye of ender";
         this.item = new ItemStack(Material.ENDER_EYE);
     }
@@ -40,10 +35,9 @@ public class UseEyeOfEnderTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<UseEyeOfEnderTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<UseEyeOfEnderTask> getTasks(int tier) {
         List<UseEyeOfEnderTask> tasks = new ArrayList<>();
-        tasks.add(new UseEyeOfEnderTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new UseEyeOfEnderTask());
         return tasks;
     }
 

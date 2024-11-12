@@ -9,12 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class ActivateBlockTask extends LockinTask {
@@ -25,9 +21,8 @@ public class ActivateBlockTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ActivateBlockTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                         LockinRewardHandler lockinRewardHandler, Material material) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public ActivateBlockTask(Material material) {
+        super();
         this.material = material;
         this.name = "Activate a " + Utils.getReadableMaterialName(material);
         this.item = new ItemStack(this.material);
@@ -37,8 +32,8 @@ public class ActivateBlockTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String materialStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String materialStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 Material.valueOf(materialStr);
             }
         }
@@ -51,8 +46,7 @@ public class ActivateBlockTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ActivateBlockTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<ActivateBlockTask> getTasks(int tier) {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<ActivateBlockTask> tasks = new ArrayList<>();
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
@@ -63,7 +57,7 @@ public class ActivateBlockTask extends LockinTask {
         }
         for (int i = 0; i < taskCount; i++) {
             Material material = Material.valueOf(materialStrs.get(i));
-            tasks.add(new ActivateBlockTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material));
+            tasks.add(new ActivateBlockTask(material));
         }
         return tasks;
     }

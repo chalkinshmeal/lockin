@@ -10,12 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 
 
@@ -23,9 +19,8 @@ public class KillLeftySkeletonTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public KillLeftySkeletonTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public KillLeftySkeletonTask() {
+        super();
         this.name = "Kill a lefty skeleton";
         this.item = new ItemStack(Material.SKELETON_SKULL);
     }
@@ -42,10 +37,9 @@ public class KillLeftySkeletonTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<KillLeftySkeletonTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<KillLeftySkeletonTask> getTasks(int tier) {
         List<KillLeftySkeletonTask> tasks = new ArrayList<>();
-        tasks.add(new KillLeftySkeletonTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new KillLeftySkeletonTask());
         return tasks;
     }
 

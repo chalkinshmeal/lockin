@@ -10,20 +10,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class EnterNetherTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public EnterNetherTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public EnterNetherTask() {
+        super();
         this.name = "Enter the nether";
         this.item = new ItemStack(Material.NETHERRACK);
     }
@@ -40,10 +35,9 @@ public class EnterNetherTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<EnterNetherTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<EnterNetherTask> getTasks(int tier) {
         List<EnterNetherTask> tasks = new ArrayList<>();
-        tasks.add(new EnterNetherTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new EnterNetherTask());
         return tasks;
     }
 

@@ -11,12 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class InteractItemTask extends LockinTask {
@@ -27,9 +23,8 @@ public class InteractItemTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public InteractItemTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                         LockinRewardHandler lockinRewardHandler, Material material) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public InteractItemTask(Material material) {
+        super();
         this.material = material;
         this.name = "Interact with a " + Utils.getReadableMaterialName(material);
         this.item = new ItemStack(this.material);
@@ -39,8 +34,8 @@ public class InteractItemTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 Material.valueOf(valueStr);
             }
         }
@@ -53,8 +48,7 @@ public class InteractItemTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<InteractItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<InteractItemTask> getTasks(int tier) {
         List<InteractItemTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
@@ -67,7 +61,7 @@ public class InteractItemTask extends LockinTask {
         }
         for (int i = 0; i < loopCount; i++) {
             Material material = Material.valueOf(materialStrs.get(i));
-            tasks.add(new InteractItemTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material));
+            tasks.add(new InteractItemTask(material));
         }
         return tasks;
     }

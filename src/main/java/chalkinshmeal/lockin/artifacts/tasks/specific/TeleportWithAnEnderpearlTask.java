@@ -8,19 +8,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class TeleportWithAnEnderpearlTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public TeleportWithAnEnderpearlTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public TeleportWithAnEnderpearlTask() {
+        super();
         this.name = "Teleport with an enderpearl";
         this.item = new ItemStack(Material.ENDER_PEARL);
         this.value = 1;
@@ -35,10 +31,9 @@ public class TeleportWithAnEnderpearlTask extends LockinTask {
 		this.listeners.add(new TeleportWithAnEnderpearlTaskPlayerInteractListener(this));
     }
 
-    public static List<TeleportWithAnEnderpearlTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
-                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<TeleportWithAnEnderpearlTask> getTasks(int tier) {
         List<TeleportWithAnEnderpearlTask> tasks = new ArrayList<>();
-        tasks.add(new TeleportWithAnEnderpearlTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new TeleportWithAnEnderpearlTask());
         return tasks;
     }
 

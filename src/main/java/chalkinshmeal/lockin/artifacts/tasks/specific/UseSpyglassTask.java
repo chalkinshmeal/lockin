@@ -10,12 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 
 
@@ -23,9 +19,8 @@ public class UseSpyglassTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public UseSpyglassTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public UseSpyglassTask() {
+        super();
         this.name = "Look through a spyglass";
         this.item = new ItemStack(Material.SPYGLASS);
     }
@@ -42,10 +37,9 @@ public class UseSpyglassTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<UseSpyglassTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<UseSpyglassTask> getTasks(int tier) {
         List<UseSpyglassTask> tasks = new ArrayList<>();
-        tasks.add(new UseSpyglassTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new UseSpyglassTask());
         return tasks;
     }
 

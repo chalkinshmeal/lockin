@@ -10,12 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 
 
@@ -23,9 +19,8 @@ public class LaunchFireworkTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public LaunchFireworkTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public LaunchFireworkTask() {
+        super();
         this.name = "Launch a firework";
         this.item = new ItemStack(Material.FIREWORK_ROCKET);
     }
@@ -42,10 +37,9 @@ public class LaunchFireworkTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<LaunchFireworkTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<LaunchFireworkTask> getTasks(int tier) {
         List<LaunchFireworkTask> tasks = new ArrayList<>();
-        tasks.add(new LaunchFireworkTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new LaunchFireworkTask());
         return tasks;
     }
 

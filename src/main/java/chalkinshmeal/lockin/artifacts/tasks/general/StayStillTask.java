@@ -12,13 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class StayStillTask extends LockinTask {
     private static final String configKey = "stayStillTask";
@@ -30,9 +26,8 @@ public class StayStillTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public StayStillTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetSeconds) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public StayStillTask(int targetSeconds) {
+        super();
         this.targetSeconds = targetSeconds;
         this.name = "Stay still for " + this.targetSeconds + " seconds.";
         this.item = new ItemStack(Material.BAKED_POTATO);
@@ -58,11 +53,10 @@ public class StayStillTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<StayStillTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<StayStillTask> getTasks(int tier) {
         List<StayStillTask> tasks = new ArrayList<>();
         int targetSeconds = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
-        tasks.add(new StayStillTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetSeconds));
+        tasks.add(new StayStillTask(targetSeconds));
         return tasks;
     }
 

@@ -12,19 +12,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class GrowWheatWithBonemealTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public GrowWheatWithBonemealTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public GrowWheatWithBonemealTask() {
+        super();
         this.name = "Grow wheat using bonemeal";
         this.item = new ItemStack(Material.WHEAT_SEEDS);
         this.value = 1;
@@ -39,10 +35,9 @@ public class GrowWheatWithBonemealTask extends LockinTask {
 		this.listeners.add(new GrowWheatWithBonemealTaskPlayerInteractListener(this));
     }
 
-    public static List<GrowWheatWithBonemealTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
-                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<GrowWheatWithBonemealTask> getTasks(int tier) {
         List<GrowWheatWithBonemealTask> tasks = new ArrayList<>();
-        tasks.add(new GrowWheatWithBonemealTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new GrowWheatWithBonemealTask());
         return tasks;
     }
 

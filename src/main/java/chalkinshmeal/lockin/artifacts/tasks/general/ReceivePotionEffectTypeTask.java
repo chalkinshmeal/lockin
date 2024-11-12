@@ -8,14 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class ReceivePotionEffectTypeTask extends LockinTask {
@@ -26,9 +22,8 @@ public class ReceivePotionEffectTypeTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ReceivePotionEffectTypeTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                         LockinRewardHandler lockinRewardHandler, PotionEffectType potionEffectType) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public ReceivePotionEffectTypeTask(PotionEffectType potionEffectType) {
+        super();
         this.potionEffectType = potionEffectType;
         this.name = "Receive the " + Utils.getReadablePotionEffectTypeName(this.potionEffectType) + " potion effect";
         this.item = new ItemStack(Utils.getSplashPotionFromPotionEffectType(potionEffectType));
@@ -38,8 +33,8 @@ public class ReceivePotionEffectTypeTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 Utils.getPotionEffectTypeFromStr(valueStr);
             }
         }
@@ -52,8 +47,7 @@ public class ReceivePotionEffectTypeTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ReceivePotionEffectTypeTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<ReceivePotionEffectTypeTask> getTasks(int tier) {
         List<ReceivePotionEffectTypeTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> potionEffectTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
@@ -64,7 +58,7 @@ public class ReceivePotionEffectTypeTask extends LockinTask {
         }
         for (int i = 0; i < taskCount; i++) {
             PotionEffectType potionEffectType = Utils.getPotionEffectTypeFromStr(potionEffectTypeStrs.get(i));
-            tasks.add(new ReceivePotionEffectTypeTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, potionEffectType));
+            tasks.add(new ReceivePotionEffectTypeTask(potionEffectType));
         }
         return tasks;
     }

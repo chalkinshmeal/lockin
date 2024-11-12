@@ -9,20 +9,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class DrinkMilkToCurePoisonTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public DrinkMilkToCurePoisonTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public DrinkMilkToCurePoisonTask() {
+        super();
         this.name = "Drink milk to cure the poison effect";
         this.item = new ItemStack(Material.MILK_BUCKET);
         this.value = 1;
@@ -37,10 +33,9 @@ public class DrinkMilkToCurePoisonTask extends LockinTask {
 		this.listeners.add(new DrinkMilkToCurePoisonTaskListener(this));
     }
 
-    public static List<DrinkMilkToCurePoisonTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
-                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<DrinkMilkToCurePoisonTask> getTasks(int tier) {
         List<DrinkMilkToCurePoisonTask> tasks = new ArrayList<>();
-        tasks.add(new DrinkMilkToCurePoisonTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new DrinkMilkToCurePoisonTask());
         return tasks;
     }
 

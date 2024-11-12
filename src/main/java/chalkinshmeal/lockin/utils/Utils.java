@@ -625,6 +625,12 @@ public class Utils {
     //---------------------------------------------------------------------------------------------
     // Items 
     //---------------------------------------------------------------------------------------------
+    public static void resetLore(ItemStack item) {
+        List<Component> loreList = item.getItemMeta().lore();
+        if (loreList == null) return;
+        loreList.clear();
+    }
+
     public static ItemStack addLore(ItemStack item, Component lore) {
         ItemMeta meta = item.getItemMeta();
         List<Component> loreList = meta.lore();

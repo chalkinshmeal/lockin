@@ -25,9 +25,8 @@ public class StayAboveHealthTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public StayAboveHealthTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetHealth) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public StayAboveHealthTask(int targetHealth) {
+        super();
         this.targetHealth = targetHealth;
         this.name = "Let your health fall to or below " + ((float) this.targetHealth / 2) + " hearts";
         this.item = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE);
@@ -52,7 +51,7 @@ public class StayAboveHealthTask extends LockinTask {
                                                           LockinRewardHandler lockinRewardHandler, int tier) {
         List<StayAboveHealthTask> tasks = new ArrayList<>();
         int targetHealth = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
-        tasks.add(new StayAboveHealthTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetHealth));
+        tasks.add(new StayAboveHealthTask(targetHealth));
         return tasks;
     }
 

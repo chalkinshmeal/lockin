@@ -10,12 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class RideEntityTask extends LockinTask {
@@ -26,9 +22,8 @@ public class RideEntityTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public RideEntityTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler, EntityType mountType) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public RideEntityTask(EntityType mountType) {
+        super();
         this.mountType = mountType;
         this.name = "Ride a " + Utils.getReadableEntityTypeName(this.mountType);
         this.item = new ItemStack(Material.SADDLE);
@@ -39,8 +34,8 @@ public class RideEntityTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 EntityType.valueOf(valueStr);
             }
         }
@@ -53,8 +48,7 @@ public class RideEntityTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<RideEntityTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<RideEntityTask> getTasks(int tier) {
         List<RideEntityTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
@@ -65,7 +59,7 @@ public class RideEntityTask extends LockinTask {
 
         for (int i = 0; i < Math.min(taskCount, entityTypeStrs.size()); i++) {
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
-            tasks.add(new RideEntityTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, entityType));
+            tasks.add(new RideEntityTask(entityType));
         }
         return tasks;
     }

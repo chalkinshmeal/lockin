@@ -11,15 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
-
-
 
 public class BreakItemsTask extends LockinTask {
     private static final String configKey = "breakItemsTask";
@@ -31,9 +24,8 @@ public class BreakItemsTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public BreakItemsTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler, Material material, int amount) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public BreakItemsTask(Material material, int amount) {
+        super();
         this.material = material;
         this.amount = amount;
         this.brokenItems = new HashMap<>();
@@ -45,8 +37,8 @@ public class BreakItemsTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String materialStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String materialStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 Material.valueOf(materialStr);
             }
         }
@@ -59,8 +51,7 @@ public class BreakItemsTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<BreakItemsTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<BreakItemsTask> getTasks(int tier) {
         List<BreakItemsTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
@@ -75,7 +66,7 @@ public class BreakItemsTask extends LockinTask {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
             int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr, 1);
-            tasks.add(new BreakItemsTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, amount));
+            tasks.add(new BreakItemsTask(material, amount));
         }
         return tasks;
     }

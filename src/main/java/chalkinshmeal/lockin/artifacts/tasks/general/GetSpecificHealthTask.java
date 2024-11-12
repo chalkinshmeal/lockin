@@ -10,12 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class GetSpecificHealthTask extends LockinTask {
     private static final String configKey = "getSpecificHealthTask";
@@ -25,9 +21,8 @@ public class GetSpecificHealthTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public GetSpecificHealthTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetHealth) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public GetSpecificHealthTask(int targetHealth) {
+        super();
         this.targetHealth = targetHealth;
         this.name = "Have your health be exactly " + ((float) this.targetHealth / 2) + " hearts";
         this.item = new ItemStack(Material.GOLDEN_APPLE);
@@ -47,11 +42,10 @@ public class GetSpecificHealthTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<GetSpecificHealthTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<GetSpecificHealthTask> getTasks(int tier) {
         List<GetSpecificHealthTask> tasks = new ArrayList<>();
         int targetHealth = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
-        tasks.add(new GetSpecificHealthTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetHealth));
+        tasks.add(new GetSpecificHealthTask(targetHealth));
         return tasks;
     }
 

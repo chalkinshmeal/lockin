@@ -12,12 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 
@@ -32,9 +28,8 @@ public class KillEntitiesTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public KillEntitiesTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                            LockinRewardHandler lockinRewardHandler, EntityType entityType, int amount) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public KillEntitiesTask(EntityType entityType, int amount) {
+        super();
         this.entityType = entityType;
         this.amount = amount;
         this.killedEntities = new HashMap<>();
@@ -46,8 +41,8 @@ public class KillEntitiesTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 EntityType.valueOf(valueStr);
             }
         }
@@ -60,8 +55,7 @@ public class KillEntitiesTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<KillEntitiesTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<KillEntitiesTask> getTasks(int tier) {
         List<KillEntitiesTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
@@ -76,7 +70,7 @@ public class KillEntitiesTask extends LockinTask {
             String entityTypeStr = entityTypeStrs.get(i);
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
             int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + entityTypeStr, 1);
-            tasks.add(new KillEntitiesTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, entityType, amount));
+            tasks.add(new KillEntitiesTask(entityType, amount));
         }
         return tasks;
     }

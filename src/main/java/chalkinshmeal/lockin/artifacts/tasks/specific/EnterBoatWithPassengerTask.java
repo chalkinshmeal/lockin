@@ -11,20 +11,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class EnterBoatWithPassengerTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public EnterBoatWithPassengerTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public EnterBoatWithPassengerTask() {
+        super();
         this.name = "Enter boat with a passenger in it";
         this.item = new ItemStack(Material.OAK_BOAT);
     }
@@ -41,10 +36,9 @@ public class EnterBoatWithPassengerTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<EnterBoatWithPassengerTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<EnterBoatWithPassengerTask> getTasks(int tier) {
         List<EnterBoatWithPassengerTask> tasks = new ArrayList<>();
-        tasks.add(new EnterBoatWithPassengerTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new EnterBoatWithPassengerTask());
         return tasks;
     }
 

@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
+import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
@@ -23,12 +24,13 @@ import net.kyori.adventure.text.format.TextDecoration;
 
 public abstract class LockinTask {
     public static String maxTaskCount = "maxTaskCount";
-    protected final JavaPlugin plugin;
-    protected final ConfigHandler configHandler;
-    private final LockinTaskHandler lockinTaskHandler;
-    private final LockinRewardHandler lockinRewardHandler;
+    protected static JavaPlugin plugin;
+    protected static ConfigHandler configHandler;
+    private static LockinTaskHandler lockinTaskHandler;
+    private static LockinRewardHandler lockinRewardHandler;
+    private static LockinTeamHandler lockinTeamHandler;
     protected List<Listener> listeners;
-    private boolean completed;
+    private List<String> completed;
     public NamedTextColor nameColor;
 
     protected String name;
@@ -44,12 +46,8 @@ public abstract class LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public LockinTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
-        this.plugin = plugin;
-        this.configHandler = configHandler;
-        this.lockinTaskHandler = lockinTaskHandler;
-        this.lockinRewardHandler = lockinRewardHandler;
-        this.completed = false;
+    public LockinTask() {
+        this.completed = new ArrayList<>();
         this.listeners = new ArrayList<>();
         this.name = "NotImplemented";
         this.item = new ItemStack(Material.DIRT);
@@ -65,12 +63,21 @@ public abstract class LockinTask {
         this.validateConfig();
     }
 
+    public static void initStaticVariables(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
+                                            LockinRewardHandler lockinRewardHandler, LockinTeamHandler lockinTeamHandler) {
+        LockinTask.plugin = plugin;
+        LockinTask.configHandler = configHandler;
+        LockinTask.lockinTaskHandler = lockinTaskHandler;
+        LockinTask.lockinRewardHandler = lockinRewardHandler;
+        LockinTask.lockinTeamHandler = lockinTeamHandler;
+    }
+
     //---------------------------------------------------------------------------------------------
     // Accessor/Mutator methods
     //---------------------------------------------------------------------------------------------
     public void init() {
         // Set reward
-        this.reward = (this.isPunishment) ? this.lockinRewardHandler.getRandomPunishment() : this.lockinRewardHandler.getRandomReward();
+        this.reward = (this.isPunishment) ? lockinRewardHandler.getRandomPunishment() : lockinRewardHandler.getRandomReward();
 
         // Change values based on if it's a punishment
         if (this.isPunishment) {
@@ -97,31 +104,37 @@ public abstract class LockinTask {
         }
 
         this.setItemDisplayName(Component.text(this.name, this.nameColor).decoration(TextDecoration.ITALIC, false));
-        this.addLore();
+        this.setLore();
         this.addListeners();
     }
 
     public ItemStack getItem() { return this.item; }
     public String getName() { return this.name; }
     public void setItemDisplayName(TextComponent displayName) { this.item = Utils.setDisplayName(this.item, displayName); }
-    public void addLore() {
+    public void setLore() {
         Component valueLore = Component.text("Value: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
                 .append(Component.text(String.valueOf(this.value), NamedTextColor.GOLD));
-        Component rewardLore = Component.text((this.isPunishment) ? "Punishment: " : "Reward: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
-                .append(Component.text((this.reward == null) ? "Nothing" : this.reward.getDescription(), NamedTextColor.LIGHT_PURPLE));
+        //Component rewardLore = Component.text((this.isPunishment) ? "Punishment: " : "Reward: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
+        //        .append(Component.text((this.reward == null) ? "Nothing" : this.reward.getDescription(), NamedTextColor.LIGHT_PURPLE));
 
+        Utils.resetLore(this.item);
         this.item = Utils.addLore(this.item, valueLore);
-        this.item = Utils.addLore(this.item, rewardLore);
+        //this.item = Utils.addLore(this.item, rewardLore);
     }
-    public boolean isComplete() { return this.completed; }
+    public boolean isComplete() {
+        for (String teamName : LockinTask.lockinTeamHandler.getTeamNames()) {
+            if (!this.completed.contains(teamName)) return false;
+        }
+        return true;
+    }
 
     //---------------------------------------------------------------------------------------------
     // Task methods
     //---------------------------------------------------------------------------------------------
     public void complete(Player player) {
-        this.completed = true;
+        this.completed.add(lockinTeamHandler.getTeamName(player));
         this.item = Utils.setMaterial(this.item, Material.GRAY_STAINED_GLASS_PANE);
-        this.lockinTaskHandler.complete(this, player);
+        lockinTaskHandler.complete(this, player);
         this.unRegisterListeners();
         if (this.reward != null) this.reward.giveReward(player);
     }
@@ -130,8 +143,8 @@ public abstract class LockinTask {
     // Listener methods
     //---------------------------------------------------------------------------------------------
     public void registerListeners() {
-		PluginManager manager = this.plugin.getServer().getPluginManager();
-        for (Listener l : this.listeners) { manager.registerEvents(l, this.plugin); }
+		PluginManager manager = plugin.getServer().getPluginManager();
+        for (Listener l : this.listeners) { manager.registerEvents(l, plugin); }
     }
     public void unRegisterListeners() {
         for (Listener l : this.listeners) { HandlerList.unregisterAll(l); }

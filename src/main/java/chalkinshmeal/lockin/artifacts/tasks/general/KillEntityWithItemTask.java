@@ -11,12 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class KillEntityWithItemTask extends LockinTask {
@@ -29,9 +25,8 @@ public class KillEntityWithItemTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public KillEntityWithItemTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                     LockinRewardHandler lockinRewardHandler, EntityType entityType, Material material) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public KillEntityWithItemTask(EntityType entityType, Material material) {
+        super();
         this.entityType = entityType;
         this.material = material;
         this.name = "Kill a " + Utils.getReadableEntityTypeName(this.entityType) + " with a " + Utils.getReadableMaterialName(this.material);
@@ -43,13 +38,13 @@ public class KillEntityWithItemTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey1)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey1 + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey1)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey1 + "." + tierStr)) {
                 EntityType.valueOf(valueStr);
             }
         }
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey2)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey2 + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey2)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey2 + "." + tierStr)) {
                 Material.valueOf(valueStr);
             }
         }
@@ -62,8 +57,7 @@ public class KillEntityWithItemTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<KillEntityWithItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<KillEntityWithItemTask> getTasks(int tier) {
         List<KillEntityWithItemTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey1 + "." + tier), taskCount);
@@ -78,7 +72,7 @@ public class KillEntityWithItemTask extends LockinTask {
         for (int i = 0; i < Math.min(taskCount, entityTypeStrs.size()); i++) {
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
             Material material = Material.valueOf(materialStrs.get(i));
-            tasks.add(new KillEntityWithItemTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, entityType, material));
+            tasks.add(new KillEntityWithItemTask(entityType, material));
         }
         return tasks;
     }

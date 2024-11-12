@@ -10,12 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 
 
@@ -23,9 +19,8 @@ public class BlockArrowWithShieldTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public BlockArrowWithShieldTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public BlockArrowWithShieldTask() {
+        super();
         this.name = "Block an arrow with a shield";
         this.item = new ItemStack(Material.SHIELD);
     }
@@ -42,10 +37,9 @@ public class BlockArrowWithShieldTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<BlockArrowWithShieldTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<BlockArrowWithShieldTask> getTasks(int tier) {
         List<BlockArrowWithShieldTask> tasks = new ArrayList<>();
-        tasks.add(new BlockArrowWithShieldTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new BlockArrowWithShieldTask());
         return tasks;
     }
 

@@ -10,12 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 
 
@@ -23,9 +19,8 @@ public class KillEntityWithStatusEffectTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public KillEntityWithStatusEffectTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public KillEntityWithStatusEffectTask() {
+        super();
         this.name = "Kill an entity with a status effect";
         this.item = new ItemStack(Material.SPLASH_POTION);
     }
@@ -42,10 +37,9 @@ public class KillEntityWithStatusEffectTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<KillEntityWithStatusEffectTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<KillEntityWithStatusEffectTask> getTasks(int tier) {
         List<KillEntityWithStatusEffectTask> tasks = new ArrayList<>();
-        tasks.add(new KillEntityWithStatusEffectTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        tasks.add(new KillEntityWithStatusEffectTask());
         return tasks;
     }
 

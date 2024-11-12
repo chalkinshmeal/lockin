@@ -12,12 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class StandOnCoordinateTask extends LockinTask {
@@ -28,9 +24,8 @@ public class StandOnCoordinateTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public StandOnCoordinateTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, Location targetLocation) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public StandOnCoordinateTask(Location targetLocation) {
+        super();
         this.targetLocation = targetLocation;
         this.name = "Be at coordinates X=" + (int) this.targetLocation.getX() + ", Z=" + (int) this.targetLocation.getZ();
         this.item = new ItemStack(Material.MAP);
@@ -49,14 +44,13 @@ public class StandOnCoordinateTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<StandOnCoordinateTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<StandOnCoordinateTask> getTasks(int tier) {
         List<StandOnCoordinateTask> tasks = new ArrayList<>();
         int targetRadius = configHandler.getInt(configKey + "." + normalKey + "." + tier, 100);
         World world = Bukkit.getWorld("world");
         Location spawnLocation = world.getSpawnLocation();
         Location targetLocation = Utils.getRandomLocation(world, spawnLocation.getX(), spawnLocation.getZ(), targetRadius);
-        tasks.add(new StandOnCoordinateTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetLocation));
+        tasks.add(new StandOnCoordinateTask(targetLocation));
         return tasks;
     }
 

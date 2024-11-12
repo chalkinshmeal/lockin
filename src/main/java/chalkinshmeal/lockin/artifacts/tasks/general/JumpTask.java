@@ -10,14 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 
 public class JumpTask extends LockinTask {
     private static final String configKey = "jumpTask";
@@ -28,9 +24,8 @@ public class JumpTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public JumpTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetJumps) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public JumpTask(int targetJumps) {
+        super();
         this.targetJumps = targetJumps;
         this.name = "Jump " + this.targetJumps + " times";
         this.item = new ItemStack(Material.RABBIT_FOOT);
@@ -50,11 +45,10 @@ public class JumpTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<JumpTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<JumpTask> getTasks(int tier) {
         List<JumpTask> tasks = new ArrayList<>();
         int targetJumps = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
-        tasks.add(new JumpTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetJumps));
+        tasks.add(new JumpTask(targetJumps));
         return tasks;
     }
 

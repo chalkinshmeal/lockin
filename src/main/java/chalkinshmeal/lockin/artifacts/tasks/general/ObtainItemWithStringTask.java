@@ -10,12 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class ObtainItemWithStringTask extends LockinTask {
@@ -28,9 +24,8 @@ public class ObtainItemWithStringTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ObtainItemWithStringTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, Material material, String glob, int amount) {
-        super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
+    public ObtainItemWithStringTask(Material material, String glob, int amount) {
+        super();
         this.material = material;
         this.glob = glob;
         this.amount = amount;
@@ -42,8 +37,8 @@ public class ObtainItemWithStringTask extends LockinTask {
     // Abstract methods
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
-        for (String tierStr : this.configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String valueStr : this.configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+        for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
+            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
                 Material.valueOf(valueStr);
             }
         }
@@ -57,8 +52,7 @@ public class ObtainItemWithStringTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ObtainItemWithStringTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, int tier) {
+    public static List<ObtainItemWithStringTask> getTasks(int tier) {
         List<ObtainItemWithStringTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
@@ -74,7 +68,7 @@ public class ObtainItemWithStringTask extends LockinTask {
             Material material = Material.valueOf(materialStrs.get(i));
             String glob = configHandler.getString(configKey + "." + subKey + "." + tier + "." + materialStr + ".string", "Not found");
             int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr + ".amount", 1);
-            tasks.add(new ObtainItemWithStringTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, glob, amount));
+            tasks.add(new ObtainItemWithStringTask(material, glob, amount));
         }
         return tasks;
     }
