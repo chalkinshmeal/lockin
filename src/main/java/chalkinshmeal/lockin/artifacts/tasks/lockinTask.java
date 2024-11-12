@@ -112,13 +112,27 @@ public abstract class LockinTask {
     public String getName() { return this.name; }
     public void setItemDisplayName(TextComponent displayName) { this.item = Utils.setDisplayName(this.item, displayName); }
     public void setLore() {
-        Component valueLore = Component.text("Value: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
-                .append(Component.text(String.valueOf(this.value), NamedTextColor.GOLD));
+        this.item = Utils.resetLore(this.item);
+
+        Component teamLore = Component.text("Status: ", NamedTextColor.GRAY)
+            .decoration(TextDecoration.ITALIC, false);
+        this.item = Utils.addLore(this.item, teamLore);
+
+        for (String teamName : LockinTask.lockinTeamHandler.getDisplayTeamNames()) {
+            NamedTextColor teamColor = this.completed.contains(teamName) ? NamedTextColor.GREEN : NamedTextColor.RED;
+            String completeText = this.completed.contains(teamName) ? ":)" : ":(";
+            Component individualTeamLore = Component.text(" " + teamName, NamedTextColor.DARK_AQUA)
+                .decoration(TextDecoration.ITALIC, false)
+                .append(Component.text(" " + completeText, teamColor));
+            this.item = Utils.addLore(this.item, individualTeamLore);
+        }
+
+        //Component valueLore = Component.text("Value: ", NamedTextColor.GRAY)
+        //    .decoration(TextDecoration.ITALIC, false)
+        //    .append(Component.text(String.valueOf(this.value), NamedTextColor.GOLD));
+        //this.item = Utils.addLore(this.item, valueLore);
         //Component rewardLore = Component.text((this.isPunishment) ? "Punishment: " : "Reward: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
         //        .append(Component.text((this.reward == null) ? "Nothing" : this.reward.getDescription(), NamedTextColor.LIGHT_PURPLE));
-
-        Utils.resetLore(this.item);
-        this.item = Utils.addLore(this.item, valueLore);
         //this.item = Utils.addLore(this.item, rewardLore);
     }
     public boolean isComplete() {
@@ -137,6 +151,7 @@ public abstract class LockinTask {
         lockinTaskHandler.complete(this, player);
         this.unRegisterListeners();
         if (this.reward != null) this.reward.giveReward(player);
+        this.setLore();
     }
 
     //---------------------------------------------------------------------------------------------

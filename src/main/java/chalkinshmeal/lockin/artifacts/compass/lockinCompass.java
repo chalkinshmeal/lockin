@@ -73,6 +73,7 @@ public class LockinCompass {
         if (lockinTaskHandler == null) return;
 
         for (LockinTask task : lockinTaskHandler.GetTasks()) {
+            task.setLore();
             this.tasksInv.addItem(task.getItem());
         }
     }

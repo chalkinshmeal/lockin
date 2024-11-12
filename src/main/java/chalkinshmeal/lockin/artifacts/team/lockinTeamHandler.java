@@ -46,6 +46,18 @@ public class LockinTeamHandler {
     public HashSet<UUID> getTeamPlayers(String teamName) { return this.teams.get(teamName); }
     public HashSet<UUID> getTeamPlayers(int teamIndex) { return new ArrayList<>(this.teams.values()).get(teamIndex); }
     public List<String> getTeamNames() { return new ArrayList<>(this.teams.keySet()); }
+    public List<String> getDisplayTeamNames() {
+        List<String> displayTeamNames = new ArrayList<>();
+        for (String teamName : this.getTeamNames()) {
+            int teamIndex = this.getTeamIndex(teamName);
+            if (this.getPlayerNames(teamIndex).size() == 0) continue;
+
+            boolean oneManTeam = this.getPlayerNames(teamIndex).size() == 1;
+            String displayName = oneManTeam ? this.getPlayerNames(teamIndex).get(0) : teamName;
+            displayTeamNames.add(displayName);
+        }
+        return displayTeamNames;
+    }
     public String getTeamName(Player player) {
         System.out.println("[lockinTeamHandler::getTeamName] Fetching team name for player " + player);
         for (String teamName : this.teams.keySet()) {
