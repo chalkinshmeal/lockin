@@ -41,7 +41,7 @@ public class EnterNetherTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EnterNetherTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<EnterNetherTask> tasks = new ArrayList<>();
         tasks.add(new EnterNetherTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

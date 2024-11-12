@@ -22,7 +22,6 @@ import chalkinshmeal.lockin.utils.Utils;
 public class SpecificDeathTask extends LockinTask {
     private static final String configKey = "specificDeathTask";
     private static final String normalKey = "damageCauses";
-    private static final String punishmentKey = "punishmentDamageCauses";
     private static final String materialSubKey = "material";
     private static final String explanationSubKey = "explanation";
     private final DamageCause damageCause;
@@ -32,13 +31,12 @@ public class SpecificDeathTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public SpecificDeathTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                            LockinRewardHandler lockinRewardHandler, DamageCause damageCause, Material material, String explanation, boolean isPunishment) {
+                            LockinRewardHandler lockinRewardHandler, DamageCause damageCause, Material material, String explanation) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.damageCause = damageCause;
         this.material = material;
         this.name = explanation;
         this.item = new ItemStack(this.material);
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -60,12 +58,12 @@ public class SpecificDeathTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<SpecificDeathTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<SpecificDeathTask> tasks = new ArrayList<>();
-        int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isPunishment) ? punishmentKey : normalKey;
-        List<String> damageCauseStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isPunishment) ? damageCauseStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> damageCauseStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
         if (damageCauseStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
             return tasks;
@@ -74,9 +72,9 @@ public class SpecificDeathTask extends LockinTask {
         for (int i = 0; i < loopCount; i++) {
             String damageCauseStr = damageCauseStrs.get(i);
             DamageCause damageCause = DamageCause.valueOf(damageCauseStrs.get(i));
-            Material material = configHandler.getMaterialFromKey(configKey + "." + subKey + "." + damageCauseStr + "." + materialSubKey);
-            String explanation = configHandler.getString(configKey + "." + subKey + "." + damageCauseStr + "." + explanationSubKey, "");
-            tasks.add(new SpecificDeathTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, damageCause, material, explanation, isPunishment));
+            Material material = configHandler.getMaterialFromKey(configKey + "." + subKey + "." + tier + "." + damageCauseStr + "." + materialSubKey);
+            String explanation = configHandler.getString(configKey + "." + subKey + "." + tier + "." + damageCauseStr + "." + explanationSubKey, "");
+            tasks.add(new SpecificDeathTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, damageCause, material, explanation));
         }
         return tasks;
     }

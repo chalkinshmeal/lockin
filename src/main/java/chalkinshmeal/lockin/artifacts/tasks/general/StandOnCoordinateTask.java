@@ -22,8 +22,7 @@ import chalkinshmeal.lockin.utils.Utils;
 
 public class StandOnCoordinateTask extends LockinTask {
     private static final String configKey = "standOnCoordinateTask";
-    private static final String normalKey1 = "minRadius";
-    private static final String normalKey2 = "maxRadius";
+    private static final String normalKey = "radius";
     private final Location targetLocation;
 
     //---------------------------------------------------------------------------------------------
@@ -51,11 +50,9 @@ public class StandOnCoordinateTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<StandOnCoordinateTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<StandOnCoordinateTask> tasks = new ArrayList<>();
-        int minRadius = configHandler.getInt(configKey + "." + normalKey1, 100);
-        int maxRadius = configHandler.getInt(configKey + "." + normalKey2, 1000);
-        int targetRadius = Utils.getRandNum(minRadius, maxRadius);
+        int targetRadius = configHandler.getInt(configKey + "." + normalKey + "." + tier, 100);
         World world = Bukkit.getWorld("world");
         Location spawnLocation = world.getSpawnLocation();
         Location targetLocation = Utils.getRandomLocation(world, spawnLocation.getX(), spawnLocation.getZ(), targetRadius);

@@ -43,7 +43,7 @@ public class BlockArrowWithShieldTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<BlockArrowWithShieldTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<BlockArrowWithShieldTask> tasks = new ArrayList<>();
         tasks.add(new BlockArrowWithShieldTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

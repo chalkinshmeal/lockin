@@ -21,9 +21,6 @@ import chalkinshmeal.lockin.utils.Utils;
 public class ObtainItemsTask extends LockinTask {
     private static final String configKey = "obtainItemsTask";
     private static final String normalKey = "materials";
-    private static final String punishmentKey = "punishmentMaterials";
-    private static final String suddenDeathKey = "suddenDeathMaterials";
-    private static final String suddenDeathTaskCountKey = "suddenDeathTaskCount";
     private final Material material;
     private final int amount;
 
@@ -31,14 +28,12 @@ public class ObtainItemsTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public ObtainItemsTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, Material material, int amount, boolean isPunishment, boolean isSuddenDeath) {
+                           LockinRewardHandler lockinRewardHandler, Material material, int amount) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.amount = amount;
         this.name = "Obtain " + ((this.amount == 1 ? "a" : this.amount)) + " " + Utils.getReadableMaterialName(material);
         this.item = new ItemStack(this.material);
-        this.isPunishment = isPunishment;
-        this.isSuddenDeath = isSuddenDeath;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -61,12 +56,12 @@ public class ObtainItemsTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<ObtainItemsTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment, boolean isSuddenDeath) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<ObtainItemsTask> tasks = new ArrayList<>();
-        int taskCount = (isSuddenDeath | isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isSuddenDeath) ? suddenDeathKey : (isPunishment) ? punishmentKey : normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isSuddenDeath) ? configHandler.getInt(configKey + "." + suddenDeathTaskCountKey, 5) : (isPunishment) ? materialStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
@@ -75,8 +70,8 @@ public class ObtainItemsTask extends LockinTask {
         for (int i = 0; i < Math.min(loopCount, materialStrs.size()); i++) {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
-            int amount = configHandler.getInt(configKey + "." + subKey + "." + materialStr, 1);
-            tasks.add(new ObtainItemsTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, amount, isPunishment, isSuddenDeath));
+            int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr, 1);
+            tasks.add(new ObtainItemsTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, amount));
         }
         return tasks;
     }

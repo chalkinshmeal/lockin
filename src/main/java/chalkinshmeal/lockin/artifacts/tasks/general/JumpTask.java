@@ -18,14 +18,10 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class JumpTask extends LockinTask {
     private static final String configKey = "jumpTask";
-    private static final String normalKey1 = "minJumps";
-    private static final String normalKey2 = "maxJumps";
-    private static final String punishmentKey1 = "punishmentMinJumps";
-    private static final String punishmentKey2 = "punishmentMaxJumps";
+    private static final String normalKey = "jumps";
     private final int targetJumps;
     private Map<Player, Integer> jumpCounts;
 
@@ -33,12 +29,11 @@ public class JumpTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public JumpTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetJumps, boolean isPunishment) {
+                           LockinRewardHandler lockinRewardHandler, int targetJumps) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetJumps = targetJumps;
         this.name = "Jump " + this.targetJumps + " times";
         this.item = new ItemStack(Material.RABBIT_FOOT);
-        this.isPunishment = isPunishment;
         this.jumpCounts = new HashMap<>();
     }
 
@@ -56,20 +51,10 @@ public class JumpTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<JumpTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<JumpTask> tasks = new ArrayList<>();
-        int targetJumps = -1;
-        if (isPunishment) {
-            int minJumps = configHandler.getInt(configKey + "." + punishmentKey1, 100);
-            int maxJumps = configHandler.getInt(configKey + "." + punishmentKey2, 100);
-            targetJumps = Utils.getRandNum(minJumps, maxJumps);
-        }
-        else {
-            int minJumps = configHandler.getInt(configKey + "." + normalKey1, 10);
-            int maxJumps = configHandler.getInt(configKey + "." + normalKey2, 10);
-            targetJumps = Utils.getRandNum(minJumps, maxJumps);
-        }
-        tasks.add(new JumpTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetJumps, isPunishment));
+        int targetJumps = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        tasks.add(new JumpTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetJumps));
         return tasks;
     }
 

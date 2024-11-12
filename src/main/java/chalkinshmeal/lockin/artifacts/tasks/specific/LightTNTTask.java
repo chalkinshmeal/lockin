@@ -1,5 +1,8 @@
 package chalkinshmeal.lockin.artifacts.tasks.specific;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -33,6 +36,13 @@ public class LightTNTTask extends LockinTask {
 
     public void addListeners() {
 		this.listeners.add(new LightTNTTaskListener(this));
+    }
+
+    public static List<LightTNTTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
+                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+        List<LightTNTTask> tasks = new ArrayList<>();
+        tasks.add(new LightTNTTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        return tasks;
     }
 
     //---------------------------------------------------------------------------------------------

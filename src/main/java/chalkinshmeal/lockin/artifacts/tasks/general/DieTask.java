@@ -17,14 +17,10 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class DieTask extends LockinTask {
     private static final String configKey = "deathTask";
-    private static final String normalKey1 = "minDeaths";
-    private static final String normalKey2 = "maxDeaths";
-    private static final String punishmentKey1 = "punishmentMinDeaths";
-    private static final String punishmentKey2 = "punishmentMaxDeaths";
+    private static final String normalKey = "deaths";
     private final int targetDeaths;
     private Map<Player, Integer> deathCounts;
 
@@ -32,12 +28,11 @@ public class DieTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public DieTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetDeaths, boolean isPunishment) {
+                           LockinRewardHandler lockinRewardHandler, int targetDeaths) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetDeaths = targetDeaths;
         this.name = "Die " + this.targetDeaths + " times";
         this.item = new ItemStack(Material.TOTEM_OF_UNDYING);
-        this.isPunishment = isPunishment;
         this.deathCounts = new HashMap<>();
         this.applyAAnRules = false;
     }
@@ -55,20 +50,10 @@ public class DieTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<DieTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<DieTask> tasks = new ArrayList<>();
-        int targetDeaths = -1;
-        if (isPunishment) {
-            int minDeaths = configHandler.getInt(configKey + "." + punishmentKey1, 1);
-            int maxDeaths = configHandler.getInt(configKey + "." + punishmentKey2, 1);
-            targetDeaths = Utils.getRandNum(minDeaths, maxDeaths);
-        }
-        else {
-            int minDeaths = configHandler.getInt(configKey + "." + normalKey1, 10);
-            int maxDeaths = configHandler.getInt(configKey + "." + normalKey2, 10);
-            targetDeaths = Utils.getRandNum(minDeaths, maxDeaths);
-        }
-        tasks.add(new DieTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetDeaths, isPunishment));
+        int targetDeaths = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        tasks.add(new DieTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetDeaths));
         return tasks;
     }
 

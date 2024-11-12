@@ -1,5 +1,8 @@
 package chalkinshmeal.lockin.artifacts.tasks.specific;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,6 +35,13 @@ public class WearFullIronArmorTask extends LockinTask {
 
     public void addListeners() {
 		this.listeners.add(new WearFullIronArmorTaskPlayerArmorChangeListener(this));
+    }
+
+    public static List<WearFullIronArmorTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
+                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+        List<WearFullIronArmorTask> tasks = new ArrayList<>();
+        tasks.add(new WearFullIronArmorTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        return tasks;
     }
 
     //---------------------------------------------------------------------------------------------

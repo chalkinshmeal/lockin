@@ -18,12 +18,10 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class ShearSheepTask extends LockinTask {
     private static final String configKey = "shearSheepTask";
-    private static final String normalKey1 = "minShears";
-    private static final String normalKey2 = "maxShears";
+    private static final String normalKey = "shears";
     private final int targetShears;
     private final Map<Player, Integer> shearCounts;
 
@@ -53,11 +51,9 @@ public class ShearSheepTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<ShearSheepTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<ShearSheepTask> tasks = new ArrayList<>();
-        int minShears = configHandler.getInt(configKey + "." + normalKey1, 1);
-        int maxShears = configHandler.getInt(configKey + "." + normalKey2, 20);
-        int targetShears = Utils.getRandNum(minShears, maxShears);
+        int targetShears = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
         tasks.add(new ShearSheepTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetShears));
         return tasks;
     }

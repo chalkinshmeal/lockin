@@ -43,7 +43,7 @@ public class BrewPotionTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<BrewPotionTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<BrewPotionTask> tasks = new ArrayList<>();
         tasks.add(new BrewPotionTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

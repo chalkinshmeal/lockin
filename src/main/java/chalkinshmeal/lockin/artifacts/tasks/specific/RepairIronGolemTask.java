@@ -42,7 +42,7 @@ public class RepairIronGolemTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<RepairIronGolemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<RepairIronGolemTask> tasks = new ArrayList<>();
         tasks.add(new RepairIronGolemTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

@@ -15,12 +15,10 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class StayAboveHungerTask extends LockinTask {
     private static final String configKey = "stayAboveHungerTask";
-    private static final String normalKey1 = "minHunger";
-    private static final String normalKey2 = "maxHunger";
+    private static final String normalKey = "hunger";
     private final int targetHunger;
 
     //---------------------------------------------------------------------------------------------
@@ -49,11 +47,9 @@ public class StayAboveHungerTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<StayAboveHungerTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<StayAboveHungerTask> tasks = new ArrayList<>();
-        int minHunger = configHandler.getInt(configKey + "." + normalKey1, 1);
-        int maxHunger = configHandler.getInt(configKey + "." + normalKey2, 20);
-        int targetHunger = Utils.getRandNum(minHunger, maxHunger);
+        int targetHunger = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
         tasks.add(new StayAboveHungerTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetHunger));
         return tasks;
     }

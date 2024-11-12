@@ -53,11 +53,11 @@ public class EquipItemTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EquipItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<EquipItemTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + subKey), taskCount);
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + subKey + "." + tier), taskCount);
 
         if (materialStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);

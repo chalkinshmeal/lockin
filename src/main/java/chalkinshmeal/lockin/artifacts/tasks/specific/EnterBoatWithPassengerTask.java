@@ -42,7 +42,7 @@ public class EnterBoatWithPassengerTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EnterBoatWithPassengerTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<EnterBoatWithPassengerTask> tasks = new ArrayList<>();
         tasks.add(new EnterBoatWithPassengerTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

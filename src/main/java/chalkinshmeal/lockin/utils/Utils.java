@@ -618,7 +618,7 @@ public class Utils {
 
         LivingEntity livingEntity = (LivingEntity) entity;
         double currentHealth = livingEntity.getHealth();
-        double maxHealth = livingEntity.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).getValue();
+        double maxHealth = livingEntity.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue();
         return currentHealth == maxHealth;
     }
 

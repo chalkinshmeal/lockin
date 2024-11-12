@@ -59,10 +59,10 @@ public class SmeltItemsTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<SmeltItemsTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<SmeltItemsTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey), taskCount);
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
         int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
@@ -72,7 +72,7 @@ public class SmeltItemsTask extends LockinTask {
         for (int i = 0; i < loopCount; i++) {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
-            int amount = configHandler.getInt(configKey + "." + normalKey + "." + materialStr, 1);
+            int amount = configHandler.getInt(configKey + "." + normalKey + "." + tier + "." + materialStr, 1);
             tasks.add(new SmeltItemsTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, amount));
         }
         return tasks;

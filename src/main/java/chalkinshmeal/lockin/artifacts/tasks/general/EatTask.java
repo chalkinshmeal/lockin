@@ -17,14 +17,10 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class EatTask extends LockinTask {
     private static final String configKey = "eatTask";
-    private static final String normalKey1 = "minConsumes";
-    private static final String normalKey2 = "maxConsumes";
-    private static final String punishmentKey1 = "punishmentMinConsumes";
-    private static final String punishmentKey2 = "punishmentMaxConsumes";
+    private static final String normalKey = "consumes";
     private final int targetConsumes;
     private Map<Player, Integer> consumeCounts;
 
@@ -32,12 +28,11 @@ public class EatTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public EatTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetConsumes, boolean isPunishment) {
+                           LockinRewardHandler lockinRewardHandler, int targetConsumes) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetConsumes = targetConsumes;
         this.name = "Eat " + this.targetConsumes + " items";
         this.item = new ItemStack(Material.COOKED_BEEF);
-        this.isPunishment = isPunishment;
         this.consumeCounts = new HashMap<>();
     }
 
@@ -55,20 +50,10 @@ public class EatTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EatTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<EatTask> tasks = new ArrayList<>();
-        int targetConsumes = -1;
-        if (isPunishment) {
-            int minConsumes = configHandler.getInt(configKey + "." + punishmentKey1, 5);
-            int maxConsumes = configHandler.getInt(configKey + "." + punishmentKey2, 5);
-            targetConsumes = Utils.getRandNum(minConsumes, maxConsumes);
-        }
-        else {
-            int minConsumes = configHandler.getInt(configKey + "." + normalKey1, 10);
-            int maxConsumes = configHandler.getInt(configKey + "." + normalKey2, 50);
-            targetConsumes = Utils.getRandNum(minConsumes, maxConsumes);
-        }
-        tasks.add(new EatTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetConsumes, isPunishment));
+        int targetConsumes = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        tasks.add(new EatTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetConsumes));
         return tasks;
     }
 

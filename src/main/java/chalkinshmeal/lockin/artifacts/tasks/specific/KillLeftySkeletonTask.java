@@ -43,7 +43,7 @@ public class KillLeftySkeletonTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<KillLeftySkeletonTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<KillLeftySkeletonTask> tasks = new ArrayList<>();
         tasks.add(new KillLeftySkeletonTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

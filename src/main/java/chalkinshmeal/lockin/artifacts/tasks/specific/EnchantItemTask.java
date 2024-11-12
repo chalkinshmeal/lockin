@@ -42,7 +42,7 @@ public class EnchantItemTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EnchantItemTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<EnchantItemTask> tasks = new ArrayList<>();
         tasks.add(new EnchantItemTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

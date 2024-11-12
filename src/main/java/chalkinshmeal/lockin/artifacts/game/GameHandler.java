@@ -232,7 +232,7 @@ public class GameHandler {
     // Utility methods
     //---------------------------------------------------------------------------------------------
     private void resetPlayerState(Player player) {
-        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getValue());
         player.setFoodLevel(20);
         player.setSaturation(5);
         player.setFireTicks(0);

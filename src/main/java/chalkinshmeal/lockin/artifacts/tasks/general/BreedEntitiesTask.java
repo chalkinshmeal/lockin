@@ -61,10 +61,10 @@ public class BreedEntitiesTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<BreedEntitiesTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<BreedEntitiesTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey), taskCount);
+        List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
 
         if (entityTypeStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
@@ -73,7 +73,7 @@ public class BreedEntitiesTask extends LockinTask {
         for (int i = 0; i < taskCount; i++) {
             String entityTypeStr = entityTypeStrs.get(i);
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
-            int amount = configHandler.getInt(configKey + "." + normalKey + "." + entityTypeStr, 1);
+            int amount = configHandler.getInt(configKey + "." + normalKey + "." + tier + "." + entityTypeStr, 1);
             tasks.add(new BreedEntitiesTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, entityType, amount));
         }
         return tasks;

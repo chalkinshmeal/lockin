@@ -41,7 +41,7 @@ public class UseEyeOfEnderTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<UseEyeOfEnderTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<UseEyeOfEnderTask> tasks = new ArrayList<>();
         tasks.add(new UseEyeOfEnderTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

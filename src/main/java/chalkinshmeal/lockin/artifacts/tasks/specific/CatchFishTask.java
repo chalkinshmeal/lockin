@@ -43,7 +43,7 @@ public class CatchFishTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<CatchFishTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<CatchFishTask> tasks = new ArrayList<>();
         tasks.add(new CatchFishTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

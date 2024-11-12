@@ -62,7 +62,7 @@ activateBlockTask:
 
 # Task: Break an item. Possible items to break, and how many to break
 breakItemsTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   materials:
     1:
       OAK_LOG: 10
@@ -178,7 +178,7 @@ breedEntitiesTask:
 
 # Task: Craft an item. List of possible items to craft
 craftItemTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   materials:
   2:
   - BRUSH
@@ -277,7 +277,7 @@ eatTask:
 
 # Task: Eat an item. List of possible items you can eat (Updated to 1.21)
 eatItemTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   materials:
   2:
   - BEEF
@@ -316,7 +316,7 @@ eatItemTask:
 
 # Task: Enter a biome. List of possible biomes to enter, and the material that appears in with the task
 enterBiomeTask:
-  maxTaskCount: 2
+  maxTaskCount: 1
   biomes:
     4:
       FOREST: OAK_SAPLING
@@ -367,7 +367,7 @@ holdItemTask:
 
 # Task: Interact with an item. List of possible items to interact with
 interactItemTask:
-  maxTaskCount: 2
+  maxTaskCount: 1
   materials:
     1:
     - LEVER
@@ -394,7 +394,7 @@ jumpTask:
 
 # Task: Kill N entities. Possible entities to kill, and how many to kill
 killEntitiesTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   entityTypes:
   1:
     CHICKEN: 5
@@ -514,7 +514,7 @@ killEntityWithItemTask:
 # - Materials: Materials that count as part of the description's group
 # - Amount: Required amount of items from the materials needed to complete the task
 obtainItemGroupTask:
-  maxTaskCount: 2
+  maxTaskCount: 1
   materials:
     APPLE:
       description: "Obtain 2 types of raw fruit"
@@ -800,7 +800,7 @@ obtainItemGroupTask:
 
 # Task: Obtain an item. Possible items to obtain and the amount to obtain
 obtainItemsTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   materials:
   1:
     COBBLESTONE: 5
@@ -1017,7 +1017,7 @@ placeItemInItemFrameTask:
 
 # Task: Place N items. Possible items to place, and the amount to place
 placeItemsTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   materials:
     1:
       COBBLESTONE_WALL: 1
@@ -1069,7 +1069,7 @@ placeItemsTask:
 
 # Task: Punch an entity with an item. Possible entities to punch, and the items to punch them with
 punchAnEntityWithItemTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   entityTypes:
   2:
   - DROWNED
@@ -1333,7 +1333,7 @@ sneakOnBlockTask:
 
 # Task: Die a specific way. Possible DamageCauses to die from
 specificDeathTask:
-  maxTaskCount: 2 
+  maxTaskCount: 1
   damageCauses:
     1:
       DROWNING:
@@ -1376,7 +1376,7 @@ specificDeathTask:
 
 # Task: Stand on a block. Possible items to stand on
 standOnBlockTask:
-  maxTaskCount: 3
+  maxTaskCount: 1
   materials:
   2:
   - CLAY

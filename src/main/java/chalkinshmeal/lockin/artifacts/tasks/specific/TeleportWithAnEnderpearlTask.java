@@ -1,5 +1,8 @@
 package chalkinshmeal.lockin.artifacts.tasks.specific;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,6 +33,13 @@ public class TeleportWithAnEnderpearlTask extends LockinTask {
 
     public void addListeners() {
 		this.listeners.add(new TeleportWithAnEnderpearlTaskPlayerInteractListener(this));
+    }
+
+    public static List<TeleportWithAnEnderpearlTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
+                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+        List<TeleportWithAnEnderpearlTask> tasks = new ArrayList<>();
+        tasks.add(new TeleportWithAnEnderpearlTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        return tasks;
     }
 
     //---------------------------------------------------------------------------------------------

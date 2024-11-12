@@ -19,14 +19,10 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class StayStillTask extends LockinTask {
     private static final String configKey = "stayStillTask";
-    private static final String normalKey1 = "minSeconds";
-    private static final String normalKey2 = "maxSeconds";
-    private static final String punishmentKey1 = "punishmentMinSeconds";
-    private static final String punishmentKey2 = "punishmentMaxSeconds";
+    private static final String normalKey = "seconds";
     private final int targetSeconds;
     private Map<Player, Location> playerLocations;
     private Map<Player, Long> stayTimers;
@@ -35,12 +31,11 @@ public class StayStillTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public StayStillTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int targetSeconds, boolean isPunishment) {
+                           LockinRewardHandler lockinRewardHandler, int targetSeconds) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.targetSeconds = targetSeconds;
         this.name = "Stay still for " + this.targetSeconds + " seconds.";
         this.item = new ItemStack(Material.BAKED_POTATO);
-        this.isPunishment = isPunishment;
         this.playerLocations = new HashMap<>();
         this.stayTimers = new HashMap<>();
     }
@@ -64,20 +59,10 @@ public class StayStillTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<StayStillTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<StayStillTask> tasks = new ArrayList<>();
-        int targetSeconds = -1;
-        if (isPunishment) {
-            int minSeconds = configHandler.getInt(configKey + "." + punishmentKey1, 100);
-            int maxSeconds = configHandler.getInt(configKey + "." + punishmentKey2, 100);
-            targetSeconds = Utils.getRandNum(minSeconds, maxSeconds);
-        }
-        else {
-            int minSeconds = configHandler.getInt(configKey + "." + normalKey1, 10);
-            int maxSeconds = configHandler.getInt(configKey + "." + normalKey2, 10);
-            targetSeconds = Utils.getRandNum(minSeconds, maxSeconds);
-        }
-        tasks.add(new StayStillTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetSeconds, isPunishment));
+        int targetSeconds = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        tasks.add(new StayStillTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetSeconds));
         return tasks;
     }
 

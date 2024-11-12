@@ -21,14 +21,13 @@ import chalkinshmeal.lockin.utils.Utils;
 public class TouchBlockTask extends LockinTask {
     private static final String configKey = "touchBlockTask";
     private static final String normalKey = "materials";
-    private static final String punishmentKey = "punishmentMaterials";
     private final Material material;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public TouchBlockTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                         LockinRewardHandler lockinRewardHandler, Material material, boolean isPunishment) {
+                         LockinRewardHandler lockinRewardHandler, Material material) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.name = "Touch " + Utils.getReadableMaterialName(material) + " (Standing on or be within)";
@@ -38,7 +37,6 @@ public class TouchBlockTask extends LockinTask {
         catch (IllegalArgumentException e) {
             this.item = new ItemStack(Material.BRUSH);
         }
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -60,12 +58,12 @@ public class TouchBlockTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<TouchBlockTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<TouchBlockTask> tasks = new ArrayList<>();
-        int taskCount = (isPunishment) ? 10000 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isPunishment) ? punishmentKey : normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isPunishment) ? materialStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
@@ -73,7 +71,7 @@ public class TouchBlockTask extends LockinTask {
         }
         for (int i = 0; i < loopCount; i++) {
             Material material = Material.valueOf(materialStrs.get(i));
-            tasks.add(new TouchBlockTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, isPunishment));
+            tasks.add(new TouchBlockTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material));
         }
         return tasks;
     }

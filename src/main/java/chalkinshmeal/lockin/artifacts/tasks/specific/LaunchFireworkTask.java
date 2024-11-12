@@ -43,7 +43,7 @@ public class LaunchFireworkTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<LaunchFireworkTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<LaunchFireworkTask> tasks = new ArrayList<>();
         tasks.add(new LaunchFireworkTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

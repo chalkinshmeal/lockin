@@ -16,12 +16,10 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class GetSpecificHealthTask extends LockinTask {
     private static final String configKey = "getSpecificHealthTask";
-    private static final String normalKey1 = "minHealth";
-    private static final String normalKey2 = "maxHealth";
+    private static final String normalKey = "health";
     private final int targetHealth;
 
     //---------------------------------------------------------------------------------------------
@@ -50,11 +48,9 @@ public class GetSpecificHealthTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<GetSpecificHealthTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<GetSpecificHealthTask> tasks = new ArrayList<>();
-        int minHealth = configHandler.getInt(configKey + "." + normalKey1, 1);
-        int maxHealth = configHandler.getInt(configKey + "." + normalKey2, 20);
-        int targetHealth = Utils.getRandNum(minHealth, maxHealth);
+        int targetHealth = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
         tasks.add(new GetSpecificHealthTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetHealth));
         return tasks;
     }

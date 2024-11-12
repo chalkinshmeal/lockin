@@ -39,7 +39,7 @@ public class WearFullDyedLeatherArmorTask extends LockinTask {
     }
 
     public static List<WearFullDyedLeatherArmorTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
-                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler) {
+                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
         List<WearFullDyedLeatherArmorTask> tasks = new ArrayList<>();
         tasks.add(new WearFullDyedLeatherArmorTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

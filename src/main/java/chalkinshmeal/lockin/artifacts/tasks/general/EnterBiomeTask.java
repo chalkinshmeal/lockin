@@ -21,19 +21,17 @@ import chalkinshmeal.lockin.utils.Utils;
 public class EnterBiomeTask extends LockinTask {
     private static final String configKey = "enterBiomeTask";
     private static final String normalKey = "biomes";
-    private static final String punishmentKey = "punishmentBiomes";
     private final Biome biome;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public EnterBiomeTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler, Biome biome, Material material, boolean isPunishment) {
+                          LockinRewardHandler lockinRewardHandler, Biome biome, Material material) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.biome = biome;
         this.name = "Enter a " + Utils.getReadableBiomeName(biome) + " biome";
         this.item = new ItemStack(material);
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -58,12 +56,12 @@ public class EnterBiomeTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EnterBiomeTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<EnterBiomeTask> tasks = new ArrayList<>();
-        int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isPunishment) ? punishmentKey : normalKey;
-        List<String> biomeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isPunishment) ? biomeStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> biomeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
         if (biomeStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
             return tasks;
@@ -71,8 +69,8 @@ public class EnterBiomeTask extends LockinTask {
 
         for (int i = 0; i < loopCount; i++) {
             Biome biome = Biome.valueOf(biomeStrs.get(i));
-            Material material = Material.valueOf(configHandler.getString(configKey + "." + subKey + "." + biomeStrs.get(i), "NotAvailable"));
-            tasks.add(new EnterBiomeTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, biome, material, isPunishment));
+            Material material = Material.valueOf(configHandler.getString(configKey + "." + subKey + "." + tier + "." + biomeStrs.get(i), "NotAvailable"));
+            tasks.add(new EnterBiomeTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, biome, material));
         }
         return tasks;
     }

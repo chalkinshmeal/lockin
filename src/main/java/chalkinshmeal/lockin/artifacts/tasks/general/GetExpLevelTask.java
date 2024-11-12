@@ -15,25 +15,21 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.Utils;
 
 public class GetExpLevelTask extends LockinTask {
     private static final String configKey = "getExpLevelTask";
-    private static final String normalKey = "maxLevel";
-    private static final String punishmentKey1 = "punishmentMinLevel";
-    private static final String punishmentKey2 = "punishmentMaxLevel";
+    private static final String normalKey = "level";
     private final int maxLevel;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public GetExpLevelTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, int maxLevel, boolean isPunishment) {
+                           LockinRewardHandler lockinRewardHandler, int maxLevel) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.maxLevel = maxLevel;
         this.name = "Get to level " + this.maxLevel;
         this.item = new ItemStack(Material.EXPERIENCE_BOTTLE);
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -50,19 +46,10 @@ public class GetExpLevelTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<GetExpLevelTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<GetExpLevelTask> tasks = new ArrayList<>();
-        int targetLevel = -1;
-        if (isPunishment) {
-            int minLevel = configHandler.getInt(configKey + "." + punishmentKey1, 1);
-            int maxLevel = configHandler.getInt(configKey + "." + punishmentKey2, 2);
-            targetLevel = Utils.getRandNum(minLevel, maxLevel);
-        }
-        else {
-            int maxLevel = configHandler.getInt(configKey + "." + normalKey, 10);
-            targetLevel = Utils.getRandNum(1, maxLevel);
-        }
-        tasks.add(new GetExpLevelTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetLevel, isPunishment));
+        int targetLevel = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        tasks.add(new GetExpLevelTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, targetLevel));
         return tasks;
     }
 

@@ -25,7 +25,6 @@ import chalkinshmeal.lockin.utils.Utils;
 public class KillEntitiesTask extends LockinTask {
     private static final String configKey = "killEntitiesTask";
     private static final String normalKey = "entityTypes";
-    private static final String punishmentKey = "punishmentEntityTypes";
     private final EntityType entityType;
     private final int amount;
     private final Map<Player, Integer> killedEntities;
@@ -34,14 +33,13 @@ public class KillEntitiesTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public KillEntitiesTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                            LockinRewardHandler lockinRewardHandler, EntityType entityType, int amount, boolean isPunishment) {
+                            LockinRewardHandler lockinRewardHandler, EntityType entityType, int amount) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.entityType = entityType;
         this.amount = amount;
         this.killedEntities = new HashMap<>();
         this.name = "Kill " + this.amount + " " + Utils.getReadableEntityTypeName(entityType);
         this.item = new ItemStack(Material.IRON_SWORD);
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -63,12 +61,12 @@ public class KillEntitiesTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<KillEntitiesTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<KillEntitiesTask> tasks = new ArrayList<>();
-        int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isPunishment) ? punishmentKey : normalKey;
-        List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isPunishment) ? entityTypeStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
 
         if (entityTypeStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
@@ -77,8 +75,8 @@ public class KillEntitiesTask extends LockinTask {
         for (int i = 0; i < loopCount; i++) {
             String entityTypeStr = entityTypeStrs.get(i);
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
-            int amount = configHandler.getInt(configKey + "." + subKey + "." + entityTypeStr, 1);
-            tasks.add(new KillEntitiesTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, entityType, amount, isPunishment));
+            int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + entityTypeStr, 1);
+            tasks.add(new KillEntitiesTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, entityType, amount));
         }
         return tasks;
     }

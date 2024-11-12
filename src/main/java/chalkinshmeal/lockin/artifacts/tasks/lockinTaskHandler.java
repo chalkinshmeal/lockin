@@ -12,7 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
-import chalkinshmeal.lockin.artifacts.tasks.general.ActivateBlockTask;
+import chalkinshmeal.lockin.artifacts.tasks.general.*;
+import chalkinshmeal.lockin.artifacts.tasks.specific.*;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
@@ -43,73 +44,71 @@ public class LockinTaskHandler {
         this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
 
         List<LockinTask> allTasks = new ArrayList<>();
-        try {
+        //try {
             // General tasks
             allTasks.addAll(ActivateBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
-            //allTasks.addAll(BreakItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(BrewPotionTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(BreedEntitiesTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(BlockArrowWithShieldTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(CatchFishTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(CraftItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(CreateEntityTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(DestroyItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(DieTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(EatTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(EatItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(EnchantItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(EnterBiomeTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(EnterBoatWithPassengerTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(EnterNetherTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(EquipItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(GetExpLevelTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(GetSpecificHealthTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(InteractItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(JumpTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(KillEntitiesTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(KillEntityWithItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(KillEntityWithStatusEffectTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(KillLeftySkeletonTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(LaunchFireworkTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(ObtainItemGroupTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(ObtainItemWithStringTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(ObtainItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false, false));
-            //allTasks.addAll(PlaceBookOnLecternTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(PlaceFlowerInPotTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(PlaceItemInItemFrameTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(PlaceItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(PunchAnEntityWithItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(ReceivePotionEffectTypeTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(RepairIronGolemTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(RideEntityTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(ShearColoredSheepTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(ShearSheepTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(ShootBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(ShootProjectileTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(SleepInColoredBedTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(SmeltItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(SneakOnBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(SpecificDeathTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(StandOnBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(StandOnCoordinateTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(StayStillTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(TouchBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false));
-            //allTasks.addAll(UseEyeOfEnderTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(UseNametagTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(UseSpyglassTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.addAll(WearFullDyedLeatherArmorTask.getTasks(plugin, configHandler, this, lockinRewardHandler));
-
-            //// Specific tasks
-            //allTasks.add(new WearFullIronArmorTask(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.add(new TeleportWithAnEnderpearlTask(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.add(new GrowWheatWithBonemealTask(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.add(new LightTNTTask(plugin, configHandler, this, lockinRewardHandler));
-            //allTasks.add(new DrinkMilkToCurePoisonTask(plugin, configHandler, this, lockinRewardHandler));
-        }
-        catch (Exception e) {
-            this.plugin.getLogger().warning("Could not create task list: " + e.getMessage());
-            return false;
-        }
+            allTasks.addAll(BreakItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(BrewPotionTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(BreedEntitiesTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(BlockArrowWithShieldTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(CatchFishTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(CraftItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(CreateEntityTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(DestroyItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(DieTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(DrinkMilkToCurePoisonTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(EatTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(EatItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(EnchantItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(EnterBiomeTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(EnterBoatWithPassengerTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(EnterNetherTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(EquipItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(GetExpLevelTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(GetSpecificHealthTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(GrowWheatWithBonemealTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(InteractItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(JumpTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(KillEntitiesTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(KillEntityWithItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(KillEntityWithStatusEffectTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(KillLeftySkeletonTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(LaunchFireworkTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(LightTNTTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ObtainItemGroupTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ObtainItemWithStringTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ObtainItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(PlaceBookOnLecternTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(PlaceFlowerInPotTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(PlaceItemInItemFrameTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(PlaceItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(PunchAnEntityWithItemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ReceivePotionEffectTypeTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(RepairIronGolemTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(RideEntityTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ShearColoredSheepTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ShearSheepTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ShootBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(ShootProjectileTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(SleepInColoredBedTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(SmeltItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(SneakOnBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(SpecificDeathTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(StandOnBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(StandOnCoordinateTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(StayStillTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(TeleportWithAnEnderpearlTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(TouchBlockTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(UseEyeOfEnderTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(UseNametagTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(UseSpyglassTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(WearFullDyedLeatherArmorTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+            allTasks.addAll(WearFullIronArmorTask.getTasks(plugin, configHandler, this, lockinRewardHandler, tier));
+        //}
+        //catch (Exception e) {
+        //    this.plugin.getLogger().warning("Could not create task list: " + e.getMessage());
+        //    return false;
+        //}
 
         // Randomly get items
         this.tasks = Utils.getRandomItems(allTasks, Math.min(this.maxLockinTasks, allTasks.size()));

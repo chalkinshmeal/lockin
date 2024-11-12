@@ -21,7 +21,6 @@ import chalkinshmeal.lockin.utils.Utils;
 public class ObtainItemGroupTask extends LockinTask {
     private static final String configKey = "obtainItemGroupTask";
     private static final String normalKey = "materials";
-    private static final String punishmentKey = "punishmentMaterials";
     private final Material material;
     private final int amount;
     private final List<Material> validMaterials;
@@ -31,14 +30,13 @@ public class ObtainItemGroupTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public ObtainItemGroupTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
                            LockinRewardHandler lockinRewardHandler, Material material, String description, int amount, 
-                           List<Material> validMaterials, boolean isPunishment) {
+                           List<Material> validMaterials) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.amount = amount;
         this.validMaterials = validMaterials;
         this.name = description;
         this.item = new ItemStack(this.material);
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -64,12 +62,12 @@ public class ObtainItemGroupTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<ObtainItemGroupTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<ObtainItemGroupTask> tasks = new ArrayList<>();
-        int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isPunishment) ? punishmentKey : normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isPunishment) ? materialStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
@@ -78,10 +76,10 @@ public class ObtainItemGroupTask extends LockinTask {
         for (int i = 0; i < loopCount; i++) {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
-            String description = configHandler.getString(configKey + "." + subKey + "." + materialStr + ".description", "Not found");
-            int amount = configHandler.getInt(configKey + "." + subKey + "." + materialStr + ".amount", 1);
-            List<Material> validMaterials = configHandler.getMaterialsFromKey(configKey + "." + subKey + "." + materialStr + ".materials");
-            tasks.add(new ObtainItemGroupTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, description, amount, validMaterials, isPunishment));
+            String description = configHandler.getString(configKey + "." + subKey + "." + tier + "." + materialStr + ".description", "Not found");
+            int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr + ".amount", 1);
+            List<Material> validMaterials = configHandler.getMaterialsFromKey(configKey + "." + subKey + "." + tier + "." + materialStr + ".materials");
+            tasks.add(new ObtainItemGroupTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, description, amount, validMaterials));
         }
         return tasks;
     }

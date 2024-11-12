@@ -43,7 +43,7 @@ public class UseSpyglassTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<UseSpyglassTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<UseSpyglassTask> tasks = new ArrayList<>();
         tasks.add(new UseSpyglassTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

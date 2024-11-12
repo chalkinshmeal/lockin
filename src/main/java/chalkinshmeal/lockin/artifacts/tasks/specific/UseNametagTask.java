@@ -40,7 +40,7 @@ public class UseNametagTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<UseNametagTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<UseNametagTask> tasks = new ArrayList<>();
         tasks.add(new UseNametagTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

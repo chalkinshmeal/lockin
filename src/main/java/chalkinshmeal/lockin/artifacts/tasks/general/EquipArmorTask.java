@@ -26,7 +26,6 @@ public class EquipArmorTask extends LockinTask {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.name = "Equip armor";
         this.item = new ItemStack(Material.CHAINMAIL_BOOTS);
-        this.isPunishment = true;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -42,7 +41,7 @@ public class EquipArmorTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EquipArmorTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<EquipArmorTask> tasks = new ArrayList<>();
         tasks.add(new EquipArmorTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

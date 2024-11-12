@@ -21,7 +21,6 @@ import chalkinshmeal.lockin.utils.Utils;
 public class ObtainItemWithStringTask extends LockinTask {
     private static final String configKey = "obtainItemWithStringTask";
     private static final String normalKey = "materials";
-    private static final String punishmentKey = "punishmentMaterials";
     private final Material material;
     private final String glob;
     private final int amount;
@@ -30,15 +29,13 @@ public class ObtainItemWithStringTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public ObtainItemWithStringTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                           LockinRewardHandler lockinRewardHandler, Material material, String glob, int amount, 
-                           boolean isPunishment) {
+                           LockinRewardHandler lockinRewardHandler, Material material, String glob, int amount) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.glob = glob;
         this.amount = amount;
         this.name = "Obtain " + this.amount + " items with '" + this.glob + "' in their name";
         this.item = new ItemStack(this.material);
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -61,12 +58,12 @@ public class ObtainItemWithStringTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<ObtainItemWithStringTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<ObtainItemWithStringTask> tasks = new ArrayList<>();
-        int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isPunishment) ? punishmentKey : normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isPunishment) ? materialStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
@@ -75,9 +72,9 @@ public class ObtainItemWithStringTask extends LockinTask {
         for (int i = 0; i < loopCount; i++) {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
-            String glob = configHandler.getString(configKey + "." + subKey + "." + materialStr + ".string", "Not found");
-            int amount = configHandler.getInt(configKey + "." + subKey + "." + materialStr + ".amount", 1);
-            tasks.add(new ObtainItemWithStringTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, glob, amount, isPunishment));
+            String glob = configHandler.getString(configKey + "." + subKey + "." + tier + "." + materialStr + ".string", "Not found");
+            int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr + ".amount", 1);
+            tasks.add(new ObtainItemWithStringTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, glob, amount));
         }
         return tasks;
     }

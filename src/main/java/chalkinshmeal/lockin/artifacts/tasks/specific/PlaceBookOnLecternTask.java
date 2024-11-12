@@ -44,7 +44,7 @@ public class PlaceBookOnLecternTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<PlaceBookOnLecternTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<PlaceBookOnLecternTask> tasks = new ArrayList<>();
         tasks.add(new PlaceBookOnLecternTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
         return tasks;

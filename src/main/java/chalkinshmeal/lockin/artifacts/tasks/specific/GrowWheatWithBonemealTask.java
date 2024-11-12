@@ -1,5 +1,8 @@
 package chalkinshmeal.lockin.artifacts.tasks.specific;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -34,6 +37,13 @@ public class GrowWheatWithBonemealTask extends LockinTask {
 
     public void addListeners() {
 		this.listeners.add(new GrowWheatWithBonemealTaskPlayerInteractListener(this));
+    }
+
+    public static List<GrowWheatWithBonemealTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler,
+                                                              LockinTaskHandler lockinTaskHandler, LockinRewardHandler lockinRewardHandler, int tier) {
+        List<GrowWheatWithBonemealTask> tasks = new ArrayList<>();
+        tasks.add(new GrowWheatWithBonemealTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler));
+        return tasks;
     }
 
     //---------------------------------------------------------------------------------------------

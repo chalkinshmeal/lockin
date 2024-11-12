@@ -24,7 +24,6 @@ import chalkinshmeal.lockin.utils.Utils;
 public class BreakItemsTask extends LockinTask {
     private static final String configKey = "breakItemsTask";
     private static final String normalKey = "materials";
-    private static final String punishmentKey = "punishmentMaterials";
     private final Material material;
     private final int amount;
     private final Map<Player, Integer> brokenItems;
@@ -33,14 +32,13 @@ public class BreakItemsTask extends LockinTask {
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
     public BreakItemsTask(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                          LockinRewardHandler lockinRewardHandler, Material material, int amount, boolean isPunishment) {
+                          LockinRewardHandler lockinRewardHandler, Material material, int amount) {
         super(plugin, configHandler, lockinTaskHandler, lockinRewardHandler);
         this.material = material;
         this.amount = amount;
         this.brokenItems = new HashMap<>();
         this.name = "Break " + this.amount + " " + Utils.getReadableMaterialName(material);
         this.item = new ItemStack(this.material);
-        this.isPunishment = isPunishment;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -62,12 +60,12 @@ public class BreakItemsTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<BreakItemsTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                                          LockinRewardHandler lockinRewardHandler, boolean isPunishment) {
+                                                          LockinRewardHandler lockinRewardHandler, int tier) {
         List<BreakItemsTask> tasks = new ArrayList<>();
-        int taskCount = (isPunishment) ? -1 : configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = (isPunishment) ? punishmentKey : normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey), taskCount);
-        int loopCount = (isPunishment) ? materialStrs.size() : taskCount;
+        int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
+        String subKey = normalKey;
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
             plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
@@ -76,8 +74,8 @@ public class BreakItemsTask extends LockinTask {
         for (int i = 0; i < loopCount; i++) {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
-            int amount = configHandler.getInt(configKey + "." + subKey + "." + materialStr, 1);
-            tasks.add(new BreakItemsTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, amount, isPunishment));
+            int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr, 1);
+            tasks.add(new BreakItemsTask(plugin, configHandler, lockinTaskHandler, lockinRewardHandler, material, amount));
         }
         return tasks;
     }
