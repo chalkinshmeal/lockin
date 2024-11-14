@@ -31,6 +31,7 @@ public class LockinCompass {
     private final Map<String, Inventory> tasksInvs; 
     private final int taskCount;
     private boolean isActive;
+    private boolean debug = true;
 
     private final Component compassDisplayName = Component.text(
         "Lockin", NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.ITALIC, false);
@@ -76,14 +77,18 @@ public class LockinCompass {
     }
 
     public void updateTasksInventory(LockinTaskHandler lockinTaskHandler) {
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory] Updating task inventories");
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]   Clearing inventories");
         for (Inventory tasksInv : this.tasksInvs.values()) {
             tasksInv.clear();
         }
         if (lockinTaskHandler == null) return;
 
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]   Populating with tasks");
         for (LockinTask task : lockinTaskHandler.GetTasks()) {
             task.setLore();
             for (String teamName : this.tasksInvs.keySet()) {
+                if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]     Task: " + task.getName() + ", Team: " + teamName);
                 Inventory tasksInv = this.tasksInvs.get(teamName);
                 ItemStack taskItem = task.getItem();
                 if (task.hasCompleted(teamName)) {
@@ -95,6 +100,9 @@ public class LockinCompass {
     }
 
     public void openInventory(Player player) {
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::openInventory] Opening inventory to player " + player.getName());
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::openInventory]   Current Inventory Count: " + this.tasksInvs.size());
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::openInventory]   Task Inventory: " + this.getTaskInv(player));
         if (this.isActive) player.openInventory(this.getTaskInv(player));
         else player.openInventory(this.teamsInv);
     }
@@ -115,6 +123,8 @@ public class LockinCompass {
     // Listener methods
     //---------------------------------------------------------------------------------------------
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerInteractEvent] --- Get Team (Before) ---");
+        if (debug) this.lockinTeamHandler.getTeamName(event.getPlayer());
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (!Utils.isRightClick(event.getAction())) return;
         if (event.getItem() == null) return;
@@ -123,37 +133,55 @@ public class LockinCompass {
 
         this.updateTeamsInventory();
         this.openInventory(event.getPlayer());
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerInteractEvent] --- Get Team (After) ---");
+        if (debug) this.lockinTeamHandler.getTeamName(event.getPlayer());
     }
 
     public void onInventoryClickEvent(InventoryClickEvent event) {
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent] --- Get Team --- (Before)");
+        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
         // Check that inventory name matches
         String invName = Utils.asString(event.getView().title());
         if (!invName.equals(this.getInvName())) return;
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Inventory name matches");
 
         // Prevent movement
         if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)
             event.setCancelled(true);
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Preventing movement");
 
         // Check that slot is valid
         int slot = event.getRawSlot();
         if (slot < 0 || slot >= this.getMaxSlots()) return;
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Slot is valid");
 
         event.setCancelled(true);
 
+        if (this.isActive) return;
+
         // Change team of player
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Changing team of player");
         Player player = (Player) event.getWhoClicked();
         this.lockinTeamHandler.removePlayer(player);
         this.lockinTeamHandler.addPlayer(player, slot);
         this.updateTeamsInventory();
         player.updateInventory();
+
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent] --- Get Team (After) ---");
+        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
     }
 
     public void onInventoryDragEvent(InventoryDragEvent event) {
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerDragEvent] --- Get Team --- (Before)");
+        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
         // Check that inventory name matches
         String invName = Utils.asString(event.getView().title());
         if (!invName.equals(this.getInvName())) return;
 
         event.setCancelled(true);
+
+        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerDragEvent] --- Get Team --- (After)");
+        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
     }
 
     //---------------------------------------------------------------------------------------------

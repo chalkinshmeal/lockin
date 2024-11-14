@@ -83,11 +83,18 @@ public class LockinTeamHandler {
     public HashSet<UUID> getTeamPlayers(int teamIndex) { return new ArrayList<>(this.teams.values()).get(teamIndex); }
     public List<String> getTeamNames() { return new ArrayList<>(this.teams.keySet()); }
     public String getTeamName(Player player) {
+        if (debug) this.plugin.getLogger().info("[LockinTeamHandler::getTeamName] Getting team name for player: " + player.getName());
+        if (debug) this.plugin.getLogger().info("[LockinTeamHandler::getTeamName]   Teams:");
+        for (String teamName : this.teams.keySet()) {
+            if (debug) this.plugin.getLogger().info("[LockinTeamHandler::getTeamName]     " + teamName + " (Size: " + this.teams.get(teamName).size() + ")");
+        }
         for (String teamName : this.teams.keySet()) {
             if (this.teams.get(teamName).contains(player.getUniqueId())) {
+                if (debug) this.plugin.getLogger().info("[LockinTeamHandler::getTeamName]   Found team: " + teamName);
                 return teamName;
             }
         }
+        if (debug) this.plugin.getLogger().info("[LockinTeamHandler::getTeamName]   Could not find team. Returning null");
         return null;
     }
 

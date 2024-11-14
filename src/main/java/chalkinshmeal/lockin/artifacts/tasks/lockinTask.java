@@ -149,14 +149,15 @@ public abstract class LockinTask {
     // Task methods
     //---------------------------------------------------------------------------------------------
     public void complete(Player player) {
-        System.out.println("[LockinTask] Completed task: " + this.name);
+        System.out.println("[LockinTask::complete] Completed task: " + this.name);
         String teamName = lockinTeamHandler.getTeamName(player);
         if (this.hasCompleted(teamName)) return;
 
+        System.out.println("[LockinTask::complete] Completed team: " + teamName);
         this.completed.add(teamName);
-        System.out.println("[LockinTask] Completed team names: ");
+        System.out.println("[LockinTask::complete] Completed team names: ");
         for (String _teamName : this.completed) {
-            System.out.println("[LockinTask]   " + _teamName);
+            System.out.println("[LockinTask::complete]   " + _teamName);
         }
         lockinTaskHandler.complete(this, player);
         if (this.reward != null) this.reward.giveReward(player);
