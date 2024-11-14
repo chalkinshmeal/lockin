@@ -77,7 +77,7 @@ class EatItemsTaskPlayerItemConsumeEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerItemConsumeEvent(event);
     }
 }

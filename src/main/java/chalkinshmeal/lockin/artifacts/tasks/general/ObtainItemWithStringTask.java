@@ -60,7 +60,7 @@ public class ObtainItemWithStringTask extends LockinTask {
         int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
         for (int i = 0; i < loopCount; i++) {
@@ -111,7 +111,7 @@ class ObtainItemWithStringTaskEntityPickupItemEventListener implements Listener 
     /** Event Handler */
     @EventHandler
     public void onEntityPickupItemEvent(EntityPickupItemEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityPickupItemEvent(event);
     }
 }
@@ -126,7 +126,7 @@ class ObtainItemWithStringTaskInventoryClickEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onInventoryClickEvent(event);
     }
 }

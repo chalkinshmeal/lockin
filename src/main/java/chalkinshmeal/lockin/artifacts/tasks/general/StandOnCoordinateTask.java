@@ -81,7 +81,7 @@ class StandOnCoordinateTaskPlayerMoveEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerMoveEvent(event);
     }
 }

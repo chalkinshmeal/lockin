@@ -61,7 +61,7 @@ public class BreedEntitiesTask extends LockinTask {
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
 
         if (entityTypeStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
         for (int i = 0; i < taskCount; i++) {
@@ -102,7 +102,7 @@ class BreedEntitiesTaskEntityBreedEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityBreedEvent(EntityBreedEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityBreedEvent(event);
     }
 }

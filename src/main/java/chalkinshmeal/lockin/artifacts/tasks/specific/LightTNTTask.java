@@ -35,6 +35,7 @@ public class LightTNTTask extends LockinTask {
     }
 
     public static List<LightTNTTask> getTasks(int tier) {
+        if (tier != 2) return new ArrayList<>();
         List<LightTNTTask> tasks = new ArrayList<>();
         tasks.add(new LightTNTTask());
         return tasks;
@@ -68,7 +69,7 @@ class LightTNTTaskListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEvent(event);
     }
 }

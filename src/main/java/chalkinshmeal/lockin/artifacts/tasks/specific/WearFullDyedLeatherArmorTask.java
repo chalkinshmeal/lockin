@@ -35,6 +35,7 @@ public class WearFullDyedLeatherArmorTask extends LockinTask {
     }
 
     public static List<WearFullDyedLeatherArmorTask> getTasks(int tier) {
+        if (tier != 5) return new ArrayList<>();
         List<WearFullDyedLeatherArmorTask> tasks = new ArrayList<>();
         tasks.add(new WearFullDyedLeatherArmorTask());
         return tasks;
@@ -71,7 +72,7 @@ class WearFullDyedLeatherArmorTaskPlayerArmorChangeListener implements Listener 
     /** Event Handler */
     @EventHandler
     public void onPlayerArmorChangeEvent(PlayerArmorChangeEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerArmorChangeEvent(event);
     }
 }

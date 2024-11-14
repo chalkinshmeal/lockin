@@ -73,63 +73,39 @@ public class LockinScoreboard {
     }
 
     public void addScore(Player player, int scoreValue) {
-        System.out.println("[lockinScoreboard::addScore] Player: " + player + " Point: " + scoreValue);
         String teamName = this.lockinTeamHandler.getTeamName(player);
-        System.out.println("[lockinScoreboard::addScore] Fetching team name: " + teamName);
-        System.out.println("[lockinScoreboard::addScore] HERE1");
         if (teamName == null) return;
-        System.out.println("[lockinScoreboard::addScore] HERE2");
 
         Team team = scoreboard.getTeam(teamName);
-        System.out.println("[lockinScoreboard::addScore] HERE3");
         if (team == null || team.getEntries().size() == 0) {
-            System.out.println("[lockinScoreboard::addScore] HERE3a");
             return;
         }
-        System.out.println("[lockinScoreboard::addScore] HERE4");
 
         String displayName = team.getEntries().size() == 1 ? team.getEntries().iterator().next() : teamName;
-        System.out.println("[lockinScoreboard::addScore] HERE5");
         Score score = teamScores.computeIfAbsent(displayName, k -> objective.getScore(displayName));
-        System.out.println("[lockinScoreboard::addScore] HERE6");
         score.setScore(score.getScore() + scoreValue);
-        System.out.println("[lockinScoreboard::addScore] HERE7");
     }
 
     public void addScore(String teamName, int scoreValue) {
-        System.out.println("[lockinScoreboard::addScore] Team: " + teamName + " Point: " + scoreValue);
         Team team = scoreboard.getTeam(teamName);
-        System.out.println("[lockinScoreboard::addScore] HERE1");
         if (team == null || team.getEntries().size() == 0) {
-            System.out.println("[lockinScoreboard::addScore] HERE1a");
             return;
         }
-        System.out.println("[lockinScoreboard::addScore] HERE2");
 
         String displayName = team.getEntries().size() == 1 ? team.getEntries().iterator().next() : teamName;
-        System.out.println("[lockinScoreboard::addScore] HERE3");
         Score score = teamScores.computeIfAbsent(displayName, k -> objective.getScore(displayName));
-        System.out.println("[lockinScoreboard::addScore] HERE4");
         score.setScore(score.getScore() + scoreValue);
-        System.out.println("[lockinScoreboard::addScore] HERE5");
     }
 
     public void setScore(String teamName, int scoreValue) {
-        System.out.println("[lockinScoreboard::setScore] Team: " + teamName + " Point: " + scoreValue);
         Team team = scoreboard.getTeam(teamName);
-        System.out.println("[lockinScoreboard::addScore] HERE1");
         if (team == null || team.getEntries().size() == 0) {
-            System.out.println("[lockinScoreboard::addScore] HERE1a");
             return;
         }
-        System.out.println("[lockinScoreboard::addScore] HERE2");
 
         String displayName = team.getEntries().size() == 1 ? team.getEntries().iterator().next() : teamName;
-        System.out.println("[lockinScoreboard::addScore] HERE3");
         Score score = teamScores.computeIfAbsent(displayName, k -> objective.getScore(displayName));
-        System.out.println("[lockinScoreboard::addScore] HERE4");
         score.setScore(scoreValue);
-        System.out.println("[lockinScoreboard::addScore] HERE5");
     }
 
     public int getScore(String teamName) {
@@ -140,7 +116,6 @@ public class LockinScoreboard {
 
         String displayName = team.getEntries().size() == 1 ? team.getEntries().iterator().next() : teamName;
         Score score = teamScores.computeIfAbsent(displayName, k -> objective.getScore(displayName));
-        System.out.println("[lockinScoreboard::getScore] Team: " + teamName + " Point: " + score.getScore());
         return score.getScore();
     }
 

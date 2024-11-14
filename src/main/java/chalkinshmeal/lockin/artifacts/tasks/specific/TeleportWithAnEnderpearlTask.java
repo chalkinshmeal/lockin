@@ -32,6 +32,7 @@ public class TeleportWithAnEnderpearlTask extends LockinTask {
     }
 
     public static List<TeleportWithAnEnderpearlTask> getTasks(int tier) {
+        if (tier != 3) return new ArrayList<>();
         List<TeleportWithAnEnderpearlTask> tasks = new ArrayList<>();
         tasks.add(new TeleportWithAnEnderpearlTask());
         return tasks;
@@ -59,7 +60,7 @@ class TeleportWithAnEnderpearlTaskPlayerInteractListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerTeleportEvent(PlayerTeleportEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerTeleportEvent(event);
     }
 }

@@ -36,6 +36,7 @@ public class UseEyeOfEnderTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<UseEyeOfEnderTask> getTasks(int tier) {
+        if (tier != 7) return new ArrayList<>();
         List<UseEyeOfEnderTask> tasks = new ArrayList<>();
         tasks.add(new UseEyeOfEnderTask());
         return tasks;
@@ -69,7 +70,7 @@ class UseEyeOfEnderTaskPlayerInteractEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEvent(event);
     }
 }

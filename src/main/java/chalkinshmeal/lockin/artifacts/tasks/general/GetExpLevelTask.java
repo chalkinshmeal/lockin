@@ -73,7 +73,7 @@ class GetExpLevelTaskPlayerLevelChangeEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerLevelChangeEvent(PlayerLevelChangeEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerLevelChangeEvent(event);
     }
 }

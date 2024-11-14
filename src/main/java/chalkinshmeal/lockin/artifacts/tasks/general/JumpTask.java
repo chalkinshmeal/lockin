@@ -78,7 +78,7 @@ class JumpTaskPlayerJumpEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerJumpEvent(PlayerJumpEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerJumpEvent(event);
     }
 }

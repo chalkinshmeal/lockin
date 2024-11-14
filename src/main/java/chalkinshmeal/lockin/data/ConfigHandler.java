@@ -27,6 +27,7 @@ public class ConfigHandler {
     private final JavaPlugin plugin;
     private final FileConfiguration config;
     private File file;
+    private final boolean debug = false;
 
     // Constructor
     public ConfigHandler(JavaPlugin plugin) {
@@ -65,7 +66,7 @@ public class ConfigHandler {
             return materials;
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return null;
         }
     }
@@ -75,7 +76,7 @@ public class ConfigHandler {
             return this.config.getStringList(key);
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return new ArrayList<>();
         }
     }
@@ -86,7 +87,7 @@ public class ConfigHandler {
             return Material.valueOf(material_str.toUpperCase());
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return null;
         }
     }
@@ -96,7 +97,7 @@ public class ConfigHandler {
             return new ArrayList<>(keys);
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return new ArrayList<>();
         }
     }
@@ -107,7 +108,7 @@ public class ConfigHandler {
             return this.config.get(key);
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return this.config.get(key);
         }
     }
@@ -118,7 +119,7 @@ public class ConfigHandler {
             return this.config.getInt(key);
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return defaultVal;
         }
     }
@@ -129,14 +130,14 @@ public class ConfigHandler {
             return str;
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return defaultVal;
         }
     }
     public float getFloat(String key, float defaultVal) {
         try { return (float) this.config.getDouble(key); }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
+            if (debug) this.plugin.getLogger().warning("Could not load '" + key + "': " + e);
             return defaultVal;
         }
     }
@@ -154,7 +155,7 @@ public class ConfigHandler {
             this.config.set(key, value);
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("Could not set '" + key + "' to value '" + value + "'");
+            if (debug) this.plugin.getLogger().warning("Could not set '" + key + "' to value '" + value + "'");
         }
         try {
             this.config.save(this.file);

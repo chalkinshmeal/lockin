@@ -38,6 +38,7 @@ public class KillLeftySkeletonTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<KillLeftySkeletonTask> getTasks(int tier) {
+        if (tier != 4) return new ArrayList<>();
         List<KillLeftySkeletonTask> tasks = new ArrayList<>();
         tasks.add(new KillLeftySkeletonTask());
         return tasks;
@@ -71,7 +72,7 @@ class KillLeftySkeletonTaskEntityDeathEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityDeathEvent(event);
     }
 }

@@ -53,7 +53,7 @@ public class SleepInColoredBedTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> dyeColorStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
         if (dyeColorStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
 
@@ -91,7 +91,7 @@ class SleepInColoredBedTaskListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerBedEnterEvent(PlayerBedEnterEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerBedEnterEvent(event);
     }
 }

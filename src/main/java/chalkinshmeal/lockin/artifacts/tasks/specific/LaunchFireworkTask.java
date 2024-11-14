@@ -38,6 +38,7 @@ public class LaunchFireworkTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<LaunchFireworkTask> getTasks(int tier) {
+        if (tier != 3) return new ArrayList<>();
         List<LaunchFireworkTask> tasks = new ArrayList<>();
         tasks.add(new LaunchFireworkTask());
         return tasks;
@@ -69,7 +70,7 @@ class LaunchFireworkTaskProjectileLaunchEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onProjectileLaunchEvent(ProjectileLaunchEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onProjectileLaunchEvent(event);
     }
 }

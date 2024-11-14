@@ -60,7 +60,7 @@ public class SmeltItemsTask extends LockinTask {
         int loopCount = taskCount;
 
         if (materialStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
         for (int i = 0; i < loopCount; i++) {
@@ -100,7 +100,7 @@ class SmeltItemsTaskFurnaceExtractEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onFurnaceExtractEvent(FurnaceExtractEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onFurnaceExtractEvent(event);
     }
 }

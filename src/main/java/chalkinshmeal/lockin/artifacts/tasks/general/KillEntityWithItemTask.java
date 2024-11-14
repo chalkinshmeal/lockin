@@ -66,7 +66,7 @@ public class KillEntityWithItemTask extends LockinTask {
         Collections.shuffle(materialStrs);
 
         if (materialStrs.size() == 0 || entityTypeStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
         for (int i = 0; i < Math.min(taskCount, entityTypeStrs.size()); i++) {
@@ -107,7 +107,7 @@ class KillEntityWithItemTaskPlayerInteractListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityDeathEvent(event);
     }
 }

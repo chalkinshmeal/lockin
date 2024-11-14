@@ -35,6 +35,7 @@ public class UseNametagTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<UseNametagTask> getTasks(int tier) {
+        if (tier != 6) return new ArrayList<>();
         List<UseNametagTask> tasks = new ArrayList<>();
         tasks.add(new UseNametagTask());
         return tasks;
@@ -70,7 +71,7 @@ class UseNametagTaskPlayerInteractEntityEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEntityEvent(event);
     }
 }

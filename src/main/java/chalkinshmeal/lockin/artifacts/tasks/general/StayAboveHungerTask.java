@@ -80,7 +80,7 @@ class StayAboveHungerTaskFoodLevelChangeEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onFoodLevelChangeEvent(FoodLevelChangeEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onFoodLevelChangeEvent(event);
     }
 }

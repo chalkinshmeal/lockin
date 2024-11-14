@@ -36,6 +36,7 @@ public class GrowWheatWithBonemealTask extends LockinTask {
     }
 
     public static List<GrowWheatWithBonemealTask> getTasks(int tier) {
+        if (tier != 2) return new ArrayList<>();
         List<GrowWheatWithBonemealTask> tasks = new ArrayList<>();
         tasks.add(new GrowWheatWithBonemealTask());
         return tasks;
@@ -72,7 +73,7 @@ class GrowWheatWithBonemealTaskPlayerInteractListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEvent(event);
     }
 }

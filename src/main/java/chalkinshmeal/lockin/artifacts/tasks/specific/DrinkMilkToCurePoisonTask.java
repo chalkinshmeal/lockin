@@ -34,6 +34,7 @@ public class DrinkMilkToCurePoisonTask extends LockinTask {
     }
 
     public static List<DrinkMilkToCurePoisonTask> getTasks(int tier) {
+        if (tier != 3) return new ArrayList<>();
         List<DrinkMilkToCurePoisonTask> tasks = new ArrayList<>();
         tasks.add(new DrinkMilkToCurePoisonTask());
         return tasks;
@@ -64,7 +65,7 @@ class DrinkMilkToCurePoisonTaskListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerItemConsumeEvent(event);
     }
 }

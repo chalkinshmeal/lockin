@@ -71,7 +71,7 @@ class EquipArmorTaskPlayerArmorChangeListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerArmorChangeEvent(PlayerArmorChangeEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerArmorChangeEvent(event);
     }
 }

@@ -37,6 +37,7 @@ public class EnchantItemTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EnchantItemTask> getTasks(int tier) {
+        if (tier != 6) return new ArrayList<>();
         List<EnchantItemTask> tasks = new ArrayList<>();
         tasks.add(new EnchantItemTask());
         return tasks;
@@ -64,7 +65,7 @@ class EnchantItemTaskEnchantItemEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEnchantItemEvent(EnchantItemEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEnchantItemEvent(event);
     }
 }

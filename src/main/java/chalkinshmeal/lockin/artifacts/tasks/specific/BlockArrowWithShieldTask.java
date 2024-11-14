@@ -13,8 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 
-
-
 public class BlockArrowWithShieldTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -38,6 +36,7 @@ public class BlockArrowWithShieldTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<BlockArrowWithShieldTask> getTasks(int tier) {
+        if (tier != 3) return new ArrayList<>();
         List<BlockArrowWithShieldTask> tasks = new ArrayList<>();
         tasks.add(new BlockArrowWithShieldTask());
         return tasks;
@@ -74,7 +73,7 @@ class BlockArrowWithShieldTaskEntityDamageByEntityEventListener implements Liste
     /** Event Handler */
     @EventHandler
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityDamageByEntityEvent(event);
     }
 }

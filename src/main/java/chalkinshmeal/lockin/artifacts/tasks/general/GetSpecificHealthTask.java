@@ -84,7 +84,7 @@ class GetSpecificHealthTaskEntityDamageEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityDamageEvent(EntityDamageEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityDamageEvent(event);
     }
 }
@@ -99,7 +99,7 @@ class GetSpecificHealthTaskEntityRegainHealthEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityRegainHealthEvent(EntityRegainHealthEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityRegainHealthEvent(event);
     }
 }

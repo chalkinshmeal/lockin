@@ -34,6 +34,7 @@ public class WearFullIronArmorTask extends LockinTask {
     }
 
     public static List<WearFullIronArmorTask> getTasks(int tier) {
+        if (tier != 5) return new ArrayList<>();
         List<WearFullIronArmorTask> tasks = new ArrayList<>();
         tasks.add(new WearFullIronArmorTask());
         return tasks;
@@ -67,7 +68,7 @@ class WearFullIronArmorTaskPlayerArmorChangeListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerArmorChangeEvent(PlayerArmorChangeEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerArmorChangeEvent(event);
     }
 }

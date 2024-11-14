@@ -94,6 +94,7 @@ public class GameHandler {
         this.currentTier = 1;
 
         this.isActive = true;
+        this.lockinTeamHandler.init();
         this.lockinScoreboard.init(this.lockinTeamHandler);
 
         for (Player player : this.lockinTeamHandler.getAllPlayers()) {

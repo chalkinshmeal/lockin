@@ -37,6 +37,7 @@ public class RepairIronGolemTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<RepairIronGolemTask> getTasks(int tier) {
+        if (tier != 3) return new ArrayList<>();
         List<RepairIronGolemTask> tasks = new ArrayList<>();
         tasks.add(new RepairIronGolemTask());
         return tasks;
@@ -69,7 +70,7 @@ class RepairIronGolemTaskPlayerInteractEntityEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEntityEvent(event);
     }
 }

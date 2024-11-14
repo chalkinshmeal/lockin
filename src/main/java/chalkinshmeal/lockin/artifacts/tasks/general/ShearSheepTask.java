@@ -79,7 +79,7 @@ class ShearSheepTaskPlayerShearEntityEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerShearEntityEvent(PlayerShearEntityEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerShearEntityEvent(event);
     }
 }

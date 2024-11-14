@@ -38,6 +38,7 @@ public class CatchFishTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<CatchFishTask> getTasks(int tier) {
+        if (tier != 2) return new ArrayList<>();
         List<CatchFishTask> tasks = new ArrayList<>();
         tasks.add(new CatchFishTask());
         return tasks;
@@ -67,7 +68,7 @@ class CatchFishTaskPlayerFishEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerFishEvent(PlayerFishEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerFishEvent(event);
     }
 }

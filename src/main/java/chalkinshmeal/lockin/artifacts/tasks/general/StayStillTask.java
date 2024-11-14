@@ -82,7 +82,7 @@ public class StayStillTask extends LockinTask {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (isComplete()) {
+                if (haveAllTeamsCompleted()) {
                     this.cancel();
                     return;
                 }
@@ -119,7 +119,7 @@ class StayStillTaskPlayerMoveEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerMoveEvent(event);
     }
 }

@@ -48,7 +48,7 @@ public class LockinTaskHandler {
         this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
 
         List<LockinTask> allTasks = new ArrayList<>();
-        //try {
+        try {
             // General tasks
             allTasks.addAll(ActivateBlockTask.getTasks(tier));
             allTasks.addAll(BreakItemsTask.getTasks(tier));
@@ -108,11 +108,11 @@ public class LockinTaskHandler {
             allTasks.addAll(UseSpyglassTask.getTasks(tier));
             allTasks.addAll(WearFullDyedLeatherArmorTask.getTasks(tier));
             allTasks.addAll(WearFullIronArmorTask.getTasks(tier));
-        //}
-        //catch (Exception e) {
-        //    this.plugin.getLogger().warning("Could not create task list: " + e.getMessage());
-        //    return false;
-        //}
+        }
+        catch (Exception e) {
+            this.plugin.getLogger().warning("Could not create task list: " + e.getMessage());
+            return false;
+        }
 
         // Randomly get items
         this.tasks = Utils.getRandomItems(allTasks, Math.min(this.maxLockinTasks, allTasks.size()));
@@ -155,7 +155,7 @@ public class LockinTaskHandler {
     public List<LockinTask> GetTasks() { return new ArrayList<>(this.tasks); }
     public boolean areAllTasksDone() { 
         for (LockinTask task : this.tasks) {
-            if (!task.isComplete()) return false;
+            if (!task.haveAllTeamsCompleted()) return false;
         }
         return true;
     }
@@ -186,7 +186,6 @@ public class LockinTaskHandler {
         }
 
         this.lockinCompass.updateTasksInventory(this);
-        System.out.println("Task completed: " + task.name + ", Value: " + task.value);
         this.lockinScoreboard.addScore(completedPlayer, task.value);
     }
 

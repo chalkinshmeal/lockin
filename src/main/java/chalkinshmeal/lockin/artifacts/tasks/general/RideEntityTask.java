@@ -53,7 +53,7 @@ public class RideEntityTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
         if (entityTypeStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
 
@@ -87,7 +87,7 @@ class RideEntityTaskListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityMountEvent(EntityMountEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityMountEvent(event);
     }
 }

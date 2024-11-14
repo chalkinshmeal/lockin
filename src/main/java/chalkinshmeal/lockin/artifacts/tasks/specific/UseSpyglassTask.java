@@ -38,6 +38,7 @@ public class UseSpyglassTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<UseSpyglassTask> getTasks(int tier) {
+        if (tier != 6) return new ArrayList<>();
         List<UseSpyglassTask> tasks = new ArrayList<>();
         tasks.add(new UseSpyglassTask());
         return tasks;
@@ -70,7 +71,7 @@ class UseSpyglassTaskPlayerInteractEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEvent(event);
     }
 }

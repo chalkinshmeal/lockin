@@ -77,7 +77,7 @@ class DieTaskPlayerDeathEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerDeathEvent(event);
     }
 }

@@ -36,6 +36,7 @@ public class EnterNetherTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EnterNetherTask> getTasks(int tier) {
+        if (tier != 4) return new ArrayList<>();
         List<EnterNetherTask> tasks = new ArrayList<>();
         tasks.add(new EnterNetherTask());
         return tasks;
@@ -68,7 +69,7 @@ class EnterNetherTaskPlayerChangedWorldEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerChangedWorldEvent(PlayerChangedWorldEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerChangedWorldEvent(event);
     }
 }

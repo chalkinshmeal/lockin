@@ -66,7 +66,7 @@ public class PunchAnEntityWithItemTask extends LockinTask {
         Collections.shuffle(materialStrs);
 
         if (materialStrs.size() == 0 || entityTypeStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
         for (int i = 0; i < Math.min(taskCount, entityTypeStrs.size()); i++) {
@@ -104,7 +104,7 @@ class PunchAnEntityWithItemTaskPlayerInteractListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityDamageByEntityEvent(event);
     }
 }

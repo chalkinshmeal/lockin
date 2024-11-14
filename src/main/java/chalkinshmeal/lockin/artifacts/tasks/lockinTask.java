@@ -118,10 +118,12 @@ public abstract class LockinTask {
             .decoration(TextDecoration.ITALIC, false);
         this.item = Utils.addLore(this.item, teamLore);
 
-        for (String teamName : LockinTask.lockinTeamHandler.getDisplayTeamNames()) {
+        for (int i = 0; i < LockinTask.lockinTeamHandler.getNumTeams(); i++) {
+            String teamName = LockinTask.lockinTeamHandler.getTeamName(i);
+            String displayTeamName = LockinTask.lockinTeamHandler.getDisplayTeamName(i);
             NamedTextColor teamColor = this.completed.contains(teamName) ? NamedTextColor.GREEN : NamedTextColor.RED;
             String completeText = this.completed.contains(teamName) ? ":)" : ":(";
-            Component individualTeamLore = Component.text(" " + teamName, NamedTextColor.DARK_AQUA)
+            Component individualTeamLore = Component.text(" " + displayTeamName, NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text(" " + completeText, teamColor));
             this.item = Utils.addLore(this.item, individualTeamLore);
@@ -135,23 +137,35 @@ public abstract class LockinTask {
         //        .append(Component.text((this.reward == null) ? "Nothing" : this.reward.getDescription(), NamedTextColor.LIGHT_PURPLE));
         //this.item = Utils.addLore(this.item, rewardLore);
     }
-    public boolean isComplete() {
+    public boolean haveAllTeamsCompleted() {
         for (String teamName : LockinTask.lockinTeamHandler.getTeamNames()) {
             if (!this.completed.contains(teamName)) return false;
         }
         return true;
     }
+    public boolean hasCompleted(String teamName) { return this.completed.contains(teamName); }
 
     //---------------------------------------------------------------------------------------------
     // Task methods
     //---------------------------------------------------------------------------------------------
     public void complete(Player player) {
-        this.completed.add(lockinTeamHandler.getTeamName(player));
-        this.item = Utils.setMaterial(this.item, Material.GRAY_STAINED_GLASS_PANE);
+        System.out.println("[LockinTask] Completed task: " + this.name);
+        String teamName = lockinTeamHandler.getTeamName(player);
+        if (this.hasCompleted(teamName)) return;
+
+        this.completed.add(teamName);
+        System.out.println("[LockinTask] Completed team names: ");
+        for (String _teamName : this.completed) {
+            System.out.println("[LockinTask]   " + _teamName);
+        }
         lockinTaskHandler.complete(this, player);
-        this.unRegisterListeners();
         if (this.reward != null) this.reward.giveReward(player);
         this.setLore();
+
+        if (this.haveAllTeamsCompleted()) {
+            this.item = Utils.setMaterial(this.item, Material.GRAY_STAINED_GLASS_PANE);
+            this.unRegisterListeners();
+        }
     }
 
     //---------------------------------------------------------------------------------------------

@@ -59,7 +59,7 @@ public class SpecificDeathTask extends LockinTask {
         List<String> damageCauseStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
         int loopCount = taskCount;
         if (damageCauseStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
 
@@ -102,7 +102,7 @@ class SpecificDeathTaskEntityDeathEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityDeathEvent(event);
     }
 }

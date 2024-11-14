@@ -54,7 +54,7 @@ public class ShootBlockTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
         if (materialStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
 
@@ -96,7 +96,7 @@ class ShootBlockTaskPlayerItemConsumeListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onProjectileHitEvent(ProjectileHitEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onProjectileHitEvent(event);
     }
 }

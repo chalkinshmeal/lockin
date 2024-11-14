@@ -1,6 +1,8 @@
 package chalkinshmeal.lockin.artifacts.compass;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,7 +28,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 public class LockinCompass {
     private final LockinTeamHandler lockinTeamHandler;
     private final Inventory teamsInv;
-    private final Inventory tasksInv; 
+    private final Map<String, Inventory> tasksInvs; 
     private final int taskCount;
     private boolean isActive;
 
@@ -42,7 +44,11 @@ public class LockinCompass {
         this.lockinTeamHandler = lockinTeamHandler;
         this.taskCount = Utils.getHighestMultiple((int) configHandler.getInt("taskCount", 27), 9);
         this.teamsInv = Bukkit.createInventory(null, 9, Component.text(this.teamsInvName, NamedTextColor.LIGHT_PURPLE));
-        this.tasksInv = Bukkit.createInventory(null, this.taskCount, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
+        this.tasksInvs = new HashMap<>();
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            Inventory newInv = Bukkit.createInventory(null, this.taskCount, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
+            this.tasksInvs.put(teamName, newInv);
+        }
         this.isActive = false;
 
         this.updateTeamsInventory();
@@ -55,6 +61,7 @@ public class LockinCompass {
     public int getMaxTeams() { return this.lockinTeamHandler.getNumTeams(); }
     public String getInvName() { return (this.isActive) ? Utils.stripColor(this.tasksInvName) : Utils.stripColor(this.teamsInvName); }
     public int getMaxSlots() {return (this.isActive) ? this.taskCount : this.lockinTeamHandler.getNumTeams(); }
+    public Inventory getTaskInv(Player player) { return this.tasksInvs.get(this.lockinTeamHandler.getTeamName(player)); }
     public void SetIsActive(boolean isActive) { this.isActive = isActive; }
 
     //---------------------------------------------------------------------------------------------
@@ -69,17 +76,26 @@ public class LockinCompass {
     }
 
     public void updateTasksInventory(LockinTaskHandler lockinTaskHandler) {
-        this.tasksInv.clear();
+        for (Inventory tasksInv : this.tasksInvs.values()) {
+            tasksInv.clear();
+        }
         if (lockinTaskHandler == null) return;
 
         for (LockinTask task : lockinTaskHandler.GetTasks()) {
             task.setLore();
-            this.tasksInv.addItem(task.getItem());
+            for (String teamName : this.tasksInvs.keySet()) {
+                Inventory tasksInv = this.tasksInvs.get(teamName);
+                ItemStack taskItem = task.getItem();
+                if (task.hasCompleted(teamName)) {
+                    taskItem = Utils.setMaterial(taskItem, Material.GRAY_STAINED_GLASS_PANE);
+                }
+                tasksInv.addItem(taskItem);
+            }
         }
     }
 
     public void openInventory(Player player) {
-        if (this.isActive) player.openInventory(this.tasksInv);
+        if (this.isActive) player.openInventory(this.getTaskInv(player));
         else player.openInventory(this.teamsInv);
     }
 
@@ -111,7 +127,7 @@ public class LockinCompass {
 
     public void onInventoryClickEvent(InventoryClickEvent event) {
         // Check that inventory name matches
-        String invName = Utils.stripColor(event.getView().getOriginalTitle());
+        String invName = Utils.asString(event.getView().title());
         if (!invName.equals(this.getInvName())) return;
 
         // Prevent movement
@@ -134,7 +150,7 @@ public class LockinCompass {
 
     public void onInventoryDragEvent(InventoryDragEvent event) {
         // Check that inventory name matches
-        String invName = Utils.stripColor(event.getView().getOriginalTitle());
+        String invName = Utils.asString(event.getView().title());
         if (!invName.equals(this.getInvName())) return;
 
         event.setCancelled(true);

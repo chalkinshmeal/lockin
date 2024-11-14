@@ -37,6 +37,7 @@ public class EnterBoatWithPassengerTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<EnterBoatWithPassengerTask> getTasks(int tier) {
+        if (tier != 1) return new ArrayList<>();
         List<EnterBoatWithPassengerTask> tasks = new ArrayList<>();
         tasks.add(new EnterBoatWithPassengerTask());
         return tasks;
@@ -71,7 +72,7 @@ class EnterBoatWithPassengerTaskVehicleEnterEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onVehicleEnterEvent(VehicleEnterEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onVehicleEnterEvent(event);
     }
 }

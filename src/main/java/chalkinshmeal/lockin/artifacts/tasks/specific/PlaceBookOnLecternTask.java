@@ -37,6 +37,7 @@ public class PlaceBookOnLecternTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<PlaceBookOnLecternTask> getTasks(int tier) {
+        if (tier != 3) return new ArrayList<>();
         List<PlaceBookOnLecternTask> tasks = new ArrayList<>();
         tasks.add(new PlaceBookOnLecternTask());
         return tasks;
@@ -74,7 +75,7 @@ class PlaceBookOnLecternTaskPlayerInteractEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEvent(event);
     }
 }

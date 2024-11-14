@@ -54,7 +54,7 @@ public class PlaceFlowerInPotTask extends LockinTask {
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
 
         if (materialStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
         for (int i = 0; i < Math.min(taskCount, materialStrs.size()); i++) {
@@ -100,7 +100,7 @@ class PlaceFlowerInPotTaskPlayerItemConsumeListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerInteractEvent(event);
     }
 }

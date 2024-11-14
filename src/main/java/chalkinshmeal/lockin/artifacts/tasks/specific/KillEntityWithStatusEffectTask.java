@@ -38,6 +38,7 @@ public class KillEntityWithStatusEffectTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<KillEntityWithStatusEffectTask> getTasks(int tier) {
+        if (tier != 5) return new ArrayList<>();
         List<KillEntityWithStatusEffectTask> tasks = new ArrayList<>();
         tasks.add(new KillEntityWithStatusEffectTask());
         return tasks;
@@ -69,7 +70,7 @@ class KillEntityWithStatusEffectTaskEntityDeathEventListener implements Listener
     /** Event Handler */
     @EventHandler
     public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityDeathEvent(event);
     }
 }

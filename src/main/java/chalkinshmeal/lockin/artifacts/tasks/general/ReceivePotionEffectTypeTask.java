@@ -53,7 +53,7 @@ public class ReceivePotionEffectTypeTask extends LockinTask {
         List<String> potionEffectTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
 
         if (potionEffectTypeStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
         for (int i = 0; i < taskCount; i++) {
@@ -93,7 +93,7 @@ class ReceivePotionEffectTypeTaskPlayerCraftListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onEntityPotionEffectEvent(EntityPotionEffectEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onEntityPotionEffectEvent(event);
     }
 }

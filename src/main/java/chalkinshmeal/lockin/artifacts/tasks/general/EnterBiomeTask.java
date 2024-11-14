@@ -57,7 +57,7 @@ public class EnterBiomeTask extends LockinTask {
         List<String> biomeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
         int loopCount = taskCount;
         if (biomeStrs.size() == 0) {
-            plugin.getLogger().warning("Could not find any entries at config key '" + configKey + "'. Skipping " + configKey);
+            
             return tasks;
         }
 
@@ -94,7 +94,7 @@ class EnterBiomeTaskPlayerItemConsumeListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onPlayerMoveEvent(event);
     }
 }

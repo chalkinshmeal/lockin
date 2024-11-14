@@ -14,6 +14,7 @@ public class LockinTeamHandler {
     private JavaPlugin plugin;
     private LinkedHashMap<String, HashSet<UUID>> teams = new LinkedHashMap<>();
     private LinkedHashMap<String, Material> teamMaterials = new LinkedHashMap<>();
+    private boolean debug = true;
 
     public LockinTeamHandler(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -29,6 +30,23 @@ public class LockinTeamHandler {
         this.teamMaterials.put("Team 3", Material.RED_WOOL);
         this.teamMaterials.put("Team 4", Material.MAGENTA_WOOL);
     }
+
+    //---------------------------------------------------------------------------------------------
+    // Init methods
+    //---------------------------------------------------------------------------------------------
+    // Initialization
+    public void init() {
+        if (debug) this.plugin.getLogger().info("[LockinTeamHandler::init] Removing all empty teams");
+        List<String> teamNamesToRemove = new ArrayList<>();
+        // Remove empty teams
+        for (String teamName : this.teams.keySet()) {
+            HashSet<UUID> teamPlayers = this.teams.get(teamName);
+            if (teamPlayers.size() == 0) teamNamesToRemove.add(teamName);
+        }
+        for (String teamNameToRemove : teamNamesToRemove) {
+            this.teams.remove(teamNameToRemove);
+        }
+    }
     
     //---------------------------------------------------------------------------------------------
     // Accessor/Mutator methods
@@ -42,35 +60,37 @@ public class LockinTeamHandler {
         this.teamMaterials.put(teamName, material);
     }
 
+    // Display
+    public List<String> getDisplayTeamNames() {
+        List<String> displayTeamNames = new ArrayList<>();
+        for (int i = 0; i < this.getNumTeams(); i++) {
+            String displayTeamName = this.getDisplayTeamName(i);
+            if (displayTeamName != null) displayTeamNames.add(displayTeamName);
+        }
+        return displayTeamNames;
+    }
+    public String getDisplayTeamName(int teamIndex) {
+        if (this.getPlayerNames(teamIndex).size() == 0) return null;
+
+        boolean oneManTeam = this.getPlayerNames(teamIndex).size() == 1;
+        String firstPlayerName = this.getPlayerNames(teamIndex).get(0);
+        String teamName = this.getTeamName(teamIndex);
+        return oneManTeam ? firstPlayerName : teamName;
+    }
+
     public int getNumTeams() { return this.teams.size(); }
     public HashSet<UUID> getTeamPlayers(String teamName) { return this.teams.get(teamName); }
     public HashSet<UUID> getTeamPlayers(int teamIndex) { return new ArrayList<>(this.teams.values()).get(teamIndex); }
     public List<String> getTeamNames() { return new ArrayList<>(this.teams.keySet()); }
-    public List<String> getDisplayTeamNames() {
-        List<String> displayTeamNames = new ArrayList<>();
-        for (String teamName : this.getTeamNames()) {
-            int teamIndex = this.getTeamIndex(teamName);
-            if (this.getPlayerNames(teamIndex).size() == 0) continue;
-
-            boolean oneManTeam = this.getPlayerNames(teamIndex).size() == 1;
-            String displayName = oneManTeam ? this.getPlayerNames(teamIndex).get(0) : teamName;
-            displayTeamNames.add(displayName);
-        }
-        return displayTeamNames;
-    }
     public String getTeamName(Player player) {
-        System.out.println("[lockinTeamHandler::getTeamName] Fetching team name for player " + player);
         for (String teamName : this.teams.keySet()) {
-            System.out.println("[lockinTeamHandler::getTeamName] - Are they on team: " + teamName);
             if (this.teams.get(teamName).contains(player.getUniqueId())) {
-                System.out.println("[lockinTeamHandler::getTeamName] - Yes!");
                 return teamName;
             }
-            System.out.println("[lockinTeamHandler::getTeamName] - Nope!");
         }
-        System.out.println("COULDN'T FIND");
         return null;
     }
+
     public String getTeamName(int teamIndex) {
         return new ArrayList<>(this.teams.keySet()).get(teamIndex);
     }

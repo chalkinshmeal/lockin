@@ -38,6 +38,7 @@ public class BrewPotionTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<BrewPotionTask> getTasks(int tier) {
+        if (tier != 8) return new ArrayList<>();
         List<BrewPotionTask> tasks = new ArrayList<>();
         tasks.add(new BrewPotionTask());
         return tasks;
@@ -66,7 +67,7 @@ class BrewPotionTaskBrewEventListener implements Listener {
     /** Event Handler */
     @EventHandler
     public void onBrewEvent(BrewEvent event) {
-        if (this.task.isComplete()) return;
+        if (this.task.haveAllTeamsCompleted()) return;
         this.task.onBrewEvent(event);
     }
 }
