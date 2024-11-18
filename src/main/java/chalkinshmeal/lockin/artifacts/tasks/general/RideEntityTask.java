@@ -52,12 +52,9 @@ public class RideEntityTask extends LockinTask {
         List<RideEntityTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
-        if (entityTypeStrs.size() == 0) {
-            
-            return tasks;
-        }
+        int loopCount = Math.min(taskCount, entityTypeStrs.size());
 
-        for (int i = 0; i < Math.min(taskCount, entityTypeStrs.size()); i++) {
+        for (int i = 0; i < loopCount; i++) {
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
             tasks.add(new RideEntityTask(entityType));
         }

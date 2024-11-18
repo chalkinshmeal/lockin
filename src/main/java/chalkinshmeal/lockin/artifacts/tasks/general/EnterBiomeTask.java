@@ -55,11 +55,7 @@ public class EnterBiomeTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
         List<String> biomeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
-        int loopCount = taskCount;
-        if (biomeStrs.size() == 0) {
-            
-            return tasks;
-        }
+        int loopCount = Math.min(taskCount, biomeStrs.size());
 
         for (int i = 0; i < loopCount; i++) {
             Biome biome = Biome.valueOf(biomeStrs.get(i));

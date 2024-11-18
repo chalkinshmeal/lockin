@@ -10,11 +10,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import chalkinshmeal.lockin.utils.PlayerUtils;
+
 public class LockinTeamHandler {
     private JavaPlugin plugin;
     private LinkedHashMap<String, HashSet<UUID>> teams = new LinkedHashMap<>();
     private LinkedHashMap<String, Material> teamMaterials = new LinkedHashMap<>();
-    private boolean debug = true;
+    private boolean debug = false;
 
     public LockinTeamHandler(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -77,6 +79,9 @@ public class LockinTeamHandler {
         String teamName = this.getTeamName(teamIndex);
         return oneManTeam ? firstPlayerName : teamName;
     }
+    public String getDisplayTeamName(Player player) {
+        return this.getDisplayTeamName(this.getTeamIndex(player));
+    }
 
     public int getNumTeams() { return this.teams.size(); }
     public HashSet<UUID> getTeamPlayers(String teamName) { return this.teams.get(teamName); }
@@ -125,7 +130,7 @@ public class LockinTeamHandler {
         List<HashSet<UUID>> teamPlayerList = new ArrayList<>(this.teams.values());
         HashSet<UUID> teamPlayers = teamPlayerList.get(teamIndex);
         List<String> playerNames = new ArrayList<>();
-        for (UUID uuid : teamPlayers) playerNames.add(this.plugin.getServer().getPlayer(uuid).getName());
+        for (UUID uuid : teamPlayers) playerNames.add(PlayerUtils.getPlayerName(uuid));
         return playerNames; 
     }
     public void addPlayer(Player player, String teamName) {
@@ -157,4 +162,22 @@ public class LockinTeamHandler {
         return players;
     }
 
+    public List<UUID> getAllPlayerUUIDs() {
+        List<UUID> uuids = new ArrayList<>();
+        for (String teamName : this.teams.keySet()) {
+            for (UUID uuid : this.teams.get(teamName)) {
+                uuids.add(uuid);
+            }
+        }
+        return uuids;
+    }
+
+    public List<Player> getAllOnlinePlayers() {
+        List<Player> players = new ArrayList<>();
+        for (UUID uuid : this.getAllPlayerUUIDs()) {
+            Player player = this.plugin.getServer().getPlayer(uuid);
+            if (player != null) players.add(player);
+        }
+        return players;
+    }
 }

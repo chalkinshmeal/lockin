@@ -24,31 +24,48 @@ public class LockinTaskHandler {
     private final JavaPlugin plugin;
     private final ConfigHandler configHandler;
     private final LockinCompass lockinCompass;
-    private final LockinScoreboard lockinScoreboard;
     private LockinRewardHandler lockinRewardHandler;
-    private final int maxLockinTasks;
+    private int tasksPerTier;
     private List<LockinTask> tasks;
 
     public LockinTaskHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass,
-                             LockinScoreboard lockinScoreboard, LockinTeamHandler lockinTeamHandler) {
+                                LockinScoreboard lockinScoreboard, LockinTeamHandler lockinTeamHandler) {
         this.plugin = plugin;
         this.configHandler = configHandler;
         this.lockinCompass = lockinCompass;
-        this.lockinScoreboard = lockinScoreboard;
         this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
         this.tasks = new ArrayList<>();
-        this.maxLockinTasks = this.configHandler.getInt("taskCount", 27);
+        this.tasksPerTier = this.configHandler.getInt("tasksPerTier", 9);
 
         LockinTask.initStaticVariables(plugin, configHandler, this, lockinRewardHandler, lockinTeamHandler);
     }
 
-    // Create the list of tasks for this lockin challenge
+    //---------------------------------------------------------------------------------------------
+    // Accessor/Mutator methods
+    //---------------------------------------------------------------------------------------------
+    public void setTasksPerTier(int tasksPerTier) { this.tasksPerTier = tasksPerTier; }
+    public List<LockinTask> getTasks() { return new ArrayList<>(this.tasks); }
+    public boolean areAllTasksDone() { 
+        for (LockinTask task : this.tasks) {
+            if (!task.haveAllTeamsCompleted()) return false;
+        }
+        return true;
+    }
+
+    //---------------------------------------------------------------------------------------------
+	// Task methods
+    //---------------------------------------------------------------------------------------------
+    public void stopCurrentTasks() {
+        for (LockinTask task : this.tasks) { task.stop(); }
+    }
+
+    // Update the list of tasks for this lockin challenge
     // Return true if successful, false if not
-    public boolean CreateTaskList(int tier) {
+    public boolean updateTaskList(int tier) {
         this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
 
         List<LockinTask> allTasks = new ArrayList<>();
-        try {
+        //try {
             // General tasks
             allTasks.addAll(ActivateBlockTask.getTasks(tier));
             allTasks.addAll(BreakItemsTask.getTasks(tier));
@@ -108,14 +125,14 @@ public class LockinTaskHandler {
             allTasks.addAll(UseSpyglassTask.getTasks(tier));
             allTasks.addAll(WearFullDyedLeatherArmorTask.getTasks(tier));
             allTasks.addAll(WearFullIronArmorTask.getTasks(tier));
-        }
-        catch (Exception e) {
-            this.plugin.getLogger().warning("Could not create task list: " + e.getMessage());
-            return false;
-        }
+        //}
+        //catch (Exception e) {
+        //    this.plugin.getLogger().warning("Could not create task list: " + e.getMessage());
+        //    return false;
+        //}
 
         // Randomly get items
-        this.tasks = Utils.getRandomItems(allTasks, Math.min(this.maxLockinTasks, allTasks.size()));
+        this.tasks = Utils.getRandomItems(allTasks, Math.min(this.tasksPerTier, allTasks.size()));
         Collections.shuffle(this.tasks);
 
         // Initialize tasks (Generate rewards, set lore, etc.)
@@ -126,51 +143,6 @@ public class LockinTaskHandler {
         return true;
     }
 
-    //public void CreateSuddenDeathTaskList() {
-    //    this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
-
-    //    List<LockinTask> suddenDeathTasks = new ArrayList<>();
-    //    try {
-    //        suddenDeathTasks.addAll(ObtainItemsTask.getTasks(plugin, configHandler, this, lockinRewardHandler, false, true));
-    //    }
-
-    //    catch (Exception e) {
-    //        this.plugin.getLogger().warning("Could not create task list: " + e.getMessage());
-    //        return;
-    //    }
-
-    //    // Randomly get items
-    //    this.tasks = suddenDeathTasks;
-    //    Collections.shuffle(this.tasks);
-
-    //    // Initialize tasks (Generate rewards, set lore, etc.)
-    //    for (LockinTask task : this.tasks.values()) {
-    //        task.init();
-    //    }
-    //}
-
-    //---------------------------------------------------------------------------------------------
-	// Accessor/Mutator methods
-    //---------------------------------------------------------------------------------------------
-    public List<LockinTask> GetTasks() { return new ArrayList<>(this.tasks); }
-    public boolean areAllTasksDone() { 
-        for (LockinTask task : this.tasks) {
-            if (!task.haveAllTeamsCompleted()) return false;
-        }
-        return true;
-    }
-
-    public boolean areSuddenDeathTasksDone() {
-        int requiredPoints = (int) Math.ceil(this.tasks.size() / 2);
-        for (String teamName : this.lockinScoreboard.getTeamNames()) {
-            if (this.lockinScoreboard.getScore(teamName) >= requiredPoints) return true;
-        }
-        return false;
-    }
-
-    //---------------------------------------------------------------------------------------------
-	// Task methods
-    //---------------------------------------------------------------------------------------------
     public void complete(LockinTask task, Player completedPlayer) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(Component.text()
@@ -186,11 +158,10 @@ public class LockinTaskHandler {
         }
 
         this.lockinCompass.updateTasksInventory(this);
-        this.lockinScoreboard.addScore(completedPlayer, task.value);
     }
 
     //---------------------------------------------------------------------------------------------
-	// Register all server-wide listeners
+	// Listener methods
     //---------------------------------------------------------------------------------------------
 	public void registerListeners() {
         for (LockinTask task : this.tasks) {

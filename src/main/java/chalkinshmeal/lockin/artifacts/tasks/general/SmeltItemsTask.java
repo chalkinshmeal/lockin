@@ -57,12 +57,8 @@ public class SmeltItemsTask extends LockinTask {
         List<SmeltItemsTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
-        int loopCount = taskCount;
+        int loopCount = Math.min(taskCount, materialStrs.size());
 
-        if (materialStrs.size() == 0) {
-            
-            return tasks;
-        }
         for (int i = 0; i < loopCount; i++) {
             String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));

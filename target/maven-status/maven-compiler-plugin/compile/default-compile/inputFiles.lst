@@ -13,6 +13,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\InteractItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\StandOnBlockTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\GetExpLevelTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\PlayerUtils.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\KillEntityWithItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\commands\StopCommand.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\cmdframework\argument\Flag.java
@@ -44,8 +45,10 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\team\LockinTeamHandler.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\EnchantItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\cmdframework\command\BaseCommand.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\LoggerUtils.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\PlaceFlowerInPotTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\data\LootConfig.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\WorldUtils.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\ShootProjectileTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\LaunchFireworkTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\EatItemTask.java
@@ -77,6 +80,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\compass\LockinCompass.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\scoreboard\LockinScoreboard.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\ShearColoredSheepTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\LockinTaskState.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\UseEyeOfEnderTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\PlayerInteractListener.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\SneakOnBlockTask.java

@@ -42,6 +42,7 @@ public abstract class LockinTask {
     protected boolean isPunishment;
     protected boolean isSuddenDeath;
     protected boolean applyAAnRules;
+    protected LockinTaskState state;
 
     //---------------------------------------------------------------------------------------------
     // Constructor
@@ -58,6 +59,7 @@ public abstract class LockinTask {
         this.isSuddenDeath = false;
         this.applyAAnRules = true;
         this.nameColor = NamedTextColor.BLUE;
+        this.state = LockinTaskState.RUN;
         Utils.setDisplayName(item, this.itemDisplayName);
 
         this.validateConfig();
@@ -149,24 +151,23 @@ public abstract class LockinTask {
     // Task methods
     //---------------------------------------------------------------------------------------------
     public void complete(Player player) {
-        System.out.println("[LockinTask::complete] Completed task: " + this.name);
         String teamName = lockinTeamHandler.getTeamName(player);
         if (this.hasCompleted(teamName)) return;
 
-        System.out.println("[LockinTask::complete] Completed team: " + teamName);
         this.completed.add(teamName);
-        System.out.println("[LockinTask::complete] Completed team names: ");
-        for (String _teamName : this.completed) {
-            System.out.println("[LockinTask::complete]   " + _teamName);
-        }
         lockinTaskHandler.complete(this, player);
         if (this.reward != null) this.reward.giveReward(player);
         this.setLore();
 
         if (this.haveAllTeamsCompleted()) {
             this.item = Utils.setMaterial(this.item, Material.GRAY_STAINED_GLASS_PANE);
-            this.unRegisterListeners();
+            this.stop();
         }
+    }
+    
+    public void stop() {
+        this.state = LockinTaskState.DONE;
+        this.unRegisterListeners();
     }
 
     //---------------------------------------------------------------------------------------------

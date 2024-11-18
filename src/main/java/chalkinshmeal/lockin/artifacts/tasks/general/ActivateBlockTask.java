@@ -50,11 +50,12 @@ public class ActivateBlockTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<ActivateBlockTask> tasks = new ArrayList<>();
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
+        int loopCount = Math.min(taskCount, materialStrs.size());
 
         if (materialStrs.size() == 0) {
             return tasks;
         }
-        for (int i = 0; i < taskCount; i++) {
+        for (int i = 0; i < loopCount; i++) {
             Material material = Material.valueOf(materialStrs.get(i));
             tasks.add(new ActivateBlockTask(material));
         }
@@ -92,4 +93,3 @@ class ActivateBlockTaskPlayerCraftListener implements Listener {
         this.task.onBlockRedstoneEvent(event);
     }
 }
-

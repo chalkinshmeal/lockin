@@ -4,8 +4,8 @@
 # The number of lives each team starts with
 maxLives: 3
 
-# The number of tasks per round
-taskCount: 9
+# The number of tasks per tier
+tasksPerTier: 9
 
 # The number of punishments per round
 punishmentCount: 1

@@ -17,29 +17,61 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
+import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.lockin.utils.LoggerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class LockinScoreboard {
     private final JavaPlugin plugin;
+    private final ConfigHandler configHandler;
     private final Scoreboard scoreboard;
     private final Objective objective;
     private final Map<String, Score> teamScores;
     private LockinTeamHandler lockinTeamHandler;
+    private int maxLives;
 
     @SuppressWarnings("deprecation")
-    public LockinScoreboard(JavaPlugin plugin) {
+    public LockinScoreboard(JavaPlugin plugin, ConfigHandler configHandler) {
         this.plugin = plugin;
+        this.configHandler = configHandler;
 
         ScoreboardManager manager = Bukkit.getScoreboardManager();
-        if (manager == null) {
-            throw new IllegalStateException("ScoreboardManager is not available");
-        }
-
         this.scoreboard = manager.getNewScoreboard();
-        this.objective = scoreboard.registerNewObjective("scores", "dummy", Component.text("lockin", NamedTextColor.GOLD));
+        this.objective = scoreboard.registerNewObjective("scores", "dummy", Component.text("Lives", NamedTextColor.GOLD));
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         this.teamScores = new HashMap<>();
+        this.maxLives = this.configHandler.getInt("maxLives", 1);
+    }
+
+    //-------------------------------------------------------------------------
+    // Accessor/Mutator methods
+    //-------------------------------------------------------------------------
+    public boolean atMostOneTeamHasPositiveLives() {
+        int positiveTeams = 0;
+        for (String teamName : this.getTeamNames()) {
+            if (this.getScore(teamName) > 0) positiveTeams += 1;
+        }
+        return positiveTeams <= 1;
+    }
+
+    public List<String> getWinningTeams() {
+        List<String> winningTeams = new ArrayList<>();
+        int maxScore = this.getMaxScore();
+        LoggerUtils.info("Max Score: " + maxScore);
+        for (String teamName : this.getTeamNames()) {
+            LoggerUtils.info("  Team Score for " + teamName + ": " + maxScore);
+            if (this.getScore(teamName) == maxScore) winningTeams.add(teamName);
+        }
+        return winningTeams;
+    }
+
+    public int getMaxScore() {
+        int maxValue = Integer.MIN_VALUE;
+        for (String teamName : this.getTeamNames()) {
+            if (this.getScore(teamName) > maxValue) { maxValue = this.getScore(teamName); }
+        }
+        return maxValue;
     }
 
     public void init(LockinTeamHandler lockinTeamHandler) {
@@ -47,8 +79,11 @@ public class LockinScoreboard {
 
         for (String teamName : this.lockinTeamHandler.getTeamNames()) {
             for (UUID uuid : this.lockinTeamHandler.getTeamPlayers(teamName)) {
-                this.addPlayerToTeam(this.plugin.getServer().getPlayer(uuid), teamName);
+                Player player = this.plugin.getServer().getPlayer(uuid);
+                this.addPlayerToTeam(player, teamName);
+                this.showToPlayer(player);
             }
+            this.setScore(teamName, this.maxLives);
         }
     }
 
@@ -97,6 +132,17 @@ public class LockinScoreboard {
         score.setScore(score.getScore() + scoreValue);
     }
 
+    public void subtractScore(String teamName, int scoreValue) {
+        Team team = scoreboard.getTeam(teamName);
+        if (team == null || team.getEntries().size() == 0) {
+            return;
+        }
+
+        String displayName = team.getEntries().size() == 1 ? team.getEntries().iterator().next() : teamName;
+        Score score = teamScores.computeIfAbsent(displayName, k -> objective.getScore(displayName));
+        score.setScore(score.getScore() - scoreValue);
+    }
+
     public void setScore(String teamName, int scoreValue) {
         Team team = scoreboard.getTeam(teamName);
         if (team == null || team.getEntries().size() == 0) {
@@ -110,6 +156,7 @@ public class LockinScoreboard {
 
     public int getScore(String teamName) {
         Team team = scoreboard.getTeam(teamName);
+        LoggerUtils.info("Team: " + team);
         if (team == null || team.getEntries().size() == 0) {
             return -1;
         }
@@ -142,4 +189,3 @@ public class LockinScoreboard {
         }
     }
 }
-

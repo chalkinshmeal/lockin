@@ -53,12 +53,9 @@ public class ShootBlockTask extends LockinTask {
         List<ShootBlockTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
-        if (materialStrs.size() == 0) {
-            
-            return tasks;
-        }
+        int loopCount = Math.min(taskCount, materialStrs.size());
 
-        for (int i = 0; i < taskCount; i++) {
+        for (int i = 0; i < loopCount; i++) {
             Material material = Material.valueOf(materialStrs.get(i));
             tasks.add(new ShootBlockTask(material));
         }

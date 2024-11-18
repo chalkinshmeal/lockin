@@ -21,6 +21,7 @@ import chalkinshmeal.lockin.listeners.server.InventoryClickListener;
 import chalkinshmeal.lockin.listeners.server.InventoryDragListener;
 import chalkinshmeal.lockin.listeners.server.PlayerInteractListener;
 import chalkinshmeal.lockin.listeners.server.PlayerJoinListener;
+import chalkinshmeal.lockin.utils.WorldUtils;
 import chalkinshmeal.lockin.utils.cmdframework.command.ParentCommand;
 import chalkinshmeal.lockin.utils.cmdframework.handler.CommandHandler;
 import net.kyori.adventure.text.Component;
@@ -42,7 +43,7 @@ public class Plugin extends JavaPlugin implements Listener {
 		this.cmdHandler = new CommandHandler(this);
         this.configHandler = new ConfigHandler(this);
         this.lockinTeamHandler = new LockinTeamHandler(this);
-        this.lockinScoreboard = new LockinScoreboard(this);
+        this.lockinScoreboard = new LockinScoreboard(this, this.configHandler);
         this.lockinCompass = new LockinCompass(this.configHandler, this.lockinTeamHandler);
         this.lockinTaskHandler = new LockinTaskHandler(
             this, this.configHandler, this.lockinCompass, this.lockinScoreboard, this.lockinTeamHandler);
@@ -60,7 +61,7 @@ public class Plugin extends JavaPlugin implements Listener {
 		this.getServer().getConsoleSender().sendMessage(welcomeMsg);
 
         // Create spawn cage
-        this.gameHandler.createSpawnCage();
+        WorldUtils.createSpawnCage();
 	}
 
 	/** Register all commands within the /command directory */

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.artifacts.tasks.LockinTaskState;
 
 public class StayStillTask extends LockinTask {
     private static final String configKey = "stayStillTask";
@@ -82,7 +83,7 @@ public class StayStillTask extends LockinTask {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (haveAllTeamsCompleted()) {
+                if (state != LockinTaskState.DONE || haveAllTeamsCompleted()) {
                     this.cancel();
                     return;
                 }

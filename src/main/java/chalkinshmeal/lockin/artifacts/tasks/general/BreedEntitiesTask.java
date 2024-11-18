@@ -16,8 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
 
-
-
 public class BreedEntitiesTask extends LockinTask {
     private static final String configKey = "breedEntitiesTask";
     private static final String normalKey = "entityTypes";
@@ -59,12 +57,9 @@ public class BreedEntitiesTask extends LockinTask {
         List<BreedEntitiesTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
+        int loopCount = Math.min(taskCount, entityTypeStrs.size());
 
-        if (entityTypeStrs.size() == 0) {
-            
-            return tasks;
-        }
-        for (int i = 0; i < taskCount; i++) {
+        for (int i = 0; i < loopCount; i++) {
             String entityTypeStr = entityTypeStrs.get(i);
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
             int amount = configHandler.getInt(configKey + "." + normalKey + "." + tier + "." + entityTypeStr, 1);

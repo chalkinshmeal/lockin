@@ -51,12 +51,9 @@ public class ReceivePotionEffectTypeTask extends LockinTask {
         List<ReceivePotionEffectTypeTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> potionEffectTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
+        int loopCount = Math.min(taskCount, potionEffectTypeStrs.size());
 
-        if (potionEffectTypeStrs.size() == 0) {
-            
-            return tasks;
-        }
-        for (int i = 0; i < taskCount; i++) {
+        for (int i = 0; i < loopCount; i++) {
             PotionEffectType potionEffectType = Utils.getPotionEffectTypeFromStr(potionEffectTypeStrs.get(i));
             tasks.add(new ReceivePotionEffectTypeTask(potionEffectType));
         }

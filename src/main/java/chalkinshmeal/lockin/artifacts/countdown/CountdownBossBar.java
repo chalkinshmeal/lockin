@@ -17,16 +17,19 @@ public class CountdownBossBar {
     private final JavaPlugin plugin;
     private final BossBar bossBar;
     private final Map<Player, BossBar> playerBossBars;
-    private int totalTime; // Total time in seconds
+    private final int totalTime; // Total time in seconds
+    private int currentTime;
+    private boolean isActive = true;
 
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
     public CountdownBossBar(JavaPlugin plugin, ConfigHandler configHandler, int totalTime) {
         this.plugin = plugin;
-        this.totalTime = totalTime;
         this.bossBar = BossBar.bossBar(Component.text("Initializing...", NamedTextColor.WHITE), (float) 1.0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
         this.playerBossBars = new HashMap<>();
+        this.totalTime = totalTime;
+        this.currentTime = totalTime;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -49,12 +52,18 @@ public class CountdownBossBar {
     }
 
     public void stop() {
+        this.isActive = false;
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             BossBar playerBossBar = playerBossBars.get(player);
             if (playerBossBar != null) {
                 player.hideBossBar(playerBossBar);
             }
         }
+    }
+
+    public void reset() {
+        this.currentTime = this.totalTime;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -64,15 +73,18 @@ public class CountdownBossBar {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (totalTime <= 0) {
+                if (!isActive) {
                     this.cancel();
-                    update(Component.text("Time's up!", NamedTextColor.RED));
                     return;
                 }
 
-                totalTime--;
-                int minutes = totalTime / 60;
-                int seconds = totalTime % 60;
+                if (currentTime <= 0) {
+                    update(Component.text("Time's up!", NamedTextColor.RED));
+                }
+
+                currentTime--;
+                int minutes = currentTime / 60;
+                int seconds = currentTime % 60;
                 String timeString = String.format("%02d:%02d", minutes, seconds);
 
                 update(Component.text(timeString, NamedTextColor.GREEN));

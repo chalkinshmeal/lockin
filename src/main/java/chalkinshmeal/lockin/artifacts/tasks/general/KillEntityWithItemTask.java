@@ -62,14 +62,10 @@ public class KillEntityWithItemTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey1 + "." + tier), taskCount);
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey2 + "." + tier), taskCount);
-
+        int loopCount = Math.min(taskCount, entityTypeStrs.size());
         Collections.shuffle(materialStrs);
 
-        if (materialStrs.size() == 0 || entityTypeStrs.size() == 0) {
-            
-            return tasks;
-        }
-        for (int i = 0; i < Math.min(taskCount, entityTypeStrs.size()); i++) {
+        for (int i = 0; i < Math.min(loopCount, entityTypeStrs.size()); i++) {
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
             Material material = Material.valueOf(materialStrs.get(i));
             tasks.add(new KillEntityWithItemTask(entityType, material));

@@ -60,12 +60,8 @@ public class KillEntitiesTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
-        int loopCount = taskCount;
+        int loopCount = Math.min(taskCount, entityTypeStrs.size());
 
-        if (entityTypeStrs.size() == 0) {
-            
-            return tasks;
-        }
         for (int i = 0; i < loopCount; i++) {
             String entityTypeStr = entityTypeStrs.get(i);
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));

@@ -52,12 +52,9 @@ public class CreateEntityTask extends LockinTask {
         List<CreateEntityTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
+        int loopCount = Math.min(taskCount, entityTypeStrs.size());
 
-        if (entityTypeStrs.size() == 0) {
-            
-            return tasks;
-        }
-        for (int i = 0; i < Math.min(taskCount, entityTypeStrs.size()); i++) {
+        for (int i = 0; i < loopCount; i++) {
             EntityType entityType = EntityType.valueOf(entityTypeStrs.get(i));
             tasks.add(new CreateEntityTask(entityType));
         }

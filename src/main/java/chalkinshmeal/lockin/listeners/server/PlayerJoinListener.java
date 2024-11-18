@@ -24,7 +24,7 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         this.lockinCompass.giveCompass(event.getPlayer());
-        if (this.gameHandler.isActive) {
+        if (this.gameHandler.isActive()) {
             this.lockinScoreboard.showToPlayer(event.getPlayer());
         }
         else {

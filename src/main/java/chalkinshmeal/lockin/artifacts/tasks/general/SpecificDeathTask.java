@@ -57,11 +57,7 @@ public class SpecificDeathTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
         List<String> damageCauseStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
-        int loopCount = taskCount;
-        if (damageCauseStrs.size() == 0) {
-            
-            return tasks;
-        }
+        int loopCount = Math.min(taskCount, damageCauseStrs.size());
 
         for (int i = 0; i < loopCount; i++) {
             String damageCauseStr = damageCauseStrs.get(i);

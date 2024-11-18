@@ -29,9 +29,9 @@ public class LockinCompass {
     private final LockinTeamHandler lockinTeamHandler;
     private final Inventory teamsInv;
     private final Map<String, Inventory> tasksInvs; 
-    private final int taskCount;
+    private final int tasksPerTier;
     private boolean isActive;
-    private boolean debug = true;
+    private boolean debug = false;
 
     private final Component compassDisplayName = Component.text(
         "Lockin", NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.ITALIC, false);
@@ -43,11 +43,11 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     public LockinCompass(ConfigHandler configHandler, LockinTeamHandler lockinTeamHandler) {
         this.lockinTeamHandler = lockinTeamHandler;
-        this.taskCount = Utils.getHighestMultiple((int) configHandler.getInt("taskCount", 27), 9);
+        this.tasksPerTier = Utils.getHighestMultiple((int) configHandler.getInt("tasksPerTier", 27), 9);
         this.teamsInv = Bukkit.createInventory(null, 9, Component.text(this.teamsInvName, NamedTextColor.LIGHT_PURPLE));
         this.tasksInvs = new HashMap<>();
         for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-            Inventory newInv = Bukkit.createInventory(null, this.taskCount, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
+            Inventory newInv = Bukkit.createInventory(null, this.tasksPerTier, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
             this.tasksInvs.put(teamName, newInv);
         }
         this.isActive = false;
@@ -61,7 +61,7 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     public int getMaxTeams() { return this.lockinTeamHandler.getNumTeams(); }
     public String getInvName() { return (this.isActive) ? Utils.stripColor(this.tasksInvName) : Utils.stripColor(this.teamsInvName); }
-    public int getMaxSlots() {return (this.isActive) ? this.taskCount : this.lockinTeamHandler.getNumTeams(); }
+    public int getMaxSlots() {return (this.isActive) ? this.tasksPerTier : this.lockinTeamHandler.getNumTeams(); }
     public Inventory getTaskInv(Player player) { return this.tasksInvs.get(this.lockinTeamHandler.getTeamName(player)); }
     public void SetIsActive(boolean isActive) { this.isActive = isActive; }
 
@@ -85,7 +85,7 @@ public class LockinCompass {
         if (lockinTaskHandler == null) return;
 
         if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]   Populating with tasks");
-        for (LockinTask task : lockinTaskHandler.GetTasks()) {
+        for (LockinTask task : lockinTaskHandler.getTasks()) {
             task.setLore();
             for (String teamName : this.tasksInvs.keySet()) {
                 if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]     Task: " + task.getName() + ", Team: " + teamName);

@@ -1,21 +1,7 @@
 package chalkinshmeal.lockin.utils;
 
 import static org.bukkit.Material.AIR;
-import static org.bukkit.enchantments.Enchantment.BANE_OF_ARTHROPODS;
-import static org.bukkit.enchantments.Enchantment.BLAST_PROTECTION;
-import static org.bukkit.enchantments.Enchantment.FEATHER_FALLING;
-import static org.bukkit.enchantments.Enchantment.FIRE_ASPECT;
-import static org.bukkit.enchantments.Enchantment.FIRE_PROTECTION;
-import static org.bukkit.enchantments.Enchantment.KNOCKBACK;
-import static org.bukkit.enchantments.Enchantment.PROJECTILE_PROTECTION;
-import static org.bukkit.enchantments.Enchantment.PROTECTION;
-import static org.bukkit.enchantments.Enchantment.RESPIRATION;
-import static org.bukkit.enchantments.Enchantment.SHARPNESS;
-import static org.bukkit.enchantments.Enchantment.SMITE;
-import static org.bukkit.enchantments.Enchantment.SOUL_SPEED;
-import static org.bukkit.enchantments.Enchantment.SWEEPING_EDGE;
-import static org.bukkit.enchantments.Enchantment.SWIFT_SNEAK;
-import static org.bukkit.enchantments.Enchantment.THORNS;
+import static org.bukkit.enchantments.Enchantment.*;
 import static org.bukkit.entity.EntityType.POTION;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;

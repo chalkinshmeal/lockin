@@ -51,12 +51,8 @@ public class CraftItemTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + subKey + "." + tier), taskCount);
-        int loopCount = taskCount;
+        int loopCount = Math.min(taskCount, materialStrs.size());
 
-        if (materialStrs.size() == 0) {
-            
-            return tasks;
-        }
         for (int i = 0; i < loopCount; i++) {
             Material material = Material.valueOf(materialStrs.get(i));
             tasks.add(new CraftItemTask(material));

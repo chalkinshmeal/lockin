@@ -42,6 +42,12 @@ public class Argument {
 		this.required = true;
 	}
 
+	public Argument(String name, ArgType type, boolean required) {
+		this.name = name;
+		this.type = type;
+		this.required = required;
+	}
+
 	public Argument(String name, ArgType type, List<String> tabList, boolean required) {
 		this.name = name;
 		this.type = type;

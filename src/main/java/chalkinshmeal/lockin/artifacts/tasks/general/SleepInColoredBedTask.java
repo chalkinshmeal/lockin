@@ -52,12 +52,9 @@ public class SleepInColoredBedTask extends LockinTask {
         List<SleepInColoredBedTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> dyeColorStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
-        if (dyeColorStrs.size() == 0) {
-            
-            return tasks;
-        }
+        int loopCount = Math.min(taskCount, dyeColorStrs.size());
 
-        for (int i = 0; i < Math.min(taskCount, dyeColorStrs.size()); i++) {
+        for (int i = 0; i < loopCount; i++) {
             DyeColor dyeColor = DyeColor.valueOf(dyeColorStrs.get(i));
             tasks.add(new SleepInColoredBedTask(dyeColor));
         }
