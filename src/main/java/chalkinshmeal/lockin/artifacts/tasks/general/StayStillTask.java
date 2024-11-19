@@ -56,7 +56,9 @@ public class StayStillTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<StayStillTask> getTasks(int tier) {
         List<StayStillTask> tasks = new ArrayList<>();
-        int targetSeconds = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        int targetSeconds = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetSeconds == -1) return tasks;
+
         tasks.add(new StayStillTask(targetSeconds));
         return tasks;
     }

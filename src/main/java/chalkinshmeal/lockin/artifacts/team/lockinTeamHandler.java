@@ -10,7 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.utils.PlayerUtils;
+import chalkinshmeal.lockin.utils.LoggerUtils;
+import chalkinshmeal.lockin.utils.EntityUtils;
 
 public class LockinTeamHandler {
     private JavaPlugin plugin;
@@ -82,11 +83,20 @@ public class LockinTeamHandler {
     public String getDisplayTeamName(Player player) {
         return this.getDisplayTeamName(this.getTeamIndex(player));
     }
+    public String getDisplayTeamName(String teamName) {
+        return this.getDisplayTeamName(this.getTeamIndex(teamName));
+    }
 
     public int getNumTeams() { return this.teams.size(); }
     public HashSet<UUID> getTeamPlayers(String teamName) { return this.teams.get(teamName); }
     public HashSet<UUID> getTeamPlayers(int teamIndex) { return new ArrayList<>(this.teams.values()).get(teamIndex); }
-    public List<String> getTeamNames() { return new ArrayList<>(this.teams.keySet()); }
+    public List<String> getTeamNames() {
+        if (debug) LoggerUtils.info("Getting team names: (Size: " + this.teams.size() + ")");
+        for (String teamName : this.teams.keySet()) {
+            if (debug) LoggerUtils.info("  " + teamName);
+        }
+        return new ArrayList<>(this.teams.keySet());
+    }
     public String getTeamName(Player player) {
         if (debug) this.plugin.getLogger().info("[LockinTeamHandler::getTeamName] Getting team name for player: " + player.getName());
         if (debug) this.plugin.getLogger().info("[LockinTeamHandler::getTeamName]   Teams:");
@@ -130,7 +140,7 @@ public class LockinTeamHandler {
         List<HashSet<UUID>> teamPlayerList = new ArrayList<>(this.teams.values());
         HashSet<UUID> teamPlayers = teamPlayerList.get(teamIndex);
         List<String> playerNames = new ArrayList<>();
-        for (UUID uuid : teamPlayers) playerNames.add(PlayerUtils.getPlayerName(uuid));
+        for (UUID uuid : teamPlayers) playerNames.add(EntityUtils.getPlayerName(uuid));
         return playerNames; 
     }
     public void addPlayer(Player player, String teamName) {
@@ -179,5 +189,13 @@ public class LockinTeamHandler {
             if (player != null) players.add(player);
         }
         return players;
+    }
+
+    public List<UUID> getAllOnlinePlayerUUIDs() {
+        List<UUID> uuids = new ArrayList<>();
+        for (Player player : this.getAllOnlinePlayers()) {
+            uuids.add(player.getUniqueId());
+        }
+        return uuids;
     }
 }

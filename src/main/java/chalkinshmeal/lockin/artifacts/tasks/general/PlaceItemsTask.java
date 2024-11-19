@@ -22,7 +22,7 @@ public class PlaceItemsTask extends LockinTask {
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<Player, Integer> placedItems;
+    private final Map<String, Integer> placedItems;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -80,8 +80,9 @@ public class PlaceItemsTask extends LockinTask {
 
         // Return if 
         Player player = event.getPlayer();
-        this.placedItems.put(player, this.placedItems.getOrDefault(player, 0) + 1);
-        if (this.placedItems.get(player) < this.amount) return;
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        this.placedItems.put(teamName, this.placedItems.getOrDefault(teamName, 0) + 1);
+        if (this.placedItems.get(teamName) < this.amount) return;
         this.complete(player);
     }
 }

@@ -1,13 +1,30 @@
 package chalkinshmeal.lockin.utils;
 
 import static org.bukkit.Material.AIR;
-import static org.bukkit.enchantments.Enchantment.*;
+import static org.bukkit.enchantments.Enchantment.BANE_OF_ARTHROPODS;
+import static org.bukkit.enchantments.Enchantment.BLAST_PROTECTION;
+import static org.bukkit.enchantments.Enchantment.FEATHER_FALLING;
+import static org.bukkit.enchantments.Enchantment.FIRE_ASPECT;
+import static org.bukkit.enchantments.Enchantment.FIRE_PROTECTION;
+import static org.bukkit.enchantments.Enchantment.KNOCKBACK;
+import static org.bukkit.enchantments.Enchantment.PROJECTILE_PROTECTION;
+import static org.bukkit.enchantments.Enchantment.PROTECTION;
+import static org.bukkit.enchantments.Enchantment.RESPIRATION;
+import static org.bukkit.enchantments.Enchantment.SHARPNESS;
+import static org.bukkit.enchantments.Enchantment.SMITE;
+import static org.bukkit.enchantments.Enchantment.SOUL_SPEED;
+import static org.bukkit.enchantments.Enchantment.SWEEPING_EDGE;
+import static org.bukkit.enchantments.Enchantment.SWIFT_SNEAK;
+import static org.bukkit.enchantments.Enchantment.THORNS;
 import static org.bukkit.entity.EntityType.POTION;
+import static org.bukkit.event.block.Action.LEFT_CLICK_AIR;
+import static org.bukkit.event.block.Action.LEFT_CLICK_BLOCK;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
 import static org.bukkit.event.entity.EntityPotionEffectEvent.Cause.AREA_EFFECT_CLOUD;
 import static org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.CUSTOM;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -151,6 +168,7 @@ public class Utils {
 
         throw new RuntimeException("Utils::getTrimMaterialFromStr: Invalid TrimMaterial string passed: '" + trimMaterialStr + "'");
     }
+    public static boolean isLeftClick(Action action) { return action.equals(LEFT_CLICK_BLOCK) || action.equals(LEFT_CLICK_AIR); }
     public static boolean isRightClick(Action action) { return action.equals(RIGHT_CLICK_BLOCK) || action.equals(RIGHT_CLICK_AIR); }
     public static boolean isMainHand(PlayerInteractEntityEvent event) { return event.getHand().equals(EquipmentSlot.HAND); }
     public static boolean isMainHand(PlayerInteractEvent event) { return event.getHand().equals(EquipmentSlot.HAND); }
@@ -1060,5 +1078,12 @@ public class Utils {
 
     public static String asString(Component component) {
         return PlainTextComponentSerializer.plainText().serialize(component);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 }

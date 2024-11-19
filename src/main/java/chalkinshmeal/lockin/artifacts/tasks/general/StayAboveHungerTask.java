@@ -48,7 +48,9 @@ public class StayAboveHungerTask extends LockinTask {
     public static List<StayAboveHungerTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
                                                           LockinRewardHandler lockinRewardHandler, int tier) {
         List<StayAboveHungerTask> tasks = new ArrayList<>();
-        int targetHunger = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
+        int targetHunger = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetHunger == -1) return tasks;
+
         tasks.add(new StayAboveHungerTask(targetHunger));
         return tasks;
     }

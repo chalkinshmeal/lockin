@@ -50,7 +50,9 @@ public class StayAboveHealthTask extends LockinTask {
     public static List<StayAboveHealthTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
                                                           LockinRewardHandler lockinRewardHandler, int tier) {
         List<StayAboveHealthTask> tasks = new ArrayList<>();
-        int targetHealth = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
+        int targetHealth = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetHealth == -1) return tasks;
+
         tasks.add(new StayAboveHealthTask(targetHealth));
         return tasks;
     }

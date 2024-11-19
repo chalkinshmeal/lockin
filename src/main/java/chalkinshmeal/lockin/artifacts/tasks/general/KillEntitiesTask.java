@@ -23,7 +23,7 @@ public class KillEntitiesTask extends LockinTask {
     private static final String normalKey = "entityTypes";
     private final EntityType entityType;
     private final int amount;
-    private final Map<Player, Integer> killedEntities;
+    private final Map<String, Integer> killedEntities;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -80,9 +80,10 @@ public class KillEntitiesTask extends LockinTask {
 
         if (!(event.getEntity().getKiller() instanceof Player)) return;
         Player player = event.getEntity().getKiller();
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
 
-        this.killedEntities.put(player, this.killedEntities.getOrDefault(player, 0) + 1);
-        if (this.killedEntities.get(player) < this.amount) return;
+        this.killedEntities.put(teamName, this.killedEntities.getOrDefault(teamName, 0) + 1);
+        if (this.killedEntities.get(teamName) < this.amount) return;
         this.complete(player);
     }
 }

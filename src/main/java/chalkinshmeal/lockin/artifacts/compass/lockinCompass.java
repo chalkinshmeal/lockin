@@ -3,6 +3,7 @@ package chalkinshmeal.lockin.artifacts.compass;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,21 +16,27 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.lockin.utils.EntityUtils;
+import chalkinshmeal.lockin.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
 public class LockinCompass {
+    private final JavaPlugin plugin;
     private final LockinTeamHandler lockinTeamHandler;
     private final Inventory teamsInv;
     private final Map<String, Inventory> tasksInvs; 
     private final int tasksPerTier;
+    private final Map<UUID, UUID> targets;
     private boolean isActive;
     private boolean debug = false;
 
@@ -41,7 +48,8 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public LockinCompass(ConfigHandler configHandler, LockinTeamHandler lockinTeamHandler) {
+    public LockinCompass(JavaPlugin plugin, ConfigHandler configHandler, LockinTeamHandler lockinTeamHandler) {
+        this.plugin = plugin;
         this.lockinTeamHandler = lockinTeamHandler;
         this.tasksPerTier = Utils.getHighestMultiple((int) configHandler.getInt("tasksPerTier", 27), 9);
         this.teamsInv = Bukkit.createInventory(null, 9, Component.text(this.teamsInvName, NamedTextColor.LIGHT_PURPLE));
@@ -50,10 +58,12 @@ public class LockinCompass {
             Inventory newInv = Bukkit.createInventory(null, this.tasksPerTier, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
             this.tasksInvs.put(teamName, newInv);
         }
+        this.targets = new HashMap<>();
         this.isActive = false;
 
         this.updateTeamsInventory();
         this.updateTasksInventory(null);
+        this.sendLocationInfo();
     }
 
     //---------------------------------------------------------------------------------------------
@@ -126,15 +136,18 @@ public class LockinCompass {
         if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerInteractEvent] --- Get Team (Before) ---");
         if (debug) this.lockinTeamHandler.getTeamName(event.getPlayer());
         if (event.getHand() != EquipmentSlot.HAND) return;
-        if (!Utils.isRightClick(event.getAction())) return;
         if (event.getItem() == null) return;
         if (event.getItem().getItemMeta().displayName() == null) return;
         if (!event.getItem().getItemMeta().displayName().equals(this.compassDisplayName)) return;
-
-        this.updateTeamsInventory();
-        this.openInventory(event.getPlayer());
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerInteractEvent] --- Get Team (After) ---");
-        if (debug) this.lockinTeamHandler.getTeamName(event.getPlayer());
+        if (Utils.isRightClick(event.getAction())) {
+            this.updateTeamsInventory();
+            this.openInventory(event.getPlayer());
+            if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerInteractEvent] --- Get Team (After) ---");
+            if (debug) this.lockinTeamHandler.getTeamName(event.getPlayer());
+        }
+        else if (Utils.isLeftClick(event.getAction())) {
+            this.setTarget(event.getPlayer(), event.getItem());
+        }
     }
 
     public void onInventoryClickEvent(InventoryClickEvent event) {
@@ -182,6 +195,84 @@ public class LockinCompass {
 
         if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerDragEvent] --- Get Team --- (After)");
         if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
+    }
+
+    //---------------------------------------------------------------------------------------------
+    // Target methods
+    //---------------------------------------------------------------------------------------------
+    private void setTarget(Player player, ItemStack compass) {
+        // Populate targets map if the UUID is new
+        UUID uuid = player.getUniqueId();
+        if (!this.targets.containsKey(uuid)) this.targets.put(uuid, null);
+
+        // Get all online player UUIDs, excluding the current player
+        List<UUID> allUUIDsInGame = this.lockinTeamHandler.getAllOnlinePlayerUUIDs();
+        allUUIDsInGame.remove(uuid);
+        if (allUUIDsInGame.size() == 0) return;
+
+        // Get old target
+        UUID oldTarget = this.targets.get(uuid);
+
+        // Get the next target
+        int newTargetIndex = 0;
+        if (oldTarget != null) {
+            newTargetIndex = allUUIDsInGame.indexOf(oldTarget);
+            if (newTargetIndex == allUUIDsInGame.size() - 1) newTargetIndex = 0;
+        }
+        UUID newTarget = allUUIDsInGame.get(newTargetIndex);
+
+        // Update target
+        this.targets.put(uuid, newTarget);
+    }
+
+    private void sendLocationInfo() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (UUID uuid : targets.keySet()) {
+                    // Require that the player is online
+                    Player player = plugin.getServer().getPlayer(uuid);
+                    if (player == null || !player.isOnline()) continue;
+
+                    // Require that the player is holding the compass in their main hand
+                    ItemStack compass = player.getInventory().getItemInMainHand();
+                    if (compass == null) continue;
+                    if (compass.getItemMeta() == null) continue;
+                    if (compass.getItemMeta().displayName() == null) continue;
+                    if (!compass.getItemMeta().displayName().equals(compassDisplayName)) continue;
+
+                    // Require that the player has an active target
+                    if (targets.get(uuid) == null) continue;
+
+                    // Send player location information
+                    Player targetPlayer = plugin.getServer().getPlayer(targets.get(uuid));
+                    Component locationInfo = null;
+                    if (targetPlayer == null || !player.isOnline()) {
+                        locationInfo = Component.text()
+                            .decoration(TextDecoration.ITALIC, false)
+                            .append(Component.text("Pointing to " + targetPlayer.getName() + " ", NamedTextColor.GRAY))
+                            .append(Component.text("(Player is offline)")).build();
+                    }
+                    else if (player.getWorld().getName() != targetPlayer.getWorld().getName()) {
+                        locationInfo = Component.text()
+                            .decoration(TextDecoration.ITALIC, false)
+                            .append(Component.text("Pointing to " + targetPlayer.getName() + " ", NamedTextColor.GRAY))
+                            .append(Component.text("(Player is not in your dimension)")).build();
+                    }
+                    else {
+                        float distanceAway = EntityUtils.getDistance(player, targetPlayer);
+                        locationInfo = Component.text()
+                            .decoration(TextDecoration.ITALIC, false)
+                            .append(Component.text("Pointing to " + targetPlayer.getName() + " ", NamedTextColor.GRAY))
+                            .append(Component.text("(" + distanceAway + " blocks)", NamedTextColor.BLUE)).build();
+                    }
+                    player.sendActionBar(locationInfo);
+
+                    // Update compass target
+                    ItemUtils.setCompassTarget(compass, targetPlayer);
+                }
+            }
+        }.runTaskTimer(plugin, 0, 2); // Run the task every 2 ticks (0.1 second)
     }
 
     //---------------------------------------------------------------------------------------------

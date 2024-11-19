@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
@@ -21,7 +20,7 @@ public class SmeltItemsTask extends LockinTask {
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<Player, Integer> smeltedCounts;
+    private final Map<String, Integer> smeltedCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -73,11 +72,12 @@ public class SmeltItemsTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void onFurnaceExtractEvent(FurnaceExtractEvent event) {
         var player = event.getPlayer();
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
         var itemsExtracted = event.getItemAmount();
         if (event.getItemType() != this.material) return;
 
-        smeltedCounts.put(player, smeltedCounts.getOrDefault(player, 0) + itemsExtracted);
-        if (this.smeltedCounts.get(player) < this.amount) return;
+        smeltedCounts.put(teamName, smeltedCounts.getOrDefault(teamName, 0) + itemsExtracted);
+        if (this.smeltedCounts.get(teamName) < this.amount) return;
 
         this.complete(player);
     }

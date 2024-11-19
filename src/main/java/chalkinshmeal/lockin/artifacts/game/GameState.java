@@ -4,5 +4,4 @@ public enum GameState {
     INACTIVE,
     QUEUE,
     PLAY,
-    DONE,
 }

@@ -19,7 +19,7 @@ public class ShearSheepTask extends LockinTask {
     private static final String configKey = "shearSheepTask";
     private static final String normalKey = "shears";
     private final int targetShears;
-    private final Map<Player, Integer> shearCounts;
+    private final Map<String, Integer> shearCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -47,7 +47,9 @@ public class ShearSheepTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<ShearSheepTask> getTasks(int tier) {
         List<ShearSheepTask> tasks = new ArrayList<>();
-        int targetShears = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
+        int targetShears = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetShears == -1) return tasks;
+
         tasks.add(new ShearSheepTask(targetShears));
         return tasks;
     }
@@ -58,9 +60,10 @@ public class ShearSheepTask extends LockinTask {
     public void onPlayerShearEntityEvent(PlayerShearEntityEvent event) {
         if (!(event.getEntity() instanceof Sheep)) return;
         Player player = event.getPlayer();
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
 
-        shearCounts.put(player, shearCounts.getOrDefault(player, 0) + 1);
-        if (shearCounts.get(player) < this.targetShears) return;
+        shearCounts.put(teamName, shearCounts.getOrDefault(teamName, 0) + 1);
+        if (shearCounts.get(teamName) < this.targetShears) return;
 
         this.complete(player);
     }

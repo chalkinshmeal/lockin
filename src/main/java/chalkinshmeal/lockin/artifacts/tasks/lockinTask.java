@@ -28,7 +28,7 @@ public abstract class LockinTask {
     protected static ConfigHandler configHandler;
     private static LockinTaskHandler lockinTaskHandler;
     private static LockinRewardHandler lockinRewardHandler;
-    private static LockinTeamHandler lockinTeamHandler;
+    protected static LockinTeamHandler lockinTeamHandler;
     protected List<Listener> listeners;
     private List<String> completed;
     public NamedTextColor nameColor;

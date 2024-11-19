@@ -30,6 +30,7 @@ public class LockinScoreboard {
     private final Map<String, Score> teamScores;
     private LockinTeamHandler lockinTeamHandler;
     private int maxLives;
+    private final boolean debug = false;
 
     @SuppressWarnings("deprecation")
     public LockinScoreboard(JavaPlugin plugin, ConfigHandler configHandler) {
@@ -55,20 +56,23 @@ public class LockinScoreboard {
         return positiveTeams <= 1;
     }
 
+    // Get the names of the winning teams
+    // This should be the actual team names, not the display names
     public List<String> getWinningTeams() {
         List<String> winningTeams = new ArrayList<>();
         int maxScore = this.getMaxScore();
-        LoggerUtils.info("Max Score: " + maxScore);
-        for (String teamName : this.getTeamNames()) {
-            LoggerUtils.info("  Team Score for " + teamName + ": " + maxScore);
-            if (this.getScore(teamName) == maxScore) winningTeams.add(teamName);
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            String displayTeamName = this.lockinTeamHandler.getDisplayTeamName(teamName);
+            if (this.getScore(displayTeamName) == maxScore) winningTeams.add(teamName);
         }
         return winningTeams;
     }
 
     public int getMaxScore() {
+        if (debug) LoggerUtils.info("Getting max score");
         int maxValue = Integer.MIN_VALUE;
         for (String teamName : this.getTeamNames()) {
+            if (debug) LoggerUtils.info("Checking team " + teamName + ". Score: " + this.getScore(teamName));
             if (this.getScore(teamName) > maxValue) { maxValue = this.getScore(teamName); }
         }
         return maxValue;
@@ -92,8 +96,10 @@ public class LockinScoreboard {
     }
 
     public List<String> getTeamNames() {
+        if (debug) LoggerUtils.info("Getting team names (Size: " + this.teamScores.size() + ")");
         List<String> teamNames = new ArrayList<>();
         for (String teamName : this.teamScores.keySet()) {
+            if (debug) LoggerUtils.info("  " + teamName);
             teamNames.add(teamName);
         }
         return teamNames;
@@ -156,7 +162,6 @@ public class LockinScoreboard {
 
     public int getScore(String teamName) {
         Team team = scoreboard.getTeam(teamName);
-        LoggerUtils.info("Team: " + team);
         if (team == null || team.getEntries().size() == 0) {
             return -1;
         }

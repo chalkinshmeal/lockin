@@ -42,6 +42,8 @@ public class EquipArmorTask extends LockinTask {
     public static List<EquipArmorTask> getTasks(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
                                                           LockinRewardHandler lockinRewardHandler, int tier) {
         List<EquipArmorTask> tasks = new ArrayList<>();
+        if (tier != 2) return tasks;
+
         tasks.add(new EquipArmorTask());
         return tasks;
     }

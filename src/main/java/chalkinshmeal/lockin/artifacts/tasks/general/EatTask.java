@@ -18,7 +18,7 @@ public class EatTask extends LockinTask {
     private static final String configKey = "eatTask";
     private static final String normalKey = "consumes";
     private final int targetConsumes;
-    private Map<Player, Integer> consumeCounts;
+    private Map<String, Integer> consumeCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -46,7 +46,9 @@ public class EatTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<EatTask> getTasks(int tier) {
         List<EatTask> tasks = new ArrayList<>();
-        int targetConsumes = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        int targetConsumes = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetConsumes == -1) return tasks;
+
         tasks.add(new EatTask(targetConsumes));
         return tasks;
     }
@@ -56,9 +58,10 @@ public class EatTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
 
-        this.consumeCounts.put(player, this.consumeCounts.getOrDefault(player, 0) + 1);
-        if (this.consumeCounts.get(player) < this.targetConsumes) return;
+        this.consumeCounts.put(teamName, this.consumeCounts.getOrDefault(teamName, 0) + 1);
+        if (this.consumeCounts.get(teamName) < this.targetConsumes) return;
 
         this.complete(player);
     }

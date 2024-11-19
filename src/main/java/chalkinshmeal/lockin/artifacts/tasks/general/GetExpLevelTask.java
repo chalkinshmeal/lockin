@@ -42,7 +42,9 @@ public class GetExpLevelTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<GetExpLevelTask> getTasks(int tier) {
         List<GetExpLevelTask> tasks = new ArrayList<>();
-        int targetLevel = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        int targetLevel = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetLevel == -1) return tasks;
+
         tasks.add(new GetExpLevelTask(targetLevel));
         return tasks;
     }

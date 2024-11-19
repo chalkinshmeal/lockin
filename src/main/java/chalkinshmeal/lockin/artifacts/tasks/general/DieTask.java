@@ -18,7 +18,7 @@ public class DieTask extends LockinTask {
     private static final String configKey = "deathTask";
     private static final String normalKey = "deaths";
     private final int targetDeaths;
-    private Map<Player, Integer> deathCounts;
+    private Map<String, Integer> deathCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -46,7 +46,9 @@ public class DieTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<DieTask> getTasks(int tier) {
         List<DieTask> tasks = new ArrayList<>();
-        int targetDeaths = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        int targetDeaths = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetDeaths == -1) return tasks;
+
         tasks.add(new DieTask(targetDeaths));
         return tasks;
     }
@@ -56,9 +58,10 @@ public class DieTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         Player player = event.getPlayer();
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
 
-        this.deathCounts.put(player, this.deathCounts.getOrDefault(player, 0) + 1);
-        if (this.deathCounts.get(player) < this.targetDeaths) return;
+        this.deathCounts.put(teamName, this.deathCounts.getOrDefault(teamName, 0) + 1);
+        if (this.deathCounts.get(teamName) < this.targetDeaths) return;
 
         this.complete(player);
     }

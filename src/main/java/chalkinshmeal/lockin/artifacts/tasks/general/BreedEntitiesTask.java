@@ -21,7 +21,7 @@ public class BreedEntitiesTask extends LockinTask {
     private static final String normalKey = "entityTypes";
     private final EntityType entityType;
     private final int amount;
-    private final Map<Player, Integer> bredEntities;
+    private final Map<String, Integer> bredEntities;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -75,11 +75,12 @@ public class BreedEntitiesTask extends LockinTask {
         // Check if the breeding was initiated by a player
         if (!(event.getBreeder() instanceof Player)) return;
         Player player = (Player) event.getBreeder();
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
         
         if (event.getMother().getType() != this.entityType) return;
-        this.bredEntities.put(player, this.bredEntities.getOrDefault(player, 0) + 1);
+        this.bredEntities.put(teamName, this.bredEntities.getOrDefault(teamName, 0) + 1);
 
-        if (this.bredEntities.get(player) < this.amount) return;
+        if (this.bredEntities.get(teamName) < this.amount) return;
         this.complete(player);
     }
 }

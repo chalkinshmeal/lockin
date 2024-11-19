@@ -19,7 +19,7 @@ public class JumpTask extends LockinTask {
     private static final String configKey = "jumpTask";
     private static final String normalKey = "jumps";
     private final int targetJumps;
-    private Map<Player, Integer> jumpCounts;
+    private Map<String, Integer> jumpCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -47,7 +47,9 @@ public class JumpTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<JumpTask> getTasks(int tier) {
         List<JumpTask> tasks = new ArrayList<>();
-        int targetJumps = configHandler.getInt(configKey + "." + normalKey + "." + tier, 10);
+        int targetJumps = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetJumps == -1) return tasks;
+
         tasks.add(new JumpTask(targetJumps));
         return tasks;
     }
@@ -57,9 +59,10 @@ public class JumpTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void onPlayerJumpEvent(PlayerJumpEvent event) {
         Player player = event.getPlayer();
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
 
-        this.jumpCounts.put(player, this.jumpCounts.getOrDefault(player, 0) + 1);
-        if (this.jumpCounts.get(player) < this.targetJumps) return;
+        this.jumpCounts.put(teamName, this.jumpCounts.getOrDefault(teamName, 0) + 1);
+        if (this.jumpCounts.get(teamName) < this.targetJumps) return;
 
         this.complete(player);
     }

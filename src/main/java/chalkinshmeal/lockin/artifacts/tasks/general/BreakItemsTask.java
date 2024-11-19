@@ -19,7 +19,7 @@ public class BreakItemsTask extends LockinTask {
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<Player, Integer> brokenItems;
+    private final Map<String, Integer> brokenItems;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -77,8 +77,9 @@ public class BreakItemsTask extends LockinTask {
 
         // Return if 
         Player player = event.getPlayer();
-        this.brokenItems.put(player, this.brokenItems.getOrDefault(player, 0) + 1);
-        if (this.brokenItems.get(player) < this.amount) return;
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        this.brokenItems.put(teamName, this.brokenItems.getOrDefault(teamName, 0) + 1);
+        if (this.brokenItems.get(teamName) < this.amount) return;
         this.complete(player);
     }
 }

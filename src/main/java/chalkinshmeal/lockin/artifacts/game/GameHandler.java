@@ -168,8 +168,11 @@ public class GameHandler {
 
     @SuppressWarnings("deprecation")
     public void stop() {
+        if (debug) LoggerUtils.info("Stopping game");
         // Get winner
         List<String> winningTeams = this.lockinScoreboard.getWinningTeams();
+        if (debug) LoggerUtils.info("Winning teams (Size: " + winningTeams.size() + ")");
+        for (String _winningTeam : winningTeams) if (debug) LoggerUtils.info("  " + _winningTeam);
 
         if (winningTeams.size() > 1) {
             this.suddenDeath(winningTeams);
@@ -217,7 +220,7 @@ public class GameHandler {
     }
 
     public void end() {
-        this.state = GameState.DONE;
+        this.state = GameState.INACTIVE;
         this.lockinTaskHandler.unRegisterListeners();
         this.countdownBossBar.stop();
 

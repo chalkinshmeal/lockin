@@ -44,7 +44,9 @@ public class GetSpecificHealthTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<GetSpecificHealthTask> getTasks(int tier) {
         List<GetSpecificHealthTask> tasks = new ArrayList<>();
-        int targetHealth = configHandler.getInt(configKey + "." + normalKey + "." + tier, 1);
+        int targetHealth = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetHealth == -1) return tasks;
+
         tasks.add(new GetSpecificHealthTask(targetHealth));
         return tasks;
     }

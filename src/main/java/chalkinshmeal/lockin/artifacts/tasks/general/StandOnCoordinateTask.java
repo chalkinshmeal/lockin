@@ -46,7 +46,9 @@ public class StandOnCoordinateTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public static List<StandOnCoordinateTask> getTasks(int tier) {
         List<StandOnCoordinateTask> tasks = new ArrayList<>();
-        int targetRadius = configHandler.getInt(configKey + "." + normalKey + "." + tier, 100);
+        int targetRadius = configHandler.getInt(configKey + "." + normalKey + "." + tier, -1);
+        if (targetRadius == -1) return tasks;
+
         World world = Bukkit.getWorld("world");
         Location spawnLocation = world.getSpawnLocation();
         Location targetLocation = Utils.getRandomLocation(world, spawnLocation.getX(), spawnLocation.getZ(), targetRadius);

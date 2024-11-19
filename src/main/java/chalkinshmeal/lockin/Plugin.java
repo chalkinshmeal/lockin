@@ -44,7 +44,7 @@ public class Plugin extends JavaPlugin implements Listener {
         this.configHandler = new ConfigHandler(this);
         this.lockinTeamHandler = new LockinTeamHandler(this);
         this.lockinScoreboard = new LockinScoreboard(this, this.configHandler);
-        this.lockinCompass = new LockinCompass(this.configHandler, this.lockinTeamHandler);
+        this.lockinCompass = new LockinCompass(this, this.configHandler, this.lockinTeamHandler);
         this.lockinTaskHandler = new LockinTaskHandler(
             this, this.configHandler, this.lockinCompass, this.lockinScoreboard, this.lockinTeamHandler);
         this.gameHandler = new GameHandler(
