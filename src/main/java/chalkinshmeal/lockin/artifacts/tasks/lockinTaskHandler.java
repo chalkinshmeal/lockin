@@ -71,10 +71,20 @@ public class LockinTaskHandler {
         for (LockinTask task : this.tasks) { task.stop(); }
     }
 
+    public void updateSuddenDeathTaskList() {
+        this.stopCurrentTasks();
+        this.unRegisterListeners();
+
+        this.tasks = new ArrayList<>();
+        this.tasks.addAll(KillOpposingTeamTask.getTasks(this.lockinTeamHandler));
+        for (LockinTask task : this.tasks) task.init();
+    }
+
     // Update the list of tasks for this lockin challenge
     // Return true if successful, false if not
     public boolean updateTaskList(int tier) {
         this.stopCurrentTasks();
+        this.unRegisterListeners();
 
         List<LockinTask> allTasks = new ArrayList<>();
         //try {

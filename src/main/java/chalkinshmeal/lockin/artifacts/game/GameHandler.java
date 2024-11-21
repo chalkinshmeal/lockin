@@ -2,7 +2,9 @@ package chalkinshmeal.lockin.artifacts.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.GameMode;
 import org.bukkit.GameRule;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -38,7 +40,7 @@ public class GameHandler {
     private final int singleTeamTimeLimit;
     private final int multipleTeamTimeLimit;
     private final int maxTier;
-    private final boolean debug = true;
+    private final boolean debug = false;
 
     // Temporary status
     public GameState state = GameState.INACTIVE;
@@ -145,13 +147,15 @@ public class GameHandler {
         }
 
         // Check sudden death conditions
-        if (this.currentTier > this.maxTier) {
+        if (this.gameType == GameType.MULTIPLE_TEAM && this.currentTier > this.maxTier) {
             this.suddenDeath();
             return;
         }
 
         // Check end game conditions
-        if (this.lockinScoreboard.atMostOneTeamHasPositiveLives() && this.currentTier > 1) {
+        if (this.gameType == GameType.MULTIPLE_TEAM && this.lockinScoreboard.atMostOneTeamHasPositiveLives() && this.currentTier > 1 ||
+            this.gameType == GameType.SINGLE_TEAM && this.currentTier > this.maxTier ||
+            this.gameType == GameType.SINGLE_TEAM && !this.lockinScoreboard.atLeastOneTeamHasPositiveLives() && this.currentTier > 1) {
             this.stop();
             return;
         }
@@ -191,12 +195,15 @@ public class GameHandler {
 
         // Per-player operations
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+            String winOrLose = " won!";
+            if (this.gameType == GameType.SINGLE_TEAM && this.lockinScoreboard.getScore(winningTeams.get(0)) <= 0) winOrLose = " lost!";
             player.showTitle(Title.title(
-                Component.text(winningTeams.get(0) + " won!", NamedTextColor.GOLD),
+                Component.text(winningTeams.get(0) + winOrLose, NamedTextColor.GOLD),
                 Component.empty(), // No subtitle
                 Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(5), java.time.Duration.ofSeconds(1))
             ));
-            if (this.lockinTeamHandler.getTeamPlayers(winningTeams.get(0)).contains(player.getUniqueId())) {
+            if (this.lockinTeamHandler.getTeamPlayers(winningTeams.get(0)).contains(player.getUniqueId()) &&
+                !(this.gameType == GameType.SINGLE_TEAM && winOrLose.equals(" lost!"))) {
                 Utils.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_1);
             }
             else {
@@ -207,24 +214,45 @@ public class GameHandler {
         this.end();
     }
 
+    @SuppressWarnings("deprecation")
     public void suddenDeath() {
-        // Global operations
-        //this.countdownBossBar.update(Component.text("Overtime", NamedTextColor.RED));
-        //this.lockinTaskHandler.unRegisterListeners();
-        //this.lockinTaskHandler.registerListeners();
-        //this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
+        // Set world state (set all teams with <= 0 points to Spectator Mode)
+        LoggerUtils.info("In sudden death");
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            LoggerUtils.info("  Checking team name: " + teamName);
+            LoggerUtils.info("    Display Name:     " + this.lockinTeamHandler.getDisplayTeamName(teamName));
+            LoggerUtils.info("    Score:            " + this.lockinScoreboard.getScore(this.lockinTeamHandler.getDisplayTeamName(teamName)));
+            LoggerUtils.info("    Teams:            ");
+            for (String _teamName : this.lockinScoreboard.getTeamNames()) {
+                LoggerUtils.info("      " + _teamName);
+            }
+            if (this.lockinScoreboard.getScore(teamName) <= 0) {
+                for (UUID uuid : this.lockinTeamHandler.getTeamPlayers(teamName)) {
+                    Player player = EntityUtils.getPlayer(uuid);
+                    if (player != null) player.setGameMode(GameMode.SPECTATOR);
+                }
+            }
+        }
 
-        //// Per-player operations
-        //for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-        //    player.showTitle(Title.title(
-        //        Component.text("Sudden Death", NamedTextColor.GOLD),
-        //        Component.text("Compass updated. First to 3 wins", NamedTextColor.GOLD),
-        //        Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(5), java.time.Duration.ofSeconds(1))
-        //    ));
-        //    this.lockinScoreboard.setScore(this.lockinTeamHandler.getTeamName(player), 0);
-        //    this.lockinCompass.giveCompass(player);
-        //    player.setBedSpawnLocation(null, true);
-        //}
+        // Set game state
+        this.countdownBossBar.update(Component.text("Overtime", NamedTextColor.RED));
+        this.lockinTaskHandler.updateSuddenDeathTaskList();
+        this.lockinTaskHandler.registerListeners();
+        this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            if (this.lockinScoreboard.getScore(teamName) > 0) {
+                this.lockinScoreboard.setScore(teamName, 1);
+            }
+        }
+
+        // Cosmetics
+        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+            player.showTitle(Title.title(
+                Component.text("Sudden Death", NamedTextColor.GOLD),
+                Component.text("Kill all opposing players", NamedTextColor.GOLD),
+                Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(5), java.time.Duration.ofSeconds(1))
+            ));
+        }
     }
 
     public void end() {
@@ -280,15 +308,10 @@ public class GameHandler {
                     return;
                 }
 
-                // Sound
-                if (remainingSeconds <= 5) {
-                    Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING);
-                }
-                else {
-                    Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT);
-                }
+                // Cosmetics
+                Sound sound = (remainingSeconds <= 5) ? Sound.BLOCK_NOTE_BLOCK_PLING : Sound.BLOCK_NOTE_BLOCK_HAT;
+                Utils.playSound(player, sound);
 
-                // Display the remaining time in the center of the screen
                 player.showTitle(Title.title(
                     Component.text(remainingSeconds, NamedTextColor.GOLD),
                     Component.empty(), // No subtitle

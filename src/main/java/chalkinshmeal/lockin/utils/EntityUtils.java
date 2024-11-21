@@ -18,6 +18,10 @@ public class EntityUtils {
         return Utils.round((float) e1.getLocation().distance(e2.getLocation()), 2);
     }
 
+    public static Player getPlayer(UUID uuid) {
+        return Bukkit.getPlayer(uuid);
+    }
+
     // Fetches player name regardless of if they are online or offline
     public static String getPlayerName(UUID uuid) {
         // Check if the player is online

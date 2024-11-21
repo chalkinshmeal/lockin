@@ -99,6 +99,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\GrowWheatWithBonemealTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\StayAboveHealthTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\ReceivePotionEffectTypeTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\KillOpposingTeamTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\EntityDamageByEntityListener.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\PlaceItemInItemFrameTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\rewards\LockinRewardHandler.java

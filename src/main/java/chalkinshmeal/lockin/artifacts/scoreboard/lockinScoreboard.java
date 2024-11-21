@@ -48,6 +48,14 @@ public class LockinScoreboard {
     //-------------------------------------------------------------------------
     // Accessor/Mutator methods
     //-------------------------------------------------------------------------
+    public boolean atLeastOneTeamHasPositiveLives() {
+        int positiveTeams = 0;
+        for (String teamName : this.getTeamNames()) {
+            if (this.getScore(teamName) > 0) positiveTeams += 1;
+        }
+        return positiveTeams >= 1;
+    }
+
     public boolean atMostOneTeamHasPositiveLives() {
         int positiveTeams = 0;
         for (String teamName : this.getTeamNames()) {
@@ -161,13 +169,23 @@ public class LockinScoreboard {
     }
 
     public int getScore(String teamName) {
+        if (debug) LoggerUtils.info("Getting score for team " + teamName);
         Team team = scoreboard.getTeam(teamName);
+        if (debug) {
+            if (team == null) {
+                LoggerUtils.info("  Null team. Not getting score.");
+            }
+            else if (team.getEntries().size() == 0) {
+                LoggerUtils.info("  Empty team. Not getting score.");
+            }
+        }
         if (team == null || team.getEntries().size() == 0) {
             return -1;
         }
 
         String displayName = team.getEntries().size() == 1 ? team.getEntries().iterator().next() : teamName;
         Score score = teamScores.computeIfAbsent(displayName, k -> objective.getScore(displayName));
+        if (debug) LoggerUtils.info("  Score: " + score.getScore());
         return score.getScore();
     }
 

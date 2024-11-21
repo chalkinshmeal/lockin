@@ -7,9 +7,6 @@ maxLives: 3
 # The number of tasks per tier
 tasksPerTier: 9
 
-# The number of punishments per round
-punishmentCount: 1
-
 # The number of seconds players are frozen before starting a game
 queueTime: 2
 
