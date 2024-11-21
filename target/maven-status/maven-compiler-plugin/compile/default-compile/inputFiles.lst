@@ -28,7 +28,6 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\CatchFishTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\rewards\punishments\BlowUpPunishment.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\Plugin.java
-C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\EntityDeathListener.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\DestroyItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\SmeltItemsTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\InventoryDragListener.java
@@ -55,6 +54,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\GetSpecificHealthTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\KillEntitiesTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\UseNametagTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\TaskUtils.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\Particles.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\commands\StartCommand.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\StandOnCoordinateTask.java
@@ -93,6 +93,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\ObtainItemsTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\EnterBoatWithPassengerTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\BreakItemsTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\game\GameType.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\rewards\LockinReward.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\SleepInColoredBedTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\GrowWheatWithBonemealTask.java

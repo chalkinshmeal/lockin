@@ -16,7 +16,6 @@ import chalkinshmeal.lockin.commands.StopCommand;
 import chalkinshmeal.lockin.commands.TeamCommand;
 import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.listeners.server.EntityDamageByEntityListener;
-import chalkinshmeal.lockin.listeners.server.EntityDeathListener;
 import chalkinshmeal.lockin.listeners.server.InventoryClickListener;
 import chalkinshmeal.lockin.listeners.server.InventoryDragListener;
 import chalkinshmeal.lockin.listeners.server.PlayerInteractListener;
@@ -85,7 +84,6 @@ public class Plugin extends JavaPlugin implements Listener {
 	private void registerListeners() {
 		PluginManager manager = this.getServer().getPluginManager();
 		manager.registerEvents(new EntityDamageByEntityListener(this.gameHandler), this);
-		manager.registerEvents(new EntityDeathListener(this.gameHandler), this);
 		manager.registerEvents(new InventoryClickListener(this.lockinCompass), this);
 		manager.registerEvents(new InventoryDragListener(this.lockinCompass), this);
 		manager.registerEvents(new PlayerJoinListener(this.lockinCompass, this.lockinScoreboard, this.gameHandler), this);

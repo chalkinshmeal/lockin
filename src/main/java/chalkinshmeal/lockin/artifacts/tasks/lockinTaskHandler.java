@@ -25,6 +25,7 @@ public class LockinTaskHandler {
     private final ConfigHandler configHandler;
     private final LockinCompass lockinCompass;
     private LockinRewardHandler lockinRewardHandler;
+    private LockinTeamHandler lockinTeamHandler;
     private int tasksPerTier;
     private List<LockinTask> tasks;
 
@@ -34,6 +35,7 @@ public class LockinTaskHandler {
         this.configHandler = configHandler;
         this.lockinCompass = lockinCompass;
         this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
+        this.lockinTeamHandler = lockinTeamHandler;
         this.tasks = new ArrayList<>();
         this.tasksPerTier = this.configHandler.getInt("tasksPerTier", 9);
 
@@ -45,6 +47,16 @@ public class LockinTaskHandler {
     //---------------------------------------------------------------------------------------------
     public void setTasksPerTier(int tasksPerTier) { this.tasksPerTier = tasksPerTier; }
     public List<LockinTask> getTasks() { return new ArrayList<>(this.tasks); }
+    public boolean hasOneTeamCompletedAllTasks() {
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            boolean hasCompletedAllTasks = true;
+            for (LockinTask task : this.tasks) {
+                if (!task.hasCompleted(teamName)) hasCompletedAllTasks = false;
+            }
+            if (hasCompletedAllTasks) return true;
+        }
+        return false;
+    }
     public boolean areAllTasksDone() { 
         for (LockinTask task : this.tasks) {
             if (!task.haveAllTeamsCompleted()) return false;
@@ -62,7 +74,7 @@ public class LockinTaskHandler {
     // Update the list of tasks for this lockin challenge
     // Return true if successful, false if not
     public boolean updateTaskList(int tier) {
-        this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
+        this.stopCurrentTasks();
 
         List<LockinTask> allTasks = new ArrayList<>();
         //try {

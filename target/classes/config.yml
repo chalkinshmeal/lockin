@@ -13,8 +13,11 @@ punishmentCount: 1
 # The number of seconds players are frozen before starting a game
 queueTime: 2
 
-# The number of seconds to countdown after a player has completed a round's tasks before a round is locked out
-timeLimit: 600
+# If 1 team playing, the number of seconds to complete a tier
+singleTeamTimeLimit: 600
+
+# If >1 team playing, the number of seconds to complete a tier after one team finishes a tier
+multipleTeamTimeLimit: 600
 
 #--------------------------------------------------------------------------------------------------
 # Task-Specific Settings

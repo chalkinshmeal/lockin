@@ -3,19 +3,11 @@ package chalkinshmeal.lockin.artifacts.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.GameRule;
-import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
@@ -25,7 +17,9 @@ import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.lockin.utils.EntityUtils;
 import chalkinshmeal.lockin.utils.LoggerUtils;
+import chalkinshmeal.lockin.utils.TaskUtils;
 import chalkinshmeal.lockin.utils.Utils;
 import chalkinshmeal.lockin.utils.WorldUtils;
 import net.kyori.adventure.text.Component;
@@ -41,13 +35,16 @@ public class GameHandler {
     private final LockinScoreboard lockinScoreboard;
     public final LockinTeamHandler lockinTeamHandler;
     private final int queueTime;
-    private final int gameTime;
+    private final int singleTeamTimeLimit;
+    private final int multipleTeamTimeLimit;
     private final int maxTier;
-    private final boolean debug = false;
+    private final boolean debug = true;
 
     // Temporary status
     public GameState state = GameState.INACTIVE;
+    public GameType gameType = GameType.SINGLE_TEAM;
     public int currentTier = 0;
+    public List<Integer> taskIDs = new ArrayList<>();
 
     //---------------------------------------------------------------------------------------------
     // Constructor
@@ -60,9 +57,9 @@ public class GameHandler {
         this.lockinScoreboard = lockinScoreboard;
         this.lockinTeamHandler = lockinTeamHandler;
         this.queueTime = this.configHandler.getInt("queueTime", 120);
-        this.gameTime = this.configHandler.getInt("timeLimit", 600);
+        this.singleTeamTimeLimit = this.configHandler.getInt("singleTeamTimeLimit", 600);
+        this.multipleTeamTimeLimit = this.configHandler.getInt("multipleTeamTimeLimit", 600);
         this.maxTier = 10;
-        this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.gameTime);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -76,24 +73,25 @@ public class GameHandler {
     //---------------------------------------------------------------------------------------------
     public void queue() {
         this.state = GameState.QUEUE;
+        this.currentTier = 0;
 
         // Set world state
-        WorldUtils.resetWorldState();
-        WorldUtils.setGameRule(GameRule.KEEP_INVENTORY, true);
+        this.resetWorldState();
 
+        // Set game state
         this.lockinTeamHandler.init();
         this.lockinScoreboard.init(this.lockinTeamHandler);
+        this.lockinCompass.SetIsActive(true);
+        this.incrementTier();
+        this.gameType = this.lockinTeamHandler.getNumTeams() <= 1 ? GameType.SINGLE_TEAM : GameType.MULTIPLE_TEAM;
 
+        // Delayed start
+        this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::start, this.queueTime));
+
+        // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-            this.resetPlayerState(player);
-            this.lockinCompass.giveCompass(player);
             this.displayCountdownTask(plugin, player, this.queueTime);
         }
-
-        this.lockinCompass.SetIsActive(true);
-
-        this.incrementTier();
-        this.delayStartTask(this.plugin, this, this.queueTime);
     }
 
     public void start() {
@@ -102,12 +100,33 @@ public class GameHandler {
         // Set world state
         WorldUtils.destroySpawnCage();
 
-        // Global operations
-        this.countdownBossBar.start();
+        // Set game state
         this.lockinTaskHandler.registerListeners();
-        this.checkAllTasksDoneTask();
+        if (this.gameType == GameType.SINGLE_TEAM) {
+            this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.singleTeamTimeLimit);
+            this.countdownBossBar.start();
 
-        // Per-player operations
+            // Repeatedly check if all tasks are done, then increment tier
+            this.taskIDs.add(TaskUtils.runRepeatingTask(this.plugin, () -> {
+                if (lockinTaskHandler.hasOneTeamCompletedAllTasks()) {
+                    incrementTier();
+                }
+            }, 0f, 1f));
+        }
+
+        else if (this.gameType == GameType.MULTIPLE_TEAM) {
+            this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.multipleTeamTimeLimit);
+
+            // Repeatedly check if one team has completed all tasks, then start countdown
+            this.taskIDs.add(TaskUtils.runRepeatingTask(this.plugin, () -> {
+                if (lockinTaskHandler.hasOneTeamCompletedAllTasks()) {
+                    this.countdownBossBar.start();
+                    this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::incrementTier, this.multipleTeamTimeLimit));
+                }
+            }, 0f, 1f));
+        }
+
+        // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
             player.sendMessage(Component.text("Lockin game starting.", NamedTextColor.GOLD));
         }
@@ -125,16 +144,34 @@ public class GameHandler {
             }
         }
 
+        // Check sudden death conditions
+        if (this.currentTier > this.maxTier) {
+            this.suddenDeath();
+            return;
+        }
+
         // Check end game conditions
-        boolean afterMaxTier = (this.currentTier > this.maxTier);
-        boolean atMostOneTeamHasPositiveLives = (this.lockinScoreboard.atMostOneTeamHasPositiveLives() && this.currentTier > 1);
-        if (afterMaxTier || atMostOneTeamHasPositiveLives) {
+        if (this.lockinScoreboard.atMostOneTeamHasPositiveLives() && this.currentTier > 1) {
             this.stop();
             return;
         }
 
+        // Set game state
+        this.lockinTaskHandler.updateTaskList(this.currentTier);
+        this.lockinTaskHandler.registerListeners();
+        this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
+
+        // Delayed increment tier (if single team mode)
+        // In multiple team mode, the responsibility to start the next tier lies in the start()::runRepeatingTask call
+        if (this.gameType == GameType.SINGLE_TEAM) {
+            float delayTime = (this.currentTier == 1) ? this.singleTeamTimeLimit + this.queueTime : this.singleTeamTimeLimit;
+            this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) delayTime));
+        }
+
         // Cosmetics
         if (this.currentTier != 1) {
+            this.countdownBossBar.reset();
+
             for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
                 player.sendMessage(Component.text()
                     .append(Component.text("Advancing to ", NamedTextColor.GRAY))
@@ -142,28 +179,6 @@ public class GameHandler {
                 Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME);
             }
         }
-
-        // Update task list
-        this.lockinTaskHandler.stopCurrentTasks();
-        if (!this.lockinTaskHandler.updateTaskList(this.currentTier)) {
-            System.out.println("Something went wrong with tier " + this.currentTier);
-        }
-
-        // Register listeners for tasks
-        this.lockinTaskHandler.registerListeners();
-
-        // Update compass with tasks
-        this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
-
-        // Start countdown again
-        if (this.currentTier != 1) {
-            if (debug) LoggerUtils.info("Resetting countdown boss bar");
-            this.countdownBossBar.reset();
-        }
-
-        // Start delayed times up task
-        float delayTime = (this.currentTier == 1) ? this.gameTime + this.queueTime : this.gameTime;
-        this.delayTimesUpTask(plugin, this, (int) delayTime);
     }
 
     @SuppressWarnings("deprecation")
@@ -173,11 +188,6 @@ public class GameHandler {
         List<String> winningTeams = this.lockinScoreboard.getWinningTeams();
         if (debug) LoggerUtils.info("Winning teams (Size: " + winningTeams.size() + ")");
         for (String _winningTeam : winningTeams) if (debug) LoggerUtils.info("  " + _winningTeam);
-
-        if (winningTeams.size() > 1) {
-            this.suddenDeath(winningTeams);
-            return;
-        }
 
         // Per-player operations
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
@@ -197,123 +207,62 @@ public class GameHandler {
         this.end();
     }
 
-    @SuppressWarnings("deprecation")
-    public void suddenDeath(List<String> winningTeams) {
+    public void suddenDeath() {
         // Global operations
-        this.countdownBossBar.update(Component.text("Overtime", NamedTextColor.RED));
-        this.lockinTaskHandler.unRegisterListeners();
-        this.lockinTaskHandler.registerListeners();
-        this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
+        //this.countdownBossBar.update(Component.text("Overtime", NamedTextColor.RED));
+        //this.lockinTaskHandler.unRegisterListeners();
+        //this.lockinTaskHandler.registerListeners();
+        //this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
 
-        // Per-player operations
-        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-            player.showTitle(Title.title(
-                Component.text("Sudden Death", NamedTextColor.GOLD),
-                Component.text("Compass updated. First to 3 wins", NamedTextColor.GOLD),
-                Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(5), java.time.Duration.ofSeconds(1))
-            ));
-            this.lockinScoreboard.setScore(this.lockinTeamHandler.getTeamName(player), 0);
-            this.resetPlayerState(player);
-            this.lockinCompass.giveCompass(player);
-            player.setBedSpawnLocation(null, true);
-        }
+        //// Per-player operations
+        //for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+        //    player.showTitle(Title.title(
+        //        Component.text("Sudden Death", NamedTextColor.GOLD),
+        //        Component.text("Compass updated. First to 3 wins", NamedTextColor.GOLD),
+        //        Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(5), java.time.Duration.ofSeconds(1))
+        //    ));
+        //    this.lockinScoreboard.setScore(this.lockinTeamHandler.getTeamName(player), 0);
+        //    this.lockinCompass.giveCompass(player);
+        //    player.setBedSpawnLocation(null, true);
+        //}
     }
 
     public void end() {
         this.state = GameState.INACTIVE;
+
+        // Set game state
         this.lockinTaskHandler.unRegisterListeners();
         this.countdownBossBar.stop();
 
+        // Stop all tasks
+        for (int taskID : this.taskIDs) TaskUtils.cancelTask(taskID);
+
+        // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
             player.sendMessage(Component.text("Lockin game ended.", NamedTextColor.GOLD));
+        }
+    }
+
+    private void resetWorldState() {
+        WorldUtils.resetWorldState();
+        WorldUtils.setGameRule(GameRule.KEEP_INVENTORY, true);
+        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+            EntityUtils.resetPlayerState(player, true);
+            this.lockinCompass.giveCompass(player);
         }
     }
 
     //---------------------------------------------------------------------------------------------
     // Listener methods
     //---------------------------------------------------------------------------------------------
-    public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        if (this.state == GameState.INACTIVE) {
-            System.out.println("Teleporting to: " + Bukkit.getWorld("world").getSpawnLocation());
-            this.delayTeleportTask(this.plugin, this, player, Bukkit.getWorld("world").getSpawnLocation());
-            event.setCancelled(true);
-            return;
-        }
-
-        if (!this.lockinTeamHandler.getAllPlayers().contains(player)) return;
-        for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-    }
-
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-        if (this.state != GameState.QUEUE) return;
-
+        if (this.state == GameState.PLAY) return;
         event.setCancelled(true);
-    }
-
-    //---------------------------------------------------------------------------------------------
-    // Utility methods
-    //---------------------------------------------------------------------------------------------
-    private void resetPlayerState(Player player) {
-        player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getValue());
-        player.setFoodLevel(20);
-        player.setSaturation(5);
-        player.setFireTicks(0);
-        player.setExp(0);
-        player.setLevel(0);
-        player.setGlowing(false);
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(new ItemStack[4]);
-        player.setGameMode(GameMode.SURVIVAL);
-        for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-
-        World world = Bukkit.getWorld("world");
-        Location spawnLocation = world.getSpawnLocation();
-        Location teleportLocation = new Location(
-            world,
-            spawnLocation.getX() + 0.5,
-            spawnLocation.getY() + 0.1,
-            spawnLocation.getZ() + 0.5);
-        player.teleport(teleportLocation);
     }
 
     //---------------------------------------------------------------------------------------------
     // Task methods
     //---------------------------------------------------------------------------------------------
-    private void delayStartTask(JavaPlugin plugin, GameHandler gameHandler, int delaySeconds) {
-        int delayTicks = delaySeconds * 20;
- 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                gameHandler.start();
-            }
-        }.runTaskLater(plugin, delayTicks);
-    }
-
-    private void delayTimesUpTask(JavaPlugin plugin, GameHandler gameHandler, int delaySeconds) {
-        int delayTicks = delaySeconds * 20;
- 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                gameHandler.incrementTier();
-            }
-        }.runTaskLater(plugin, delayTicks);
-    }
-
-    private void delayTeleportTask(JavaPlugin plugin, GameHandler gameHandler, Player player, Location location) {
-        int delayTicks = 1;
- 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.teleport(location);
-            }
-        }.runTaskLater(plugin, delayTicks);
-    }
-
     private void displayCountdownTask(JavaPlugin plugin, Player player, int durationSeconds) {
         new BukkitRunnable() {
             private int remainingSeconds = durationSeconds;
@@ -346,28 +295,6 @@ public class GameHandler {
                     Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(1), java.time.Duration.ofSeconds(5))
                 ));
                 remainingSeconds--;
-            }
-        }.runTaskTimer(plugin, 0, 20); // Run the task every 20 ticks (1 second)
-    }
-
-    private void checkAllTasksDoneTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (state == GameState.INACTIVE) {
-                    this.cancel();
-                    return;
-                }
-                if (lockinTaskHandler.areAllTasksDone()) {
-                    if (currentTier > maxTier) {
-                        stop();
-                        this.cancel();
-                        return;
-                    }
-                    else {
-                        incrementTier();
-                    }
-                }
             }
         }.runTaskTimer(plugin, 0, 20); // Run the task every 20 ticks (1 second)
     }
