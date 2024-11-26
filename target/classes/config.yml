@@ -5,16 +5,19 @@
 maxLives: 3
 
 # The number of tasks per tier
-tasksPerTier: 9
+tasksPerTier: 1
 
 # The number of seconds players are frozen before starting a game
 queueTime: 2
 
 # If 1 team playing, the number of seconds to complete a tier
-singleTeamTimeLimit: 600
+singleTeamTimeLimit: 60
 
 # If >1 team playing, the number of seconds to complete a tier after one team finishes a tier
-multipleTeamTimeLimit: 600
+multipleCompletedTeamTimeLimit: 60
+
+# If >1 team playing, the number of seconds to complete a tier before the tier automatically moves on
+multipleTeamTimeLimit: 2700
 
 #--------------------------------------------------------------------------------------------------
 # Task-Specific Settings
@@ -180,82 +183,82 @@ breedEntitiesTask:
 craftItemTask:
   maxTaskCount: 1
   materials:
-  2:
-  - BRUSH
-  - BOW
-  - FIREWORK_ROCKET
-  - FISHING_ROD
-  - GLASS_PANE
-  - HOPPER
-  - IRON_AXE
-  - LEATHER_BOOTS
-  - PAINTING
-  - POLISHED_ANDESITE
-  - TNT
-  3:
-  - BOOKSHELF
-  - DISPENSER
-  - HAY_BLOCK
-  - NOTE_BLOCK
-  - PISTON
-  - REDSTONE_TORCH
-  4:
-  - CLOCK
-  - GOLDEN_CARROT
-  - JACK_O_LANTERN
-  - MOSSY_COBBLESTONE
-  - POWERED_RAIL
-  5:
-  - JUKEBOX
-  6:
-  - ANVIL
-  - CRIMSON_SIGN
-  - DAYLIGHT_DETECTOR
+    2:
+    - BRUSH
+    - BOW
+    - FIREWORK_ROCKET
+    - FISHING_ROD
+    - GLASS_PANE
+    - HOPPER
+    - IRON_AXE
+    - LEATHER_BOOTS
+    - PAINTING
+    - POLISHED_ANDESITE
+    - TNT
+    3:
+    - BOOKSHELF
+    - DISPENSER
+    - HAY_BLOCK
+    - NOTE_BLOCK
+    - PISTON
+    - REDSTONE_TORCH
+    4:
+    - CLOCK
+    - GOLDEN_CARROT
+    - JACK_O_LANTERN
+    - MOSSY_COBBLESTONE
+    - POWERED_RAIL
+    5:
+    - JUKEBOX
+    6:
+    - ANVIL
+    - CRIMSON_SIGN
+    - DAYLIGHT_DETECTOR
 
 # Task: Create an entity. List of entities to create
 createEntityTask:
   maxTaskCount: 1
   entityTypes:
-  4:
-  - SNOW_GOLEM
-  6:
-  - IRON_GOLEM
+    4:
+    - SNOW_GOLEM
+    6:
+    - IRON_GOLEM
 
 # Task: Eat an item. List of possible items you can eat
 destroyItemTask:
   maxTaskCount: 1
   materials:
-  1:
-  - STONE_AXE
-  - STONE_HOE
-  - STONE_PICKAXE
-  - STONE_SHOVEL
-  - STONE_SWORD
-  - WOODEN_AXE
-  - WOODEN_HOE
-  - WOODEN_PICKAXE
-  - WOODEN_SHOVEL
-  - WOODEN_SWORD
-  2:
-  - FLINT_AND_STEEL
-  - FISHING_ROD
-  - LEATHER_BOOTS
-  - LEATHER_CHESTPLATE
-  - LEATHER_HELMET
-  - LEATHER_LEGGINGS
-  - SHEARS
-  - SHIELD
-  3:
-  - IRON_AXE
-  - IRON_HOE
-  - IRON_PICKAXE
-  - IRON_SHOVEL 
-  4:
-  - GOLDEN_AXE
-  - GOLDEN_HOE
-  - GOLDEN_PICKAXE
-  - GOLDEN_SHOVEL
-  - GOLDEN_SWORD
+    1:
+    - STONE_AXE
+    - STONE_HOE
+    - STONE_PICKAXE
+    - STONE_SHOVEL
+    - STONE_SWORD
+    - WOODEN_AXE
+    - WOODEN_HOE
+    - WOODEN_PICKAXE
+    - WOODEN_SHOVEL
+    - WOODEN_SWORD
+    2:
+    - FLINT_AND_STEEL
+    - FISHING_ROD
+    - LEATHER_BOOTS
+    - LEATHER_CHESTPLATE
+    - LEATHER_HELMET
+    - LEATHER_LEGGINGS
+    - SHEARS
+    - SHIELD
+    3:
+    - IRON_AXE
+    - IRON_HOE
+    - IRON_PICKAXE
+    - IRON_SHOVEL 
+    4:
+    - GOLDEN_AXE
+    - GOLDEN_HOE
+    - GOLDEN_PICKAXE
+    - GOLDEN_SHOVEL
+    - GOLDEN_SWORD
 
 # Task: Die. Min and max deaths to have for this given task
 dieTask:
@@ -279,40 +282,40 @@ eatTask:
 eatItemTask:
   maxTaskCount: 1
   materials:
-  2:
-  - BEEF
-  - COOKED_CHICKEN
-  - COOKED_COD
-  - COOKED_MUTTON
-  - COOKED_PORKCHOP
-  - COOKED_SALMON
-  - DRIED_KELP
-  - ROTTEN_FLESH
-  3:
-  - APPLE
-  - BAKED_POTATO
-  - BEETROOT
-  - BREAD
-  - CARROT
-  4:
-  - BEETROOT_SOUP
-  - COOKED_RABBIT
-  - MELON_SLICE
-  - MUSHROOM_STEW
-  - RABBIT_STEW
-  - SWEET_BERRIES
-  5:
-  - COOKIE
-  - GOLDEN_APPLE
-  - GOLDEN_CARROT
-  - POISONOUS_POTATO
-  - PUFFERFISH
-  - PUMPKIN_PIE
-  - SUSPICIOUS_STEW
-  6:
-  - GLOW_BERRIES
-  7:
-  - HONEY_BOTTLE
+    2:
+    - BEEF
+    - COOKED_CHICKEN
+    - COOKED_COD
+    - COOKED_MUTTON
+    - COOKED_PORKCHOP
+    - COOKED_SALMON
+    - DRIED_KELP
+    - ROTTEN_FLESH
+    3:
+    - APPLE
+    - BAKED_POTATO
+    - BEETROOT
+    - BREAD
+    - CARROT
+    4:
+    - BEETROOT_SOUP
+    - COOKED_RABBIT
+    - MELON_SLICE
+    - MUSHROOM_STEW
+    - RABBIT_STEW
+    - SWEET_BERRIES
+    5:
+    - COOKIE
+    - GOLDEN_APPLE
+    - GOLDEN_CARROT
+    - POISONOUS_POTATO
+    - PUFFERFISH
+    - PUMPKIN_PIE
+    - SUSPICIOUS_STEW
+    6:
+    - GLOW_BERRIES
+    7:
+    - HONEY_BOTTLE
 
 # Task: Enter a biome. List of possible biomes to enter, and the material that appears in with the task
 enterBiomeTask:
@@ -328,17 +331,17 @@ enterBiomeTask:
 equipItemTask:
   maxTaskCount: 1
   materials:
-  2:
-  - LEATHER_HELMET
-  - LEATHER_CHESTPLATE
-  - LEATHER_LEGGINGS
-  - LEATHER_BOOTS
-  4:
-  - CARVED_PUMPKIN
-  - GOLDEN_HELMET
-  - GOLDEN_CHESTPLATE
-  - GOLDEN_LEGGINGS
-  - GOLDEN_BOOTS
+    2:
+    - LEATHER_HELMET
+    - LEATHER_CHESTPLATE
+    - LEATHER_LEGGINGS
+    - LEATHER_BOOTS
+    4:
+    - CARVED_PUMPKIN
+    - GOLDEN_HELMET
+    - GOLDEN_CHESTPLATE
+    - GOLDEN_LEGGINGS
+    - GOLDEN_BOOTS
 
 # Task: Get a certain EXP level. Is a random level, up to the max level specified here
 getExpLevelTask:
@@ -358,12 +361,12 @@ getSpecificHealthTask:
 holdItemTask:
   maxTaskCount: 1
   materials:
-  1:
-  - COAL
-  - COBBLESTONE
-  - DIRT
-  2:
-  - IRON_INGOT
+    1:
+    - COAL
+    - COBBLESTONE
+    - DIRT
+    2:
+    - IRON_INGOT
 
 # Task: Interact with an item. List of possible items to interact with
 interactItemTask:
@@ -396,118 +399,118 @@ jumpTask:
 killEntitiesTask:
   maxTaskCount: 1
   entityTypes:
-  1:
-    CHICKEN: 5
-    COW: 5
-    PIG: 5
-    SHEEP: 5
-  2:
-    COD: 5
-    CREEPER: 10
-    SALMON: 5
-    SPIDER: 10
-    SQUID: 5
-    ZOMBIE: 10
-  3:
-    BAT: 1
-    DOLPHIN: 1
-    DROWNED: 10
-    ENDERMAN: 1
-    VILLAGER: 1
-  4:
-    BEE: 1
-    DONKEY: 1
-    TROPICAL_FISH: 1
-  5:
-    HUSK: 1
-    PARROT: 1
-    RABBIT: 1
-    SNOW_GOLEM: 1
-  6:
-    AXOLOTL: 1
-    FOX: 1
-    GLOW_SQUID: 1
-    WITCH: 1
-    ZOMBIE_VILLAGER: 1
-  7:
-    BLAZE: 1
-    GHAST: 1
-    HOGLIN: 3
-    PIGLIN: 5
-  8:
-    SLIME: 1
+    1:
+      CHICKEN: 5
+      COW: 5
+      PIG: 5
+      SHEEP: 5
+    2:
+      COD: 5
+      CREEPER: 10
+      SALMON: 5
+      SPIDER: 10
+      SQUID: 5
+      ZOMBIE: 10
+    3:
+      BAT: 1
+      DOLPHIN: 1
+      DROWNED: 10
+      ENDERMAN: 1
+      VILLAGER: 1
+    4:
+      BEE: 1
+      DONKEY: 1
+      TROPICAL_FISH: 1
+    5:
+      HUSK: 1
+      PARROT: 1
+      RABBIT: 1
+      SNOW_GOLEM: 1
+    6:
+      AXOLOTL: 1
+      FOX: 1
+      GLOW_SQUID: 1
+      WITCH: 1
+      ZOMBIE_VILLAGER: 1
+    7:
+      BLAZE: 1
+      GHAST: 1
+      HOGLIN: 3
+      PIGLIN: 5
+    8:
+      SLIME: 1
 
 # Task: Kill an entity with an item. Possible entities to kill, and the items to kill them with
 killEntityWithItemTask:
   maxTaskCount: 1
   entityTypes:
-  2:
-  - BAT
-  3:
-  - DROWNED
-  - VILLAGER
-  4:
-  - BEE
-  - DOLPHIN
-  - ENDERMAN
-  - PUFFERFISH
-  5:
-  - ARMADILLO
-  - CAMEL
-  - DONKEY
-  - HUSK
-  - LLAMA
-  - PARROT
-  - SNOW_GOLEM
-  - WOLF
-  6:
-  - AXOLOTL
-  - GLOW_SQUID
-  - GOAT
-  - IRON_GOLEM
-  - POLAR_BEAR
-  - STRAY
-  - TURTLE
-  - WITCH
-  7:
-  - PIGLIN
+    2:
+    - BAT
+    3:
+    - DROWNED
+    - VILLAGER
+    4:
+    - BEE
+    - DOLPHIN
+    - ENDERMAN
+    - PUFFERFISH
+    5:
+    - ARMADILLO
+    - CAMEL
+    - DONKEY
+    - HUSK
+    - LLAMA
+    - PARROT
+    - SNOW_GOLEM
+    - WOLF
+    6:
+    - AXOLOTL
+    - GLOW_SQUID
+    - GOAT
+    - IRON_GOLEM
+    - POLAR_BEAR
+    - STRAY
+    - TURTLE
+    - WITCH
+    7:
+    - PIGLIN
 
   materials: # Food themed
-  1:
-  - BEEF
-  2:
-  - COOKED_CHICKEN
-  - COOKED_COD
-  - COOKED_MUTTON
-  - COOKED_PORKCHOP
-  - COOKED_SALMON
-  - ROTTEN_FLESH
-  3:
-  - BAKED_POTATO
-  - BREAD
-  - CARROT
-  - DRIED_KELP
-  4:
-  - APPLE
-  - BEETROOT
-  - COOKED_RABBIT
-  - COOKIE
-  - MELON_SLICE
-  - MUSHROOM_STEW
-  - PUFFERFISH
-  - SWEET_BERRIES
-  5:
-  - BEETROOT_SOUP
-  - PUMPKIN_PIE
-  - RABBIT_STEW
-  6:
-  - GLOW_BERRIES
-  - GOLDEN_APPLE
-  - GOLDEN_CARROT
-  - POISONOUS_POTATO
-  - SUSPICIOUS_STEW
-  7:
-  - HONEY_BOTTLE
+    1:
+    - BEEF
+    2:
+    - COOKED_CHICKEN
+    - COOKED_COD
+    - COOKED_MUTTON
+    - COOKED_PORKCHOP
+    - COOKED_SALMON
+    - ROTTEN_FLESH
+    3:
+    - BAKED_POTATO
+    - BREAD
+    - CARROT
+    - DRIED_KELP
+    4:
+    - APPLE
+    - BEETROOT
+    - COOKED_RABBIT
+    - COOKIE
+    - MELON_SLICE
+    - MUSHROOM_STEW
+    - PUFFERFISH
+    - SWEET_BERRIES
+    5:
+    - BEETROOT_SOUP
+    - PUMPKIN_PIE
+    - RABBIT_STEW
+    6:
+    - GLOW_BERRIES
+    - GOLDEN_APPLE
+    - GOLDEN_CARROT
+    - POISONOUS_POTATO
+    - SUSPICIOUS_STEW
+    7:
+    - HONEY_BOTTLE
 
 # Task: Obtain a group of item. List of item groups to obtain, including:
 # - Description: What is displayed as description for the task
@@ -802,85 +805,85 @@ obtainItemGroupTask:
 obtainItemsTask:
   maxTaskCount: 1
   materials:
-  1:
-    COBBLESTONE: 5
-    FEATHER: 1
-  2:
-    BARREL: 1
-    CHAIN: 1
-    FIREWORK_ROCKET: 1
-    MILK_BUCKET: 1
-    OAK_HANGING_SIGN: 1
-    OAK_LEAVES: 1
-    RED_BANNER: 1
-    WHITE_BANNER: 1
-    WHITE_BED: 1
-    YELLOW_BANNER: 1
-  3:
-    ACTIVATOR_RAIL: 1
-    BAKED_POTATO: 1
-    BELL: 1
-    BLACK_BANNER: 1
-    BLACK_BED: 1
-    CARROT_ON_A_STICK: 1
-    CAULDRON: 1
-    COAL: 64
-    DARK_OAK_LEAVES: 1
-    DIRT: 320
-    LANTERN: 1
-    LAVA_BUCKET: 1
-    REDSTONE_TORCH: 1
-    SAND: 128
-  4:
-    ACACIA_HANGING_SIGN: 1
-    ACACIA_SAPLING: 1
-    APPLE: 5
-    BIRCH_HANGING_SIGN: 1
-    BIRCH_LEAVES: 1
-    BLUE_BANNER: 1
-    CLOCK: 1
-    DETECTOR_RAIL: 1
-    LIGHT_BLUE_BED: 1
-    LIME_BED: 1
-    MELON_SLICE: 64
-    PINK_WOOL: 10
-    POWERED_RAIL: 1
-    SALMON_BUCKET: 1
-    SEA_PICKLE: 10
-    SNOWBALL: 1
-    SPRUCE_SAPLING: 1
-    TROPICAL_FISH_BUCKET: 1
-  5:
-    CHERRY_BOAT: 1
-    CHERRY_SAPLING: 1
-    DIAMOND: 1
-    HEART_OF_THE_SEA: 1
-    PUFFERFISH_BUCKET: 1
-  6:
-    AXOLOTL_BUCKET: 1
-    AZALEA_LEAVES: 1
-    BIG_DRIPLEAF: 10
-    CRYING_OBSIDIAN: 1
-    GLOW_INK_SAC: 1
-    OBSIDIAN: 5
-    RABBIT_HIDE: 1
-    SADDLE: 1
-    WARPED_HANGING_SIGN: 1
-  7:
-    BREWING_STAND: 1
-    GHAST_TEAR: 1
-    NAUTILUS_SHELL: 1
-    NETHERRACK: 640
-    NETHER_WART: 1
-    RABBIT_FOOT: 1
-  8:
-    MAGENTA_CANDLE: 1
-    PINK_CANDLE: 1
-    SPONGE: 1
-    TURTLE_SCUTE: 1
-    WHITE_CANDLE: 1
-  9:
-    SLIME_BLOCK: 1
+    1:
+      COBBLESTONE: 5
+      FEATHER: 1
+    2:
+      BARREL: 1
+      CHAIN: 1
+      FIREWORK_ROCKET: 1
+      MILK_BUCKET: 1
+      OAK_HANGING_SIGN: 1
+      OAK_LEAVES: 1
+      RED_BANNER: 1
+      WHITE_BANNER: 1
+      WHITE_BED: 1
+      YELLOW_BANNER: 1
+    3:
+      ACTIVATOR_RAIL: 1
+      BAKED_POTATO: 1
+      BELL: 1
+      BLACK_BANNER: 1
+      BLACK_BED: 1
+      CARROT_ON_A_STICK: 1
+      CAULDRON: 1
+      COAL: 64
+      DARK_OAK_LEAVES: 1
+      DIRT: 320
+      LANTERN: 1
+      LAVA_BUCKET: 1
+      REDSTONE_TORCH: 1
+      SAND: 128
+    4:
+      ACACIA_HANGING_SIGN: 1
+      ACACIA_SAPLING: 1
+      APPLE: 5
+      BIRCH_HANGING_SIGN: 1
+      BIRCH_LEAVES: 1
+      BLUE_BANNER: 1
+      CLOCK: 1
+      DETECTOR_RAIL: 1
+      LIGHT_BLUE_BED: 1
+      LIME_BED: 1
+      MELON_SLICE: 64
+      PINK_WOOL: 10
+      POWERED_RAIL: 1
+      SALMON_BUCKET: 1
+      SEA_PICKLE: 10
+      SNOWBALL: 1
+      SPRUCE_SAPLING: 1
+      TROPICAL_FISH_BUCKET: 1
+    5:
+      CHERRY_BOAT: 1
+      CHERRY_SAPLING: 1
+      DIAMOND: 1
+      HEART_OF_THE_SEA: 1
+      PUFFERFISH_BUCKET: 1
+    6:
+      AXOLOTL_BUCKET: 1
+      AZALEA_LEAVES: 1
+      BIG_DRIPLEAF: 10
+      CRYING_OBSIDIAN: 1
+      GLOW_INK_SAC: 1
+      OBSIDIAN: 5
+      RABBIT_HIDE: 1
+      SADDLE: 1
+      WARPED_HANGING_SIGN: 1
+    7:
+      BREWING_STAND: 1
+      GHAST_TEAR: 1
+      NAUTILUS_SHELL: 1
+      NETHERRACK: 640
+      NETHER_WART: 1
+      RABBIT_FOOT: 1
+    8:
+      MAGENTA_CANDLE: 1
+      PINK_CANDLE: 1
+      SPONGE: 1
+      TURTLE_SCUTE: 1
+      WHITE_CANDLE: 1
+    9:
+      SLIME_BLOCK: 1
 
 # Task: Obtain N items with a string in their name. List of item groups to obtain, including:
 # - String: String glob to search in its name
@@ -974,46 +977,46 @@ obtainItemWithStringTask:
 placeFlowerInPotTask:
   maxTaskCount: 1
   materials:
-  2:
-  - DANDELION
-  3:
-  - POPPY
-  4:
-  - ALLIUM
-  - AZURE_BLUET
-  - BLUE_ORCHID
-  - CORNFLOWER
-  - LILAC
-  - LILY_OF_THE_VALLEY
-  - ORANGE_TULIP
-  - OXEYE_DAISY
-  - PEONY
-  - PINK_TULIP
-  - RED_TULIP
-  - ROSE_BUSH
-  - SUNFLOWER
-  - WHITE_TULIP
-  11: 
-  - WITHER_ROSE
+    2:
+    - DANDELION
+    3:
+    - POPPY
+    4:
+    - ALLIUM
+    - AZURE_BLUET
+    - BLUE_ORCHID
+    - CORNFLOWER
+    - LILAC
+    - LILY_OF_THE_VALLEY
+    - ORANGE_TULIP
+    - OXEYE_DAISY
+    - PEONY
+    - PINK_TULIP
+    - RED_TULIP
+    - ROSE_BUSH
+    - SUNFLOWER
+    - WHITE_TULIP
+    11: 
+    - WITHER_ROSE
 
 # Task: Place an item in an item frame. Possible items to place in the frame
 placeItemInItemFrameTask:
   maxTaskCount: 1
   materials:
-  2:
-  - COAL
-  - IRON_INGOT
-  3:
-  - COPPER_INGOT
-  - EMERALD
-  - LAPIS_LAZULI
-  4:
-  - GOLD_INGOT
-  5:
-  - DIAMOND
-  6:
-  - AMETHYST_SHARD
-  - QUARTZ
+    2:
+    - COAL
+    - IRON_INGOT
+    3:
+    - COPPER_INGOT
+    - EMERALD
+    - LAPIS_LAZULI
+    4:
+    - GOLD_INGOT
+    5:
+    - DIAMOND
+    6:
+    - AMETHYST_SHARD
+    - QUARTZ
 
 # Task: Place N items. Possible items to place, and the amount to place
 placeItemsTask:
@@ -1071,52 +1074,52 @@ placeItemsTask:
 punchAnEntityWithItemTask:
   maxTaskCount: 1
   entityTypes:
-  2:
-  - DROWNED
-  3:
-  - BAT
-  - DOLPHIN
-  - ENDERMAN
-  - IRON_GOLEM
-  - VILLAGER
-  4:
-  - BEE
-  - PUFFERFISH
-  - SNOW_GOLEM
-  - WOLF
-  5:
-  - ARMADILLO
-  - CAMEL
-  - DONKEY
-  - HUSK
-  - PARROT
-  - STRAY
-  - TURTLE
-  - WITCH
-  6:
-  - AXOLOTL
-  - GLOW_SQUID
-  - OCELOT
-  - POLAR_BEAR
-  7:
-  - GOAT
-  - LLAMA
-  - PIGLIN
+    2:
+    - DROWNED
+    3:
+    - BAT
+    - DOLPHIN
+    - ENDERMAN
+    - IRON_GOLEM
+    - VILLAGER
+    4:
+    - BEE
+    - PUFFERFISH
+    - SNOW_GOLEM
+    - WOLF
+    5:
+    - ARMADILLO
+    - CAMEL
+    - DONKEY
+    - HUSK
+    - PARROT
+    - STRAY
+    - TURTLE
+    - WITCH
+    6:
+    - AXOLOTL
+    - GLOW_SQUID
+    - OCELOT
+    - POLAR_BEAR
+    7:
+    - GOAT
+    - LLAMA
+    - PIGLIN
 
   materials:
-  2:
-  - COD
-  - SALMON
-  3:
-  - APPLE
-  - BEETROOT
-  4:
-  - COOKIE
-  - PUFFERFISH
-  - SWEET_BERRIES
-  - TROPICAL_FISH
-  6:
-  - GLOW_BERRIES
+    2:
+    - COD
+    - SALMON
+    3:
+    - APPLE
+    - BEETROOT
+    4:
+    - COOKIE
+    - PUFFERFISH
+    - SWEET_BERRIES
+    - TROPICAL_FISH
+    6:
+    - GLOW_BERRIES
 
 # Task: Reach a velocity of N blocks/second. Define the min/max of the random number generator for target max velocity
 reachVelocityTask:
@@ -1127,52 +1130,52 @@ reachVelocityTask:
 receivePotionEffectTypeTask:
   maxTaskCount: 1
   potionEffectTypes:
-  2:
-  - HUNGER
-  3:
-  - DOLPHINS_GRACE
-  - POISON
+    2:
+    - HUNGER
+    3:
+    - DOLPHINS_GRACE
+    - POISON
 
 # Task: Ride an entity. List of possible EntityTypes to ride
 rideAnEntityTask:
   maxTaskCount: 1
   entityTypes:
-  3:
-  - HORSE
-  4:
-  - MINECART
-  5:
-  - DONKEY
-  - MULE
-  6:
-  - CAMEL
-  - PIG
-  7:
-  - STRIDER
+    3:
+    - HORSE
+    4:
+    - MINECART
+    5:
+    - DONKEY
+    - MULE
+    6:
+    - CAMEL
+    - PIG
+    7:
+    - STRIDER
 
 # Task: Shear a sheep of a certain DyeColor. List of possible DyeColors to shear
 shearColoredSheepTask:
   maxTaskCount: 1
   dyeColors:
-  2:
-  - WHITE
-  - RED
-  - YELLOW
-  3:
-  - BLACK
-  - BLUE
-  4:
-  - GREEN
-  - ORANGE
-  - PINK
-  - LIGHT_GRAY
-  - GRAY
-  - PURPLE
-  - BROWN
-  - CYAN
-  - LIGHT_BLUE
-  - LIME
-  - MAGENTA
+    2:
+    - WHITE
+    - RED
+    - YELLOW
+    3:
+    - BLACK
+    - BLUE
+    4:
+    - GREEN
+    - ORANGE
+    - PINK
+    - LIGHT_GRAY
+    - GRAY
+    - PURPLE
+    - BROWN
+    - CYAN
+    - LIGHT_BLUE
+    - LIME
+    - MAGENTA
 
 # Task: Shear N sheep. Min and max shears needed for this task
 shearSheepTask:
@@ -1185,151 +1188,151 @@ shearSheepTask:
 sleepInColoredBedTask:
   maxTaskCount: 1
   dyeColors:
-  2:
-  - WHITE
-  - RED
-  - YELLOW
-  3:
-  - BLACK
-  - BLUE
-  4:
-  - GREEN
-  - ORANGE
-  - PINK
-  - LIGHT_GRAY
-  - GRAY
-  - PURPLE
-  - BROWN
-  - CYAN
-  - LIGHT_BLUE
-  - LIME
-  - MAGENTA
+    2:
+    - WHITE
+    - RED
+    - YELLOW
+    3:
+    - BLACK
+    - BLUE
+    4:
+    - GREEN
+    - ORANGE
+    - PINK
+    - LIGHT_GRAY
+    - GRAY
+    - PURPLE
+    - BROWN
+    - CYAN
+    - LIGHT_BLUE
+    - LIME
+    - MAGENTA
 
 # Task: Shoot a projectile at a block. Possible blocks to shoot a projectile with
 shootBlockTask:
   maxTaskCount: 1
   materials:
-  1:
-  - STONE_SLAB
-  2:
-  - ANDESITE
-  - BARREL
-  - BRICKS
-  - CAMPFIRE
-  - CAULDRON
-  - COBBLESTONE_WALL
-  - COMPOSTER
-  - DIORITE
-  - FLETCHING_TABLE
-  - GLASS_PANE
-  - GRANITE
-  - LANTERN
-  - OAK_LOG
-  - SMITHING_TABLE
-  - YELLOW_WOOL
-  3:
-  - BELL
-  - BIRCH_FENCE_GATE
-  - BLACK_CONCRETE
-  - BLACK_WOOL
-  - BLAST_FURNACE
-  - BOOKSHELF
-  - CARTOGRAPHY_TABLE
-  - DISPENSER
-  - EMERALD_BLOCK
-  - GRINDSTONE
-  - HAY_BLOCK
-  - IRON_BARS
-  - LAPIS_BLOCK
-  - PISTON
-  - REDSTONE_BLOCK
-  - SANDSTONE_STAIRS
-  - TARGET
-  - TNT
-  4:
-  - ACACIA_STAIRS
-  - ANVIL
-  - BEE_NEST
-  - DARK_OAK_TRAPDOOR
-  - FARMLAND
-  - GOLD_ORE
-  - JACK_O_LANTERN
-  - JUNGLE_PLANKS
-  - LECTERN
-  - MELON
-  - MOSSY_COBBLESTONE
-  - NETHERRACK
-  - STONE_BRICKS
-  5:
-  - CHISELED_SANDSTONE
-  - GLOWSTONE
-  - JUKEBOX
-  - LIME_CONCRETE
-  - PINK_CONCRETE
-  - STRIPPED_ACACIA_LOG
-  6:
-  - CHISELED_QUARTZ_BLOCK
-  - CRIMSON_SLAB
-  - GILDED_BLACKSTONE
-  - QUARTZ_BLOCK
+    1:
+    - STONE_SLAB
+    2:
+    - ANDESITE
+    - BARREL
+    - BRICKS
+    - CAMPFIRE
+    - CAULDRON
+    - COBBLESTONE_WALL
+    - COMPOSTER
+    - DIORITE
+    - FLETCHING_TABLE
+    - GLASS_PANE
+    - GRANITE
+    - LANTERN
+    - OAK_LOG
+    - SMITHING_TABLE
+    - YELLOW_WOOL
+    3:
+    - BELL
+    - BIRCH_FENCE_GATE
+    - BLACK_CONCRETE
+    - BLACK_WOOL
+    - BLAST_FURNACE
+    - BOOKSHELF
+    - CARTOGRAPHY_TABLE
+    - DISPENSER
+    - EMERALD_BLOCK
+    - GRINDSTONE
+    - HAY_BLOCK
+    - IRON_BARS
+    - LAPIS_BLOCK
+    - PISTON
+    - REDSTONE_BLOCK
+    - SANDSTONE_STAIRS
+    - TARGET
+    - TNT
+    4:
+    - ACACIA_STAIRS
+    - ANVIL
+    - BEE_NEST
+    - DARK_OAK_TRAPDOOR
+    - FARMLAND
+    - GOLD_ORE
+    - JACK_O_LANTERN
+    - JUNGLE_PLANKS
+    - LECTERN
+    - MELON
+    - MOSSY_COBBLESTONE
+    - NETHERRACK
+    - STONE_BRICKS
+    5:
+    - CHISELED_SANDSTONE
+    - GLOWSTONE
+    - JUKEBOX
+    - LIME_CONCRETE
+    - PINK_CONCRETE
+    - STRIPPED_ACACIA_LOG
+    6:
+    - CHISELED_QUARTZ_BLOCK
+    - CRIMSON_SLAB
+    - GILDED_BLACKSTONE
+    - QUARTZ_BLOCK
 
 # Task: Shoot a projectile. Possible items to shoot a projectile with
 shootProjectileTask:
   maxTaskCount: 1
   materials:
-  2:
-  - BOW
-  3:
-  - CROSSBOW
+    2:
+    - BOW
+    3:
+    - CROSSBOW
 
 # Task: Smelt N items. Possible items to smelt
 smeltItemsTask:
   maxTaskCount: 1
   materials:
-  2:
-    CHARCOAL: 10
-    GLASS: 32
-  3:
-    BEEF: 10
-    COOKED_COD: 10
-    COOKED_CHICKEN: 10
-    COOKED_MUTTON: 10
-    COOKED_PORKCHOP: 10
-    COOKED_SALMON: 10
-    COPPER_INGOT: 20
-    DRIED_KELP: 64
-  4:
-    BRICK: 64
-    GOLD_INGOT: 10
-    GREEN_DYE: 1
-    SMOOTH_SANDSTONE: 32
-    STONE: 64
-  5:
-    IRON_INGOT: 64
-    SMOOTH_STONE: 64
-  6:
-    COOKED_RABBIT: 3
-    SMOOTH_BASALT: 10
-    SMOOTH_QUARTZ: 1
+    2:
+      CHARCOAL: 10
+      GLASS: 32
+    3:
+      BEEF: 10
+      COOKED_COD: 10
+      COOKED_CHICKEN: 10
+      COOKED_MUTTON: 10
+      COOKED_PORKCHOP: 10
+      COOKED_SALMON: 10
+      COPPER_INGOT: 20
+      DRIED_KELP: 64
+    4:
+      BRICK: 64
+      GOLD_INGOT: 10
+      GREEN_DYE: 1
+      SMOOTH_SANDSTONE: 32
+      STONE: 64
+    5:
+      IRON_INGOT: 64
+      SMOOTH_STONE: 64
+    6:
+      COOKED_RABBIT: 3
+      SMOOTH_BASALT: 10
+      SMOOTH_QUARTZ: 1
 
 # Task: Sneak on a block. Possible items to sneak on
 sneakOnBlockTask:
   maxTaskCount: 1
   materials:
-  2:
-  - CAMPFIRE
-  - MAGMA_BLOCK
-  4:
-  - CACTUS
-  6:
-  - CRYING_OBSIDIAN
-  - DEEPSLATE_DIAMOND_ORE
-  - POINTED_DRIPSTONE
-  - PRISMARINE
-  - SPAWNER
-  - SOUL_SAND
-  7:
-  - SCULK
+    2:
+    - CAMPFIRE
+    - MAGMA_BLOCK
+    4:
+    - CACTUS
+    6:
+    - CRYING_OBSIDIAN
+    - DEEPSLATE_DIAMOND_ORE
+    - POINTED_DRIPSTONE
+    - PRISMARINE
+    - SPAWNER
+    - SOUL_SAND
+    7:
+    - SCULK
 
 # Task: Die a specific way. Possible DamageCauses to die from
 specificDeathTask:
@@ -1378,36 +1381,36 @@ specificDeathTask:
 standOnBlockTask:
   maxTaskCount: 1
   materials:
-  2:
-  - CLAY
-  - COAL_ORE
-  - DIORITE
-  - IRON_BARS
-  3:
-  - BEDROCK
-  - BLAST_FURNACE
-  - COPPER_ORE
-  4:
-  - BEE_NEST
-  - CACTUS
-  - DEEPSLATE_GOLD_ORE
-  - DEEPSLATE_IRON_ORE
-  - ICE
-  - MUSHROOM_STEM
-  - NETHERRACK
-  - SNOW_BLOCK
-  - STRIPPED_BIRCH_LOG
-  - STRIPPED_DARK_OAK_LOG
-  5:
-  - BLACKSTONE
-  - BLUE_ICE
-  - SMOOTH_BASALT
-  - SOUL_SAND
-  6:
-  - AMETHYST_BLOCK
-  - CRYING_OBSIDIAN
-  - SMALL_DRIPLEAF
-  - TUFF
+    2:
+    - CLAY
+    - COAL_ORE
+    - DIORITE
+    - IRON_BARS
+    3:
+    - BEDROCK
+    - BLAST_FURNACE
+    - COPPER_ORE
+    4:
+    - BEE_NEST
+    - CACTUS
+    - DEEPSLATE_GOLD_ORE
+    - DEEPSLATE_IRON_ORE
+    - ICE
+    - MUSHROOM_STEM
+    - NETHERRACK
+    - SNOW_BLOCK
+    - STRIPPED_BIRCH_LOG
+    - STRIPPED_DARK_OAK_LOG
+    5:
+    - BLACKSTONE
+    - BLUE_ICE
+    - SMOOTH_BASALT
+    - SOUL_SAND
+    6:
+    - AMETHYST_BLOCK
+    - CRYING_OBSIDIAN
+    - SMALL_DRIPLEAF
+    - TUFF
 
 # Task: Stand on coordinate task. Set bounds of possible radius away from spawn location the coordinate is at
 standOnCoordinateTask:
@@ -1439,15 +1442,15 @@ stayStillTask:
 touchBlockTask:
   maxTaskCount: 1
   materials:
-  1:
-  - WATER
-  2:
-  - BEDROCK
-  - KELP
-  3:
-  - FIRE
-  - LAVA
-  4:
-  - COBWEB
-  6:
-  - GLOW_LICHEN
+    1:
+    - WATER
+    2:
+    - BEDROCK
+    - KELP
+    3:
+    - FIRE
+    - LAVA
+    4:
+    - COBWEB
+    6:
+    - GLOW_LICHEN

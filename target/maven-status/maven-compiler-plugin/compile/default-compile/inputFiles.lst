@@ -31,6 +31,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\Pl
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\DestroyItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\SmeltItemsTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\InventoryDragListener.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\KillALeaderPlayerTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\BlockArrowWithShieldTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\cmdframework\argument\ArgType.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\RepairIronGolemTask.java
@@ -45,6 +46,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\specific\EnchantItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\cmdframework\command\BaseCommand.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\LoggerUtils.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\rewards\types\RestoreToOneLifeReward.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\general\PlaceFlowerInPotTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\data\LootConfig.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\WorldUtils.java

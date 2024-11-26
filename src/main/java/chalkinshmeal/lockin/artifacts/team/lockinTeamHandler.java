@@ -11,16 +11,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.utils.LoggerUtils;
+import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.utils.EntityUtils;
 
 public class LockinTeamHandler {
     private JavaPlugin plugin;
+    private LockinScoreboard lockinScoreboard;
     private LinkedHashMap<String, HashSet<UUID>> teams = new LinkedHashMap<>();
     private LinkedHashMap<String, Material> teamMaterials = new LinkedHashMap<>();
     private boolean debug = false;
 
-    public LockinTeamHandler(JavaPlugin plugin) {
+    public LockinTeamHandler(JavaPlugin plugin, LockinScoreboard lockinScoreboard) {
         this.plugin = plugin;
+        this.lockinScoreboard = lockinScoreboard;
 
         // Initialize default teams
         this.teams.put("Team 1", new HashSet<>());
@@ -197,5 +200,57 @@ public class LockinTeamHandler {
             uuids.add(player.getUniqueId());
         }
         return uuids;
+    }
+
+    //-------------------------------------------------------------------------
+    // Scoreboard-related accessors/mutators
+    //-------------------------------------------------------------------------
+    public List<Player> getLeadingTeamPlayers() {
+        List<Player> leadingTeamPlayers = new ArrayList<>();
+        for (String teamName : this.lockinScoreboard.getWinningTeams()) {
+            for (UUID uuid : this.getTeamPlayers(teamName)) {
+                Player player = EntityUtils.getPlayer(uuid);
+                if (player == null) continue;
+
+                leadingTeamPlayers.add(player);
+            }
+        }
+
+        return leadingTeamPlayers;
+    }
+
+    public List<Player> getTeamPlayersWithNoLives() {
+        List<Player> noLifePlayers = new ArrayList<>();
+        for (String teamName : this.lockinScoreboard.getTeamNames()) {
+            if (this.lockinScoreboard.getScore(teamName) > 0) continue;
+            for (UUID uuid : this.getTeamPlayers(teamName)) {
+                Player player = EntityUtils.getPlayer(uuid);
+                if (player == null) continue;
+
+                noLifePlayers.add(player);
+            }
+        }
+
+        return noLifePlayers;
+    }
+
+    public List<String> getCatchUpTeamNames() {
+        List<String> catchUpTeamNames = new ArrayList<>();
+        for (String teamName : this.getTeamNames()) {
+            if (this.isCatchUpTeam(teamName)) catchUpTeamNames.add(teamName);
+        }
+        return catchUpTeamNames;
+    }
+
+    public List<String> getNonCatchUpTeamNames() {
+        List<String> nonCatchUpTeamNames = new ArrayList<>();
+        for (String teamName : this.getTeamNames()) {
+            if (!this.isCatchUpTeam(teamName)) nonCatchUpTeamNames.add(teamName);
+        }
+        return nonCatchUpTeamNames;
+    }
+
+    public boolean isCatchUpTeam(String teamName) {
+        return this.getNumTeams() >= 3 && this.lockinScoreboard.getScore(teamName) <= 0;
     }
 }

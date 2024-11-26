@@ -43,6 +43,7 @@ public abstract class LockinTask {
     protected boolean isSuddenDeath;
     protected boolean applyAAnRules;
     protected LockinTaskState state;
+    protected boolean isCatchUpTask;
 
     //---------------------------------------------------------------------------------------------
     // Constructor
@@ -60,6 +61,7 @@ public abstract class LockinTask {
         this.applyAAnRules = true;
         this.nameColor = NamedTextColor.BLUE;
         this.state = LockinTaskState.RUN;
+        this.isCatchUpTask = false;
         Utils.setDisplayName(item, this.itemDisplayName);
 
         this.validateConfig();
@@ -135,12 +137,16 @@ public abstract class LockinTask {
         //    .decoration(TextDecoration.ITALIC, false)
         //    .append(Component.text(String.valueOf(this.value), NamedTextColor.GOLD));
         //this.item = Utils.addLore(this.item, valueLore);
-        //Component rewardLore = Component.text((this.isPunishment) ? "Punishment: " : "Reward: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
-        //        .append(Component.text((this.reward == null) ? "Nothing" : this.reward.getDescription(), NamedTextColor.LIGHT_PURPLE));
-        //this.item = Utils.addLore(this.item, rewardLore);
+
+        if (this.reward != null) {
+            Component rewardLore = Component.text((this.isPunishment) ? "Punishment: " : "Reward: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
+                    .append(Component.text(this.reward.getDescription(), NamedTextColor.LIGHT_PURPLE));
+            this.item = Utils.addLore(this.item, rewardLore);
+        }
     }
     public boolean haveAllTeamsCompleted() {
-        for (String teamName : LockinTask.lockinTeamHandler.getTeamNames()) {
+        List<String> teamNames = (this.isCatchUpTask) ? lockinTeamHandler.getCatchUpTeamNames() : lockinTeamHandler.getNonCatchUpTeamNames();
+        for (String teamName : teamNames) {
             if (!this.completed.contains(teamName)) return false;
         }
         return true;
@@ -153,6 +159,7 @@ public abstract class LockinTask {
     public void complete(Player player) {
         String teamName = lockinTeamHandler.getTeamName(player);
         if (this.hasCompleted(teamName)) return;
+        if (this.isCatchUpTask != lockinTeamHandler.isCatchUpTeam(teamName)) return;
 
         this.completed.add(teamName);
         lockinTaskHandler.complete(this, player);

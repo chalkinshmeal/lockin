@@ -30,7 +30,7 @@ public class LockinScoreboard {
     private final Map<String, Score> teamScores;
     private LockinTeamHandler lockinTeamHandler;
     private int maxLives;
-    private final boolean debug = false;
+    private final boolean debug = true;
 
     @SuppressWarnings("deprecation")
     public LockinScoreboard(JavaPlugin plugin, ConfigHandler configHandler) {
@@ -49,16 +49,19 @@ public class LockinScoreboard {
     // Accessor/Mutator methods
     //-------------------------------------------------------------------------
     public boolean atLeastOneTeamHasPositiveLives() {
+        if (debug) LoggerUtils.info("Checking...");
         int positiveTeams = 0;
-        for (String teamName : this.getTeamNames()) {
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            if (debug) LoggerUtils.info("  Team: " + teamName);
             if (this.getScore(teamName) > 0) positiveTeams += 1;
         }
+        if (debug) LoggerUtils.info("Teams with positive score: " + positiveTeams);
         return positiveTeams >= 1;
     }
 
     public boolean atMostOneTeamHasPositiveLives() {
         int positiveTeams = 0;
-        for (String teamName : this.getTeamNames()) {
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
             if (this.getScore(teamName) > 0) positiveTeams += 1;
         }
         return positiveTeams <= 1;

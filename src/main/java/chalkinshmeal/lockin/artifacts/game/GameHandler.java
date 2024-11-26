@@ -38,15 +38,18 @@ public class GameHandler {
     public final LockinTeamHandler lockinTeamHandler;
     private final int queueTime;
     private final int singleTeamTimeLimit;
+    private final int multipleCompleteTeamTimeLimit;
     private final int multipleTeamTimeLimit;
     private final int maxTier;
-    private final boolean debug = false;
+    private final boolean debug = true;
 
     // Temporary status
     public GameState state = GameState.INACTIVE;
     public GameType gameType = GameType.SINGLE_TEAM;
     public int currentTier = 0;
     public List<Integer> taskIDs = new ArrayList<>();
+    public List<Integer> incrementTierTaskIDs = new ArrayList<>();
+    public boolean multipleTeamOnePlayerHasCompleted = false;
 
     //---------------------------------------------------------------------------------------------
     // Constructor
@@ -60,8 +63,9 @@ public class GameHandler {
         this.lockinTeamHandler = lockinTeamHandler;
         this.queueTime = this.configHandler.getInt("queueTime", 120);
         this.singleTeamTimeLimit = this.configHandler.getInt("singleTeamTimeLimit", 600);
+        this.multipleCompleteTeamTimeLimit = this.configHandler.getInt("multipleCompletedTeamTimeLimit", 600);
         this.multipleTeamTimeLimit = this.configHandler.getInt("multipleTeamTimeLimit", 600);
-        this.maxTier = 10;
+        this.maxTier = 1;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -103,30 +107,14 @@ public class GameHandler {
         WorldUtils.destroySpawnCage();
 
         // Set game state
-        this.lockinTaskHandler.registerListeners();
         if (this.gameType == GameType.SINGLE_TEAM) {
             this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.singleTeamTimeLimit);
-            this.countdownBossBar.start();
-
-            // Repeatedly check if all tasks are done, then increment tier
-            this.taskIDs.add(TaskUtils.runRepeatingTask(this.plugin, () -> {
-                if (lockinTaskHandler.hasOneTeamCompletedAllTasks()) {
-                    incrementTier();
-                }
-            }, 0f, 1f));
         }
-
         else if (this.gameType == GameType.MULTIPLE_TEAM) {
             this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.multipleTeamTimeLimit);
-
-            // Repeatedly check if one team has completed all tasks, then start countdown
-            this.taskIDs.add(TaskUtils.runRepeatingTask(this.plugin, () -> {
-                if (lockinTaskHandler.hasOneTeamCompletedAllTasks()) {
-                    this.countdownBossBar.start();
-                    this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::incrementTier, this.multipleTeamTimeLimit));
-                }
-            }, 0f, 1f));
         }
+        this.countdownBossBar.start();
+        this.resetIncrementTierTasks();
 
         // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
@@ -136,6 +124,7 @@ public class GameHandler {
 
     public void incrementTier() {
         this.currentTier += 1;
+        this.multipleTeamOnePlayerHasCompleted = false;
 
         // Subtract lives
         if (this.currentTier != 1) {
@@ -144,32 +133,40 @@ public class GameHandler {
                     if (!task.hasCompleted(teamName)) this.lockinScoreboard.subtractScore(teamName, 1);
                 }
             }
-        }
 
-        // Check sudden death conditions
-        if (this.gameType == GameType.MULTIPLE_TEAM && this.currentTier > this.maxTier) {
-            this.suddenDeath();
-            return;
-        }
+            // Check sudden death conditions
+            if (this.gameType == GameType.MULTIPLE_TEAM && this.currentTier > this.maxTier) {
+                this.suddenDeath();
+                return;
+            }
 
-        // Check end game conditions
-        if (this.gameType == GameType.MULTIPLE_TEAM && this.lockinScoreboard.atMostOneTeamHasPositiveLives() && this.currentTier > 1 ||
-            this.gameType == GameType.SINGLE_TEAM && this.currentTier > this.maxTier ||
-            this.gameType == GameType.SINGLE_TEAM && !this.lockinScoreboard.atLeastOneTeamHasPositiveLives() && this.currentTier > 1) {
-            this.stop();
-            return;
+            // Check end game conditions
+            if (this.gameType == GameType.MULTIPLE_TEAM && this.lockinScoreboard.atMostOneTeamHasPositiveLives() && this.currentTier > 1 ||
+                this.gameType == GameType.SINGLE_TEAM && this.currentTier > this.maxTier ||
+                this.gameType == GameType.SINGLE_TEAM && !this.lockinScoreboard.atLeastOneTeamHasPositiveLives() && this.currentTier > 1) {
+                if (debug) LoggerUtils.info("End conditions met.");
+                if (debug) LoggerUtils.info("  Game Type: " + this.gameType);
+                if (debug) LoggerUtils.info("  Does at least one team have positive lives?: " + this.lockinScoreboard.atLeastOneTeamHasPositiveLives());
+                if (debug) LoggerUtils.info("  Current Tier: " + this.currentTier);
+                this.stop();
+                return;
+            }
         }
 
         // Set game state
+        this.lockinTaskHandler.unRegisterListeners();
         this.lockinTaskHandler.updateTaskList(this.currentTier);
         this.lockinTaskHandler.registerListeners();
+        if (this.gameType == GameType.MULTIPLE_TEAM) {
+            this.lockinTaskHandler.unRegisterCatchUpListeners();
+            this.lockinTaskHandler.updateCatchupTaskList();
+            this.lockinTaskHandler.registerCatchUpListeners();
+        }
         this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
 
-        // Delayed increment tier (if single team mode)
-        // In multiple team mode, the responsibility to start the next tier lies in the start()::runRepeatingTask call
-        if (this.gameType == GameType.SINGLE_TEAM) {
-            float delayTime = (this.currentTier == 1) ? this.singleTeamTimeLimit + this.queueTime : this.singleTeamTimeLimit;
-            this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) delayTime));
+        // Reset increment tier checker
+        if (this.currentTier != 1 && this.currentTier <= this.maxTier) {
+            resetIncrementTierTasks();
         }
 
         // Cosmetics
@@ -234,8 +231,16 @@ public class GameHandler {
             }
         }
 
+        // Clear incrementTier tasks
+        for (int taskID : this.incrementTierTaskIDs) {
+            this.taskIDs.remove(Integer.valueOf(taskID));
+            TaskUtils.cancelTask(taskID);
+        }
+
         // Set game state
-        this.countdownBossBar.update(Component.text("Overtime", NamedTextColor.RED));
+        this.incrementTierTaskIDs.clear();
+        this.countdownBossBar.stop();
+        this.lockinTaskHandler.unRegisterListeners();
         this.lockinTaskHandler.updateSuddenDeathTaskList();
         this.lockinTaskHandler.registerListeners();
         this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
@@ -244,6 +249,12 @@ public class GameHandler {
                 this.lockinScoreboard.setScore(teamName, 1);
             }
         }
+
+        // Run repeating task to check if any one team has completed all tasks (kill opposing player)
+        int taskID = TaskUtils.runRepeatingTask(this.plugin, () -> {
+            if (lockinTaskHandler.hasOneTeamCompletedAllTasks()) this.stop();
+        }, 0f, 1f);
+        this.taskIDs.add(taskID);
 
         // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
@@ -278,6 +289,73 @@ public class GameHandler {
             EntityUtils.resetPlayerState(player, true);
             this.lockinCompass.giveCompass(player);
         }
+    }
+
+    private void resetIncrementTierTasks() {
+        if (debug) LoggerUtils.info("Resetting increment tier checker tasks");
+        if (debug) {
+            LoggerUtils.info("TaskIDs:");
+            for (int taskID : this.taskIDs) {
+                LoggerUtils.info("  " + taskID);
+            }
+            LoggerUtils.info("Increment Tier Checker TaskIDs:");
+            for (int taskID : this.incrementTierTaskIDs) {
+                LoggerUtils.info("  " + taskID);
+            }
+        }
+        // Clear incrementTier tasks
+        for (int taskID : this.incrementTierTaskIDs) {
+            this.taskIDs.remove(Integer.valueOf(taskID));
+            TaskUtils.cancelTask(taskID);
+        }
+        this.incrementTierTaskIDs.clear();
+
+        // Make task to increment after time limit is reached
+        float delayTime = 0;
+        if (this.gameType == GameType.SINGLE_TEAM) {
+            delayTime = (this.currentTier == 1) ? this.singleTeamTimeLimit + this.queueTime : this.singleTeamTimeLimit;
+        }
+        else if (this.gameType == GameType.MULTIPLE_TEAM) {
+            delayTime = (this.currentTier == 1) ? this.multipleTeamTimeLimit + this.queueTime : this.multipleTeamTimeLimit;
+        }
+
+        int taskID = TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) delayTime);
+        this.incrementTierTaskIDs.add(taskID);
+        this.taskIDs.add(taskID);
+
+        // Make task to increment if tasks are completed
+        taskID = TaskUtils.runRepeatingTask(this.plugin, () -> {
+            LoggerUtils.info("In repeating task");
+            if (lockinTaskHandler.hasOneTeamCompletedAllTasks() && this.gameType == GameType.SINGLE_TEAM) {
+                incrementTier();
+            }
+            else if (lockinTaskHandler.haveAllTeamsCompletedAllTasks() && this.gameType == GameType.MULTIPLE_TEAM) {
+                LoggerUtils.info("Multiple team incrementing tier");
+                incrementTier();
+            }
+            else if (lockinTaskHandler.hasOneTeamCompletedAllTasks() && this.gameType == GameType.MULTIPLE_TEAM && !this.multipleTeamOnePlayerHasCompleted) {
+                LoggerUtils.info("HERE!!!!!!!!!!!!!!!!!!!!!!!!");
+                this.multipleTeamOnePlayerHasCompleted = true;
+                int newTime = Math.min(this.countdownBossBar.getTime(), this.multipleCompleteTeamTimeLimit);
+                LoggerUtils.info("Current time: " + this.countdownBossBar.getTime());
+                LoggerUtils.info("Multiple timelimit: " + this.multipleCompleteTeamTimeLimit);
+                LoggerUtils.info("New time: " + newTime);
+                this.countdownBossBar.setTime(newTime);
+                int newTaskID = TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) newTime);
+                this.incrementTierTaskIDs.add(newTaskID);
+                this.taskIDs.add(newTaskID);
+
+                for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+                    player.sendMessage(Component.text()
+                        .append(Component.text("Time limit reduced to ", NamedTextColor.GRAY))
+                        .append(Component.text(newTime, NamedTextColor.BLUE))
+                        .append(Component.text(" seconds", NamedTextColor.GRAY)));
+                    Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
+                }
+            }
+        }, 0f, 1f);
+        this.incrementTierTaskIDs.add(taskID);
+        this.taskIDs.add(taskID);
     }
 
     //---------------------------------------------------------------------------------------------

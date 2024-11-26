@@ -78,7 +78,11 @@ public class BreakItemsTask extends LockinTask {
         // Return if 
         Player player = event.getPlayer();
         String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        System.out.println("HERE");
+        System.out.println("Team: " + teamName);
+        System.out.println("Broken items: " + this.brokenItems.getOrDefault(teamName, 0));
         this.brokenItems.put(teamName, this.brokenItems.getOrDefault(teamName, 0) + 1);
+        System.out.println("Broken items after: " + this.brokenItems.getOrDefault(teamName, 0));
         if (this.brokenItems.get(teamName) < this.amount) return;
         this.complete(player);
     }

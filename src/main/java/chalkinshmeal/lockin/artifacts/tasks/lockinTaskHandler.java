@@ -16,6 +16,7 @@ import chalkinshmeal.lockin.artifacts.tasks.general.*;
 import chalkinshmeal.lockin.artifacts.tasks.specific.*;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -26,8 +27,11 @@ public class LockinTaskHandler {
     private final LockinCompass lockinCompass;
     private LockinRewardHandler lockinRewardHandler;
     private LockinTeamHandler lockinTeamHandler;
+    private final LockinScoreboard lockinScoreboard;
     private int tasksPerTier;
     private List<LockinTask> tasks;
+    private List<LockinTask> catchUpTasks;
+    private final boolean debug = true;
 
     public LockinTaskHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass,
                                 LockinScoreboard lockinScoreboard, LockinTeamHandler lockinTeamHandler) {
@@ -36,7 +40,9 @@ public class LockinTaskHandler {
         this.lockinCompass = lockinCompass;
         this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
         this.lockinTeamHandler = lockinTeamHandler;
+        this.lockinScoreboard = lockinScoreboard;
         this.tasks = new ArrayList<>();
+        this.catchUpTasks = new ArrayList<>();
         this.tasksPerTier = this.configHandler.getInt("tasksPerTier", 9);
 
         LockinTask.initStaticVariables(plugin, configHandler, this, lockinRewardHandler, lockinTeamHandler);
@@ -47,6 +53,7 @@ public class LockinTaskHandler {
     //---------------------------------------------------------------------------------------------
     public void setTasksPerTier(int tasksPerTier) { this.tasksPerTier = tasksPerTier; }
     public List<LockinTask> getTasks() { return new ArrayList<>(this.tasks); }
+    public List<LockinTask> getCatchUpTasks() { return new ArrayList<>(this.catchUpTasks); }
     public boolean hasOneTeamCompletedAllTasks() {
         for (String teamName : this.lockinTeamHandler.getTeamNames()) {
             boolean hasCompletedAllTasks = true;
@@ -56,6 +63,21 @@ public class LockinTaskHandler {
             if (hasCompletedAllTasks) return true;
         }
         return false;
+    }
+    public boolean haveAllTeamsCompletedAllTasks() {
+        LoggerUtils.info("Have all teams completed all tasks?");
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            LoggerUtils.info("  Team: " + teamName);
+            for (LockinTask task : this.tasks) {
+                LoggerUtils.info("    Task: " + task.name);
+                if (!task.hasCompleted(teamName)) {
+                    LoggerUtils.info("    Not complete!");
+                    return false;
+                }
+            }
+        }
+        LoggerUtils.info("    Complete!");
+        return true;
     }
     public boolean areAllTasksDone() { 
         for (LockinTask task : this.tasks) {
@@ -71,6 +93,10 @@ public class LockinTaskHandler {
         for (LockinTask task : this.tasks) { task.stop(); }
     }
 
+    public void stopCurrentCatchUpTasks() {
+        for (LockinTask task : this.catchUpTasks) { task.stop(); }
+    }
+
     public void updateSuddenDeathTaskList() {
         this.stopCurrentTasks();
         this.unRegisterListeners();
@@ -78,6 +104,15 @@ public class LockinTaskHandler {
         this.tasks = new ArrayList<>();
         this.tasks.addAll(KillOpposingTeamTask.getTasks(this.lockinTeamHandler));
         for (LockinTask task : this.tasks) task.init();
+    }
+
+    public void updateCatchupTaskList() {
+        this.stopCurrentCatchUpTasks();
+        this.unRegisterCatchUpListeners();
+
+        this.catchUpTasks = new ArrayList<>();
+        this.catchUpTasks.addAll(KillALeaderPlayerTask.getTasks(this.lockinTeamHandler, this.lockinScoreboard));
+        for (LockinTask task : this.catchUpTasks) task.init();
     }
 
     // Update the list of tasks for this lockin challenge
@@ -186,12 +221,28 @@ public class LockinTaskHandler {
 	// Listener methods
     //---------------------------------------------------------------------------------------------
 	public void registerListeners() {
+        if (debug) LoggerUtils.info("Registering tasks");
         for (LockinTask task : this.tasks) {
+            if (debug) LoggerUtils.info("Registering task: " + task.name);
             task.registerListeners();
         }
 	}
 
     public void unRegisterListeners() {
-        for (LockinTask task : this.tasks) { task.unRegisterListeners(); }
+        if (debug) LoggerUtils.info("Unregistering tasks");
+        for (LockinTask task : this.tasks) {
+            if (debug) LoggerUtils.info("Unregistering task: " + task.name);
+            task.unRegisterListeners();
+        }
+    }
+
+	public void registerCatchUpListeners() {
+        for (LockinTask task : this.catchUpTasks) {
+            task.registerListeners();
+        }
+	}
+
+    public void unRegisterCatchUpListeners() {
+        for (LockinTask task : this.catchUpTasks) { task.unRegisterListeners(); }
     }
 }

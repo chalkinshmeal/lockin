@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class ObtainItemsTask extends LockinTask {
@@ -51,6 +52,7 @@ public class ObtainItemsTask extends LockinTask {
     // Task getter
     //---------------------------------------------------------------------------------------------
     public static List<ObtainItemsTask> getTasks(int tier) {
+        LoggerUtils.info("Getting tasks. Tier: " + tier);
         List<ObtainItemsTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
@@ -63,6 +65,7 @@ public class ObtainItemsTask extends LockinTask {
             int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr, 1);
             tasks.add(new ObtainItemsTask(material, amount));
         }
+        LoggerUtils.info("Number of tasks: " + tasks.size());
         return tasks;
     }
 
@@ -86,7 +89,8 @@ public class ObtainItemsTask extends LockinTask {
 
         Material itemType = event.getCurrentItem().getType();
         if (itemType != this.material) return;
-        if (!Utils.hasMaterial(player, this.material, this.amount, event.getCurrentItem())) return;
+        //if (!Utils.hasMaterial(player, this.material, this.amount, event.getCurrentItem())) return;
+        if (!Utils.hasMaterial(player, this.material, this.amount, null)) return;
 
         this.complete(player);
     }

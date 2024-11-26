@@ -63,9 +63,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -908,6 +911,8 @@ public class Utils {
     public static boolean hasMaterial(Player player, Material material, int amount, ItemStack addedItem) {
         int totalAmount = 0;
         if (amount == 0) return true;
+
+        LoggerUtils.info("Checking if player has material " + material);
 
         List<ItemStack> items = new ArrayList<>();
         for (ItemStack item : player.getInventory().getContents()) {

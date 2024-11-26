@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
@@ -33,6 +34,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 public class LockinCompass {
     private final JavaPlugin plugin;
     private final LockinTeamHandler lockinTeamHandler;
+    private final LockinScoreboard lockinScoreboard;
     private final Inventory teamsInv;
     private final Map<String, Inventory> tasksInvs; 
     private final int tasksPerTier;
@@ -48,9 +50,10 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public LockinCompass(JavaPlugin plugin, ConfigHandler configHandler, LockinTeamHandler lockinTeamHandler) {
+    public LockinCompass(JavaPlugin plugin, ConfigHandler configHandler, LockinTeamHandler lockinTeamHandler, LockinScoreboard lockinScoreboard) {
         this.plugin = plugin;
         this.lockinTeamHandler = lockinTeamHandler;
+        this.lockinScoreboard = lockinScoreboard;
         this.tasksPerTier = Utils.getHighestMultiple((int) configHandler.getInt("tasksPerTier", 27), 9);
         this.teamsInv = Bukkit.createInventory(null, 9, Component.text(this.teamsInvName, NamedTextColor.LIGHT_PURPLE));
         this.tasksInvs = new HashMap<>();
@@ -95,10 +98,12 @@ public class LockinCompass {
         if (lockinTaskHandler == null) return;
 
         if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]   Populating with tasks");
-        for (LockinTask task : lockinTaskHandler.getTasks()) {
-            task.setLore();
-            for (String teamName : this.tasksInvs.keySet()) {
+        for (String teamName : this.tasksInvs.keySet()) {
+            boolean catchUpTeam = this.lockinTeamHandler.getNumTeams() >= 3 && this.lockinScoreboard.getScore(teamName) <= 0;
+            List<LockinTask> tasks = (catchUpTeam) ? lockinTaskHandler.getCatchUpTasks() : lockinTaskHandler.getTasks();
+            for (LockinTask task : tasks) {
                 if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]     Task: " + task.getName() + ", Team: " + teamName);
+                task.setLore();
                 Inventory tasksInv = this.tasksInvs.get(teamName);
                 ItemStack taskItem = task.getItem();
                 if (task.hasCompleted(teamName)) {

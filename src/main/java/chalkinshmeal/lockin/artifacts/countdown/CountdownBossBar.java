@@ -66,6 +66,9 @@ public class CountdownBossBar {
         this.currentTime = this.totalTime;
     }
 
+    public int getTime() { return this.currentTime; }
+    public void setTime(int time) { this.currentTime = time; }
+
     //---------------------------------------------------------------------------------------------
     // Task methods 
     //---------------------------------------------------------------------------------------------
