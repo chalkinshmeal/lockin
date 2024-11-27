@@ -73,6 +73,9 @@ public class WorldUtils {
                 }
             }
         }
+
+        // Light
+        world.getBlockAt(startX+3, startY+3, startZ+3).setType(Material.LIGHT);
     }
 
     // Destroy cube made from createHollowCube

@@ -1,8 +1,10 @@
 package chalkinshmeal.lockin.artifacts.compass;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -27,6 +29,8 @@ import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import chalkinshmeal.lockin.utils.EntityUtils;
 import chalkinshmeal.lockin.utils.ItemUtils;
+import chalkinshmeal.lockin.utils.LoggerUtils;
+import chalkinshmeal.lockin.utils.TaskUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -41,6 +45,7 @@ public class LockinCompass {
     private final Map<UUID, UUID> targets;
     private boolean isActive;
     private boolean debug = false;
+    private final Set<UUID> clickedPlayers = new HashSet<>();
 
     private final Component compassDisplayName = Component.text(
         "Lockin", NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.ITALIC, false);
@@ -144,6 +149,7 @@ public class LockinCompass {
         if (event.getItem() == null) return;
         if (event.getItem().getItemMeta().displayName() == null) return;
         if (!event.getItem().getItemMeta().displayName().equals(this.compassDisplayName)) return;
+        if (this.clickedPlayers.contains(event.getPlayer().getUniqueId())) return;
         if (Utils.isRightClick(event.getAction())) {
             this.updateTeamsInventory();
             this.openInventory(event.getPlayer());
@@ -152,6 +158,17 @@ public class LockinCompass {
         }
         else if (Utils.isLeftClick(event.getAction())) {
             this.setTarget(event.getPlayer(), event.getItem());
+            this.clickedPlayers.add(event.getPlayer().getUniqueId());
+            TaskUtils.runDelayedTask(this.plugin, () -> {
+                clickedPlayers.remove(event.getPlayer().getUniqueId());
+            }, 0.2f*20);
+
+            if (debug) {
+                LoggerUtils.info("Players in clickedPlayers:");
+                for (UUID uuid : this.clickedPlayers) {
+                    LoggerUtils.info("  " + EntityUtils.getPlayerName(uuid));
+                }
+            }
         }
     }
 
@@ -206,25 +223,45 @@ public class LockinCompass {
     // Target methods
     //---------------------------------------------------------------------------------------------
     private void setTarget(Player player, ItemStack compass) {
+        if (debug) LoggerUtils.info("Setting target for player: " + player.getName());
         // Populate targets map if the UUID is new
         UUID uuid = player.getUniqueId();
         if (!this.targets.containsKey(uuid)) this.targets.put(uuid, null);
 
         // Get all online player UUIDs, excluding the current player
         List<UUID> allUUIDsInGame = this.lockinTeamHandler.getAllOnlinePlayerUUIDs();
-        allUUIDsInGame.remove(uuid);
         if (allUUIDsInGame.size() == 0) return;
 
         // Get old target
         UUID oldTarget = this.targets.get(uuid);
+        LoggerUtils.info("  Old Target: " + oldTarget + "(" + EntityUtils.getPlayerName(oldTarget) + ")");
 
         // Get the next target
-        int newTargetIndex = 0;
-        if (oldTarget != null) {
-            newTargetIndex = allUUIDsInGame.indexOf(oldTarget);
-            if (newTargetIndex == allUUIDsInGame.size() - 1) newTargetIndex = 0;
-        }
+        int newTargetIndex = (oldTarget == null) ? 0 : allUUIDsInGame.indexOf(oldTarget) + 1;
+        LoggerUtils.info("  New Target Index: " + newTargetIndex);
+
+        // Cycle back to 0 if at size limit
+        if (newTargetIndex > allUUIDsInGame.size() - 1) newTargetIndex = 0;
+        LoggerUtils.info("  New Target Index, after cycling back: " + newTargetIndex);
+
+        // Increase by 1 if matches this player
+        if (allUUIDsInGame.get(newTargetIndex) == uuid) newTargetIndex += 1;
+        LoggerUtils.info("  New Target Index, after increasing if matches player: " + newTargetIndex);
+
+        // Cycle back to 0 if at size limit
+        if (newTargetIndex > allUUIDsInGame.size() - 1) newTargetIndex = 0;
+        LoggerUtils.info("  New Target Index, after cycling back: " + newTargetIndex);
+
+        // Set new target
         UUID newTarget = allUUIDsInGame.get(newTargetIndex);
+        LoggerUtils.info("  New Target: " + newTarget + "(" + EntityUtils.getPlayerName(newTarget) + ")");
+
+        if (debug) {
+            LoggerUtils.info("  Players in allUUIDsInGame:");
+            for (UUID _uuid : allUUIDsInGame) {
+                LoggerUtils.info("    " + EntityUtils.getPlayerName(_uuid));
+            }
+        }
 
         // Update target
         this.targets.put(uuid, newTarget);

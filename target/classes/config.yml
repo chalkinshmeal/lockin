@@ -152,7 +152,7 @@ breakItemsTask:
       AMETHYST_CLUSTER: 1
       CRIMSON_NYLIUM: 1
       GLOW_LICHEN: 10
-      GLOWSTONE: 5
+      GLOWSTONE: 10
       SPAWNER: 1
     7:
       BREWING_STAND: 1
@@ -160,6 +160,8 @@ breakItemsTask:
       SLIME_BLOCK: 1
     9:
       ANCIENT_DEBRIS: 1
+    10:
+      END_STONE: 100
 
 # Task: Breed some animals. Possible EntityTypes to breed, and how many to breed
 breedEntitiesTask:
@@ -178,6 +180,10 @@ breedEntitiesTask:
       GOAT: 1
     6:
       TURTLE: 1
+    7:
+      VILLAGER: 1
+    8:
+      PANDA: 1
 
 # Task: Craft an item. List of possible items to craft
 craftItemTask:
@@ -185,9 +191,11 @@ craftItemTask:
   materials:
     2:
     - BRUSH
+    - BONE_BLOCK
     - BOW
     - FIREWORK_ROCKET
     - FISHING_ROD
+    - FLINT_AND_STEEL
     - GLASS_PANE
     - HOPPER
     - IRON_AXE
@@ -199,21 +207,30 @@ craftItemTask:
     - BOOKSHELF
     - DISPENSER
     - HAY_BLOCK
+    - LAPIS_BLOCK
     - NOTE_BLOCK
     - PISTON
     - REDSTONE_TORCH
     4:
     - CLOCK
+    - GOLD_BLOCK
     - GOLDEN_CARROT
     - JACK_O_LANTERN
     - MOSSY_COBBLESTONE
     - POWERED_RAIL
     5:
+    - DIAMOND_BLOCK
+    - GOLDEN_APPLE
     - JUKEBOX
     6:
     - ANVIL
     - CRIMSON_SIGN
     - DAYLIGHT_DETECTOR
+    - DIORITE
+    8:
+    - HONEY_BLOCK
+    9:
+    - CONDUIT
 
 # Task: Create an entity. List of entities to create
 createEntityTask:
@@ -295,10 +312,11 @@ eatItemTask:
     - APPLE
     - BAKED_POTATO
     - BEETROOT
+    - BEETROOT_SOUP
     - BREAD
     - CARROT
+    - POTATO
     4:
-    - BEETROOT_SOUP
     - COOKED_RABBIT
     - MELON_SLICE
     - MUSHROOM_STEW
@@ -316,6 +334,8 @@ eatItemTask:
     - GLOW_BERRIES
     7:
     - HONEY_BOTTLE
+    10:
+    - CHORUS_FRUIT
 
 # Task: Enter a biome. List of possible biomes to enter, and the material that appears in with the task
 enterBiomeTask:
@@ -326,6 +346,58 @@ enterBiomeTask:
       PLAINS: SHORT_GRASS
       RIVER: CLAY
       OCEAN: SEAGRASS
+
+# Task: Enter boat with a passenger. Possible types of boats to enter, and passengers to enter with
+enterBoatWithPassengerTask:
+  maxTaskCount: 1
+  entityTypes:
+    1:
+    - CHICKEN
+    - COW
+    - PIG
+    - SHEEP
+    2:
+    - CREEPER
+    - ZOMBIE
+    3:
+    - VILLAGER
+    4:
+    - DROWNED
+    - ENDERMAN
+    5:
+    - PARROT
+    - RABBIT
+    6:
+    - AXOLOTL
+    - DONKEY
+    - FOX
+    - HUSK
+    - PILLAGER
+    - WITCH
+    7:
+    - BLAZE
+    - PIGLIN
+    - PIGLIN_BRUTE
+    - WITHER_SKELETON
+    8:
+    - SLIME
+    9:
+    - VINDICATOR
+
+  materials:
+    2:
+    - OAK_BOAT
+    4:
+    - ACACIA_BOAT
+    - BIRCH_BOAT
+    - DARK_OAK_BOAT
+    - SPRUCE_BOAT
+    5:
+    - BAMBOO_RAFT
+    - JUNGLE_BOAT
+    - MANGROVE_BOAT
+    7:
+    - CHERRY_BOAT
 
 # Task: Equip an item. List of possible items to equip (Updated to 1.21)
 equipItemTask:
@@ -395,6 +467,27 @@ jumpTask:
     2: 2000
     3: 3000
 
+# Task: Kill N baby entities. Possible entities to kill, and how many to kill
+killBabyEntitiesTask:
+  maxTaskCount: 1
+  entityTypes:
+    2:
+      CHICKEN: 1
+      COW: 1
+      PIG: 1
+      SHEEP: 1
+    4:
+      ZOMBIE: 1
+    5:
+      HORSE: 1
+      VILLAGER: 1
+    6:
+      WOLF: 1
+    7:
+      RABBIT: 1
+    8:
+      PIGLIN: 1
+
 # Task: Kill N entities. Possible entities to kill, and how many to kill
 killEntitiesTask:
   maxTaskCount: 1
@@ -430,6 +523,7 @@ killEntitiesTask:
       AXOLOTL: 1
       FOX: 1
       GLOW_SQUID: 1
+      PILLAGER: 1
       WITCH: 1
       ZOMBIE_VILLAGER: 1
     7:
@@ -437,8 +531,16 @@ killEntitiesTask:
       GHAST: 1
       HOGLIN: 3
       PIGLIN: 5
+      PIGLIN_BRUTE: 1
+      WITHER_SKELETON: 5
     8:
       SLIME: 1
+    9:
+      VINDICATOR: 1
+    10:
+      ELDER_GUARDIAN: 1
+      ENDER_DRAGON: 1
+      WITHER: 1
 
 # Task: Kill an entity with an item. Possible entities to kill, and the items to kill them with
 killEntityWithItemTask:
@@ -446,6 +548,10 @@ killEntityWithItemTask:
   entityTypes:
     2:
     - BAT
+    - CREEPER
+    - SKELETON
+    - SPIDER
+    - ZOMBIE
     3:
     - DROWNED
     - VILLAGER
@@ -474,29 +580,36 @@ killEntityWithItemTask:
     - WITCH
     7:
     - PIGLIN
+    - PIGLIN_BRUTE
 
   materials: # Food themed
     1:
     - BEEF
     2:
+    - BOW
     - COOKED_CHICKEN
     - COOKED_COD
     - COOKED_MUTTON
     - COOKED_PORKCHOP
     - COOKED_SALMON
+    - IRON_INGOT
     - ROTTEN_FLESH
+    - SPIDER_EYE
     3:
     - BAKED_POTATO
     - BREAD
     - CARROT
     - DRIED_KELP
+    - MILK_BUCKET
     4:
     - APPLE
     - BEETROOT
     - COOKED_RABBIT
     - COOKIE
+    - ENDER_PEARL
     - MELON_SLICE
     - MUSHROOM_STEW
+    - POTATO
     - PUFFERFISH
     - SWEET_BERRIES
     5:
@@ -800,6 +913,65 @@ obtainItemGroupTask:
       - REDSTONE_TORCH
       - SOUL_TORCH
       - TORCH
+    BROWN_DYE:
+      description: "Obtain 10 different types of dyes"
+      amount: 10
+      tier: 6
+      materials:
+      - WHITE_DYE
+      - LIGHT_GRAY_DYE
+      - GRAY_DYE
+      - BLACK_DYE
+      - BROWN_DYE
+      - RED_DYE
+      - ORANGE_DYE
+      - YELLOW_DYE
+      - LIME_DYE
+      - GREEN_DYE
+      - CYAN_DYE
+      - LIGHT_BLUE_DYE
+      - BLUE_DYE
+      - PURPLE_DYE
+      - MAGENTA_DYE
+      - PINK_DYE
+    DIAMOND_HELMET:
+      description: "Obtain full diamond armor"
+      amount: 4
+      tier: 7
+      materials:
+      - DIAMOND_HELMET
+      - DIAMOND_CHESTPLATE
+      - DIAMOND_LEGGINGS
+      - DIAMOND_BOOTS
+    NETHERITE_PICKAXE:
+      description: "Obtain a netherite tool"
+      amount: 1
+      tier: 9
+      materials:
+      - NETHERITE_AXE
+      - NETHERITE_HOE
+      - NETHERITE_PICKAXE
+      - NETHERITE_SHOVEL
+      - NETHERITE_SWORD
+    NETHERITE_HELMET:
+      description: "Obtain netherite armor"
+      amount: 1
+      tier: 9
+      materials:
+      - NETHERITE_HELMET
+      - NETHERITE_CHESTPLATE
+      - NETHERITE_LEGGINGS
+      - NETHERITE_BOOTS
+    DIAMOND_PICKAXE:
+      description: "Obtain a pickaxe of every material, except netherite"
+      amount: 5
+      tier: 6
+      materials:
+      - WOODEN_PICKAXE
+      - STONE_PICKAXE
+      - IRON_PICKAXE
+      - GOLDEN_PICKAXE
+      - DIAMOND_PICKAXE
 
 # Task: Obtain an item. Possible items to obtain and the amount to obtain
 obtainItemsTask:
@@ -808,16 +980,19 @@ obtainItemsTask:
     1:
       COBBLESTONE: 5
       FEATHER: 1
+      FLINT: 10
     2:
       BARREL: 1
       CHAIN: 1
       FIREWORK_ROCKET: 1
+      LADDER: 50
       MILK_BUCKET: 1
       OAK_HANGING_SIGN: 1
       OAK_LEAVES: 1
       RED_BANNER: 1
       WHITE_BANNER: 1
       WHITE_BED: 1
+      OAK_BUTTON: 50
       YELLOW_BANNER: 1
     3:
       ACTIVATOR_RAIL: 1
@@ -883,7 +1058,12 @@ obtainItemsTask:
       TURTLE_SCUTE: 1
       WHITE_CANDLE: 1
     9:
+      ENDER_EYE: 20
+      OBSIDIAN: 50
       SLIME_BLOCK: 1
+      SPONGE: 1
+    10:
+      CHORUS_FLOWER: 20
 
 # Task: Obtain N items with a string in their name. List of item groups to obtain, including:
 # - String: String glob to search in its name
@@ -1066,6 +1246,7 @@ placeItemsTask:
       NETHER_BRICKS: 1
       QUARTZ_PILLAR: 1
       WARPED_FENCE_GATE: 1
+      OBSERVER: 1
     8:
       HONEYCOMB_BLOCK: 1
       RED_SANDSTONE_SLAB: 1
@@ -1437,6 +1618,25 @@ stayStillTask:
     1: 60
     2: 120
     3: 180
+
+# Task: Tame an entity. List of possible EntityTypes to tame
+tameEntityTask:
+  maxTaskCount: 1
+  entityTypes:
+    4:
+    - WOLF
+    5:
+    - CAT
+    - OCELOT
+    - PARROT
+    6:
+    - DONKEY
+    - FOX
+    - MULE
+    7:
+    - AXOLOTL
+    - CAMEL
+    - LLAMA
 
 # Task: Touch a block. Possible items to touch
 touchBlockTask:

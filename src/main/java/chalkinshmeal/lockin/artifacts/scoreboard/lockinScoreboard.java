@@ -30,7 +30,7 @@ public class LockinScoreboard {
     private final Map<String, Score> teamScores;
     private LockinTeamHandler lockinTeamHandler;
     private int maxLives;
-    private final boolean debug = true;
+    private final boolean debug = false;
 
     @SuppressWarnings("deprecation")
     public LockinScoreboard(JavaPlugin plugin, ConfigHandler configHandler) {
@@ -48,6 +48,17 @@ public class LockinScoreboard {
     //-------------------------------------------------------------------------
     // Accessor/Mutator methods
     //-------------------------------------------------------------------------
+    public boolean noTeamHasPositiveLives() {
+        if (debug) LoggerUtils.info("Checking if no team has positive lives");
+        int positiveTeams = 0;
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            if (debug) LoggerUtils.info("  Team: " + teamName);
+            if (this.getScore(teamName) > 0) positiveTeams += 1;
+        }
+        if (debug) LoggerUtils.info("Teams with positive score: " + positiveTeams);
+        return positiveTeams == 0;
+    }
+
     public boolean atLeastOneTeamHasPositiveLives() {
         if (debug) LoggerUtils.info("Checking...");
         int positiveTeams = 0;
@@ -70,11 +81,17 @@ public class LockinScoreboard {
     // Get the names of the winning teams
     // This should be the actual team names, not the display names
     public List<String> getWinningTeams() {
+        LoggerUtils.info("Getting winning teams:----------------------------------");
         List<String> winningTeams = new ArrayList<>();
         int maxScore = this.getMaxScore();
+        LoggerUtils.info("Max score: " + maxScore);
         for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            LoggerUtils.info("Team: " + teamName);
             String displayTeamName = this.lockinTeamHandler.getDisplayTeamName(teamName);
-            if (this.getScore(displayTeamName) == maxScore) winningTeams.add(teamName);
+            LoggerUtils.info("Display Name: " + displayTeamName);
+            LoggerUtils.info("Score with team name: " + this.getScore(teamName));
+            LoggerUtils.info("Score with display team name: " + this.getScore(displayTeamName));
+            if (this.getScore(teamName) == maxScore) winningTeams.add(teamName);
         }
         return winningTeams;
     }
@@ -82,7 +99,7 @@ public class LockinScoreboard {
     public int getMaxScore() {
         if (debug) LoggerUtils.info("Getting max score");
         int maxValue = Integer.MIN_VALUE;
-        for (String teamName : this.getTeamNames()) {
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
             if (debug) LoggerUtils.info("Checking team " + teamName + ". Score: " + this.getScore(teamName));
             if (this.getScore(teamName) > maxValue) { maxValue = this.getScore(teamName); }
         }

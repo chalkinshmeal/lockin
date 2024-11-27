@@ -24,6 +24,7 @@ public class EntityUtils {
 
     // Fetches player name regardless of if they are online or offline
     public static String getPlayerName(UUID uuid) {
+        if (uuid == null) return "No Player";
         // Check if the player is online
         Player onlinePlayer = Bukkit.getPlayer(uuid);
         if (onlinePlayer != null) {
@@ -37,7 +38,7 @@ public class EntityUtils {
         }
 
         // Return null if the player has never joined the server
-        return null;
+        return "No Player";
     }
 
     public static void resetPlayerState(Player player, boolean teleportToSpawn) {

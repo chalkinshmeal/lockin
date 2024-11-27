@@ -26,15 +26,15 @@ public class LockinTeamHandler {
         this.lockinScoreboard = lockinScoreboard;
 
         // Initialize default teams
-        this.teams.put("Team 1", new HashSet<>());
-        this.teams.put("Team 2", new HashSet<>());
-        this.teams.put("Team 3", new HashSet<>());
-        this.teams.put("Team 4", new HashSet<>());
+        this.teams.put("Blue Team", new HashSet<>());
+        this.teams.put("Green Team", new HashSet<>());
+        this.teams.put("Red Team", new HashSet<>());
+        this.teams.put("Magenta Team", new HashSet<>());
 
-        this.teamMaterials.put("Team 1", Material.BLUE_WOOL);
-        this.teamMaterials.put("Team 2", Material.GREEN_WOOL);
-        this.teamMaterials.put("Team 3", Material.RED_WOOL);
-        this.teamMaterials.put("Team 4", Material.MAGENTA_WOOL);
+        this.teamMaterials.put("Blue Team", Material.BLUE_WOOL);
+        this.teamMaterials.put("Green Team", Material.GREEN_WOOL);
+        this.teamMaterials.put("Red Team", Material.RED_WOOL);
+        this.teamMaterials.put("Magenta Team", Material.MAGENTA_WOOL);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -207,12 +207,15 @@ public class LockinTeamHandler {
     //-------------------------------------------------------------------------
     public List<Player> getLeadingTeamPlayers() {
         List<Player> leadingTeamPlayers = new ArrayList<>();
+        if (debug) LoggerUtils.info("Getting leading team players");
         for (String teamName : this.lockinScoreboard.getWinningTeams()) {
+            if (debug) LoggerUtils.info("  Checking winning team: " + teamName);
             for (UUID uuid : this.getTeamPlayers(teamName)) {
                 Player player = EntityUtils.getPlayer(uuid);
                 if (player == null) continue;
 
                 leadingTeamPlayers.add(player);
+                if (debug) LoggerUtils.info("    Adding player: " + player.getName());
             }
         }
 
@@ -221,7 +224,7 @@ public class LockinTeamHandler {
 
     public List<Player> getTeamPlayersWithNoLives() {
         List<Player> noLifePlayers = new ArrayList<>();
-        for (String teamName : this.lockinScoreboard.getTeamNames()) {
+        for (String teamName : this.getTeamNames()) {
             if (this.lockinScoreboard.getScore(teamName) > 0) continue;
             for (UUID uuid : this.getTeamPlayers(teamName)) {
                 Player player = EntityUtils.getPlayer(uuid);

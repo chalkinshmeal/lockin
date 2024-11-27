@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
+import chalkinshmeal.lockin.utils.LoggerUtils;
 
 public class RestoreToOneLifeReward extends LockinReward {
     private final LockinTeamHandler lockinTeamHandler;
@@ -25,6 +26,7 @@ public class RestoreToOneLifeReward extends LockinReward {
     // Reward methods
     //---------------------------------------------------------------------------------------------
     public void giveReward(Player player) {
+        LoggerUtils.info("Giving reward to player----------------------------------");
         this.lockinScoreboard.setScore(this.lockinTeamHandler.getTeamName(player), 1);
     }
 }

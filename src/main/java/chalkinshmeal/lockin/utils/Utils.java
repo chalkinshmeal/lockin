@@ -888,7 +888,7 @@ public class Utils {
     //---------------------------------------------------------------------------------------------
     // Player
     //---------------------------------------------------------------------------------------------
-    public static Player getClosestPlayer(Location location) {
+    public static Player getClosestPlayer(Location location, float maxDistance) {
         World world = location.getWorld();
         if (world == null) return null;
 
@@ -897,6 +897,10 @@ public class Utils {
 
         for (Player player : world.getPlayers()) {
             double distanceSquared = location.distanceSquared(player.getLocation());
+            double distance = location.distance(player.getLocation());
+
+            // Check if player is past the max distance specified
+            if (distance > maxDistance) continue;
 
             // Check if this player is closer than the current closest
             if (distanceSquared < closestDistanceSquared) {

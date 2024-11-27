@@ -65,7 +65,7 @@ public class GameHandler {
         this.singleTeamTimeLimit = this.configHandler.getInt("singleTeamTimeLimit", 600);
         this.multipleCompleteTeamTimeLimit = this.configHandler.getInt("multipleCompletedTeamTimeLimit", 600);
         this.multipleTeamTimeLimit = this.configHandler.getInt("multipleTeamTimeLimit", 600);
-        this.maxTier = 1;
+        this.maxTier = 10;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ public class GameHandler {
         this.gameType = this.lockinTeamHandler.getNumTeams() <= 1 ? GameType.SINGLE_TEAM : GameType.MULTIPLE_TEAM;
 
         // Delayed start
-        this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::start, this.queueTime));
+        this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::start, this.queueTime*20));
 
         // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
@@ -130,12 +130,14 @@ public class GameHandler {
         if (this.currentTier != 1) {
             for (LockinTask task : this.lockinTaskHandler.getTasks()) {
                 for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+                    if (this.lockinScoreboard.getScore(teamName) <= 0) continue;
                     if (!task.hasCompleted(teamName)) this.lockinScoreboard.subtractScore(teamName, 1);
                 }
             }
 
             // Check sudden death conditions
-            if (this.gameType == GameType.MULTIPLE_TEAM && this.currentTier > this.maxTier) {
+            if (this.gameType == GameType.MULTIPLE_TEAM && this.currentTier > this.maxTier ||
+                this.lockinScoreboard.noTeamHasPositiveLives() && this.lockinScoreboard.getWinningTeams().size() > 1) {
                 this.suddenDeath();
                 return;
             }
@@ -253,7 +255,7 @@ public class GameHandler {
         // Run repeating task to check if any one team has completed all tasks (kill opposing player)
         int taskID = TaskUtils.runRepeatingTask(this.plugin, () -> {
             if (lockinTaskHandler.hasOneTeamCompletedAllTasks()) this.stop();
-        }, 0f, 1f);
+        }, 0f, 0.5f*20);
         this.taskIDs.add(taskID);
 
         // Cosmetics
@@ -313,13 +315,15 @@ public class GameHandler {
         // Make task to increment after time limit is reached
         float delayTime = 0;
         if (this.gameType == GameType.SINGLE_TEAM) {
-            delayTime = (this.currentTier == 1) ? this.singleTeamTimeLimit + this.queueTime : this.singleTeamTimeLimit;
+            //delayTime = (this.currentTier == 1) ? this.singleTeamTimeLimit + this.queueTime : this.singleTeamTimeLimit;
+            delayTime = this.singleTeamTimeLimit;
         }
         else if (this.gameType == GameType.MULTIPLE_TEAM) {
-            delayTime = (this.currentTier == 1) ? this.multipleTeamTimeLimit + this.queueTime : this.multipleTeamTimeLimit;
+            //delayTime = (this.currentTier == 1) ? this.multipleTeamTimeLimit + this.queueTime : this.multipleTeamTimeLimit;
+            delayTime = this.multipleTeamTimeLimit;
         }
 
-        int taskID = TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) delayTime);
+        int taskID = TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) delayTime*20);
         this.incrementTierTaskIDs.add(taskID);
         this.taskIDs.add(taskID);
 
@@ -337,23 +341,26 @@ public class GameHandler {
                 LoggerUtils.info("HERE!!!!!!!!!!!!!!!!!!!!!!!!");
                 this.multipleTeamOnePlayerHasCompleted = true;
                 int newTime = Math.min(this.countdownBossBar.getTime(), this.multipleCompleteTeamTimeLimit);
+                boolean reduceTime = this.multipleCompleteTeamTimeLimit < this.countdownBossBar.getTime();
                 LoggerUtils.info("Current time: " + this.countdownBossBar.getTime());
                 LoggerUtils.info("Multiple timelimit: " + this.multipleCompleteTeamTimeLimit);
                 LoggerUtils.info("New time: " + newTime);
                 this.countdownBossBar.setTime(newTime);
-                int newTaskID = TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) newTime);
+                int newTaskID = TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) newTime*20);
                 this.incrementTierTaskIDs.add(newTaskID);
                 this.taskIDs.add(newTaskID);
 
-                for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-                    player.sendMessage(Component.text()
-                        .append(Component.text("Time limit reduced to ", NamedTextColor.GRAY))
-                        .append(Component.text(newTime, NamedTextColor.BLUE))
-                        .append(Component.text(" seconds", NamedTextColor.GRAY)));
-                    Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
+                if (reduceTime) {
+                    for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+                        player.sendMessage(Component.text()
+                            .append(Component.text("Time limit reduced to ", NamedTextColor.GRAY))
+                            .append(Component.text(newTime, NamedTextColor.BLUE))
+                            .append(Component.text(" seconds", NamedTextColor.GRAY)));
+                        Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
+                    }
                 }
             }
-        }, 0f, 1f);
+        }, 0f, 1f*20);
         this.incrementTierTaskIDs.add(taskID);
         this.taskIDs.add(taskID);
     }

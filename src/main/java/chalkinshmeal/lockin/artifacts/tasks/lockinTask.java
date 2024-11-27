@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -16,6 +17,7 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -81,7 +83,8 @@ public abstract class LockinTask {
     //---------------------------------------------------------------------------------------------
     public void init() {
         // Set reward
-        this.reward = (this.isPunishment) ? lockinRewardHandler.getRandomPunishment() : lockinRewardHandler.getRandomReward();
+        if (this.reward == null) 
+            this.reward = (this.isPunishment) ? lockinRewardHandler.getRandomPunishment() : lockinRewardHandler.getRandomReward();
 
         // Change values based on if it's a punishment
         if (this.isPunishment) {
@@ -159,12 +162,33 @@ public abstract class LockinTask {
     public void complete(Player player) {
         String teamName = lockinTeamHandler.getTeamName(player);
         if (this.hasCompleted(teamName)) return;
-        if (this.isCatchUpTask != lockinTeamHandler.isCatchUpTeam(teamName)) return;
+        if (this.isCatchUpTask && lockinTeamHandler.isCatchUpTeam(teamName)) {
+            LoggerUtils.info("Giving reward!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            this.completed.add(teamName);
+            lockinTaskHandler.complete(this, player);
+            LoggerUtils.info("  Task: " + this.name);
+            LoggerUtils.info("  Reward: " + this.reward);
+            LoggerUtils.info("  Player: " + player);
+            if (this.reward != null) this.reward.giveReward(player);
+            this.setLore();
+            return;
+        }
 
         this.completed.add(teamName);
         lockinTaskHandler.complete(this, player);
         if (this.reward != null) this.reward.giveReward(player);
         this.setLore();
+
+        // Check if team has completed all tasks
+        if (lockinTaskHandler.hasTeamCompletedAllTasks(teamName)) {
+            for (Player _player : lockinTeamHandler.getAllOnlinePlayers()) {
+                String displayTeamName = lockinTeamHandler.getDisplayTeamName(_player);
+                player.sendMessage(Component.text()
+                    .append(Component.text(displayTeamName, NamedTextColor.GOLD))
+                    .append(Component.text(" has completed the tier", NamedTextColor.GRAY)));
+                Utils.playSound(_player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
+            }
+        }
 
         if (this.haveAllTeamsCompleted()) {
             this.item = Utils.setMaterial(this.item, Material.GRAY_STAINED_GLASS_PANE);

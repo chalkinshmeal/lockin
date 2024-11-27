@@ -13,21 +13,21 @@ public class TaskUtils {
     //-------------------------------------------------------------------------
     // Runs a task after a delay, returning its task ID
     //-------------------------------------------------------------------------
-    public static int runDelayedTask(Plugin plugin, Runnable task, float delaySeconds) {
+    public static int runDelayedTask(Plugin plugin, Runnable task, float delayTicks) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null!");
         }
-        return Bukkit.getScheduler().runTaskLater(plugin, task, (long) delaySeconds*20).getTaskId();
+        return Bukkit.getScheduler().runTaskLater(plugin, task, (long) delayTicks).getTaskId();
     }
 
     //-------------------------------------------------------------------------
     // Runs a repeating task after a delay, returning its task ID
     //-------------------------------------------------------------------------
-    public static int runRepeatingTask(Plugin plugin, Runnable task, float delaySeconds, float periodSeconds) {
+    public static int runRepeatingTask(Plugin plugin, Runnable task, float delayTicks, float periodTicks) {
         if (plugin == null) {
             throw new IllegalArgumentException("Plugin cannot be null!");
         }
-        return Bukkit.getScheduler().runTaskTimer(plugin, task, (long) delaySeconds*20, (long) periodSeconds*20).getTaskId();
+        return Bukkit.getScheduler().runTaskTimer(plugin, task, (long) delayTicks, (long) periodTicks).getTaskId();
     }
 
     //-------------------------------------------------------------------------
