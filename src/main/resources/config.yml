@@ -2,22 +2,28 @@
 # Global Settings
 #--------------------------------------------------------------------------------------------------
 # The number of lives each team starts with
-maxLives: 3
+maxLives: 5
 
 # The number of tasks per tier
-tasksPerTier: 1
+tasksPerTier: 7
+
+# The minimum number of tasks to complete per tier
+tasksToCompletePerTier: 4
+
+# Amount of tiers BELOW the current tier to pull tasks from
+taskTierLowerRange: 1
 
 # The number of seconds players are frozen before starting a game
-queueTime: 2
+queueTime: 3
 
 # If 1 team playing, the number of seconds to complete a tier
 singleTeamTimeLimit: 60
 
 # If >1 team playing, the number of seconds to complete a tier after one team finishes a tier
-multipleCompletedTeamTimeLimit: 60
+multipleCompletedTeamTimeLimit: 180
 
 # If >1 team playing, the number of seconds to complete a tier before the tier automatically moves on
-multipleTeamTimeLimit: 2700
+multipleTeamTimeLimit: 1500
 
 #--------------------------------------------------------------------------------------------------
 # Task-Specific Settings
@@ -38,10 +44,9 @@ multipleTeamTimeLimit: 2700
 activateBlockTask:
   maxTaskCount: 1
   materials:
-    1:
-    - HOPPER
     2:
     - DISPENSER
+    - HOPPER
     3:
     - ACTIVATOR_RAIL
     - DROPPER
@@ -153,6 +158,7 @@ breakItemsTask:
       CRIMSON_NYLIUM: 1
       GLOW_LICHEN: 10
       GLOWSTONE: 10
+      NETHER_QUARTZ_ORE: 10
       SPAWNER: 1
     7:
       BREWING_STAND: 1
@@ -175,62 +181,70 @@ breedEntitiesTask:
     4:
       WOLF: 1
       RABBIT: 1
-      BEE: 1
+      #BEE: 1
     5:
       GOAT: 1
     6:
       TURTLE: 1
-    7:
-      VILLAGER: 1
+    #7: Villagers breeding is broken
+      #VILLAGER: 1
     8:
       PANDA: 1
 
 # Task: Craft an item. List of possible items to craft
-craftItemTask:
+craftItemsTask:
   maxTaskCount: 1
   materials:
     2:
-    - BRUSH
-    - BONE_BLOCK
-    - BOW
-    - FIREWORK_ROCKET
-    - FISHING_ROD
-    - FLINT_AND_STEEL
-    - GLASS_PANE
-    - HOPPER
-    - IRON_AXE
-    - LEATHER_BOOTS
-    - PAINTING
-    - POLISHED_ANDESITE
-    - TNT
+      BRUSH: 1
+      BONE_BLOCK: 1
+      BOW: 1
+      FIREWORK_ROCKET: 1
+      FISHING_ROD: 1
+      FLINT_AND_STEEL: 5
+      GLASS_PANE: 1
+      HOPPER: 1
+      IRON_AXE: 1
+      LEATHER_BOOTS: 1
+      PAINTING: 1
+      POLISHED_ANDESITE: 1
+      STONE_BRICKS: 32
+      TORCH: 64
+      TNT: 1
     3:
-    - BOOKSHELF
-    - DISPENSER
-    - HAY_BLOCK
-    - LAPIS_BLOCK
-    - NOTE_BLOCK
-    - PISTON
-    - REDSTONE_TORCH
+      BOOKSHELF: 1
+      DISPENSER: 1
+      HAY_BLOCK: 1
+      LAPIS_BLOCK: 1
+      NOTE_BLOCK: 1
+      PISTON: 1
+      REDSTONE_TORCH: 30
     4:
-    - CLOCK
-    - GOLD_BLOCK
-    - GOLDEN_CARROT
-    - JACK_O_LANTERN
-    - MOSSY_COBBLESTONE
-    - POWERED_RAIL
+      CLOCK: 1
+      GOLD_BLOCK: 1
+      GOLDEN_CARROT: 1
+      JACK_O_LANTERN: 1
+      MOSSY_COBBLESTONE: 1
+      POWERED_RAIL: 1
     5:
-    - DIAMOND_BLOCK
-    - GOLDEN_APPLE
-    - JUKEBOX
+      DIAMOND_BLOCK: 1
+      GOLDEN_APPLE: 1
+      JUKEBOX: 1
+      SOUL_CAMPFIRE: 1
+      SOUL_LANTERN: 1
+      SUSPICIOUS_STEW: 1
     6:
-    - ANVIL
-    - CRIMSON_SIGN
-    - DAYLIGHT_DETECTOR
-    - DIORITE
+      ANVIL: 1
+      CRIMSON_SIGN: 1
+      DAYLIGHT_DETECTOR: 1
+      DIORITE: 1
+      SPECTRAL_ARROW: 24
     8:
-    - HONEY_BLOCK
+      GOLDEN_APPLE: 5
+      #HONEY_BLOCK: 1
     9:
-    - CONDUIT
+      CONDUIT: 1
+      SLIME_BLOCK: 5
 
 # Task: Create an entity. List of entities to create
 createEntityTask:
@@ -241,7 +255,7 @@ createEntityTask:
     6:
     - IRON_GOLEM
 
-# Task: Eat an item. List of possible items you can eat
+# Task: Destroy an item. List of possible items to destroy
 destroyItemTask:
   maxTaskCount: 1
   materials:
@@ -296,46 +310,58 @@ eatTask:
     5: 25
 
 # Task: Eat an item. List of possible items you can eat (Updated to 1.21)
-eatItemTask:
+eatItemsTask:
   maxTaskCount: 1
   materials:
+    1:
+      BEEF: 1
+      CHICKEN: 1
+      MUTTON: 1
+      PORKCHOP: 1
     2:
-    - BEEF
-    - COOKED_CHICKEN
-    - COOKED_COD
-    - COOKED_MUTTON
-    - COOKED_PORKCHOP
-    - COOKED_SALMON
-    - DRIED_KELP
-    - ROTTEN_FLESH
+      BEEF: 10
+      CHICKEN: 10
+      COOKED_CHICKEN: 1
+      COOKED_COD: 1
+      COOKED_MUTTON: 1
+      COOKED_PORKCHOP: 1
+      COOKED_SALMON: 1
+      DRIED_KELP: 1
+      MILK_BUCKET: 1
+      MUTTON: 10
+      PORKCHOP: 10
+      ROTTEN_FLESH: 1
     3:
-    - APPLE
-    - BAKED_POTATO
-    - BEETROOT
-    - BEETROOT_SOUP
-    - BREAD
-    - CARROT
-    - POTATO
+      APPLE: 1
+      BAKED_POTATO: 1
+      BEETROOT: 1
+      BEETROOT_SOUP: 1
+      BREAD: 1
+      CARROT: 1
+      POTATO: 1
+      SPIDER_EYE: 5
     4:
-    - COOKED_RABBIT
-    - MELON_SLICE
-    - MUSHROOM_STEW
-    - RABBIT_STEW
-    - SWEET_BERRIES
+      COOKED_RABBIT: 1
+      MELON_SLICE: 1
+      MUSHROOM_STEW: 1
+      RABBIT_STEW: 1
+      SWEET_BERRIES: 1
     5:
-    - COOKIE
-    - GOLDEN_APPLE
-    - GOLDEN_CARROT
-    - POISONOUS_POTATO
-    - PUFFERFISH
-    - PUMPKIN_PIE
-    - SUSPICIOUS_STEW
+      COOKIE: 1
+      GOLDEN_APPLE: 1
+      GOLDEN_CARROT: 1
+      POISONOUS_POTATO: 1
+      PUFFERFISH: 1
+      PUMPKIN_PIE: 1
+      SUSPICIOUS_STEW: 1
     6:
-    - GLOW_BERRIES
-    7:
-    - HONEY_BOTTLE
+      GLOW_BERRIES: 10
+    #7:
+      #HONEY_BOTTLE: 1
+    9:
+      ENCHANTED_GOLDEN_APPLE: 1
     10:
-    - CHORUS_FRUIT
+      CHORUS_FRUIT: 1
 
 # Task: Enter a biome. List of possible biomes to enter, and the material that appears in with the task
 enterBiomeTask:
@@ -439,6 +465,8 @@ holdItemTask:
     - DIRT
     2:
     - IRON_INGOT
+    9:
+    - GRASS_BLOCK
 
 # Task: Interact with an item. List of possible items to interact with
 interactItemTask:
@@ -523,17 +551,22 @@ killEntitiesTask:
       AXOLOTL: 1
       FOX: 1
       GLOW_SQUID: 1
+      IRON_GOLEM: 1
+      PIGLIN: 1
       PILLAGER: 1
       WITCH: 1
       ZOMBIE_VILLAGER: 1
     7:
       BLAZE: 1
+      ENDERMAN: 10
       GHAST: 1
       HOGLIN: 3
       PIGLIN: 5
       PIGLIN_BRUTE: 1
       WITHER_SKELETON: 5
+      ZOMBIE_PIGMAN: 10
     8:
+      IRON_GOLEM: 2
       SLIME: 1
     9:
       VINDICATOR: 1
@@ -622,8 +655,8 @@ killEntityWithItemTask:
     - GOLDEN_CARROT
     - POISONOUS_POTATO
     - SUSPICIOUS_STEW
-    7:
-    - HONEY_BOTTLE
+    #7:
+    #- HONEY_BOTTLE
 
 # Task: Obtain a group of item. List of item groups to obtain, including:
 # - Description: What is displayed as description for the task
@@ -1058,100 +1091,50 @@ obtainItemsTask:
       TURTLE_SCUTE: 1
       WHITE_CANDLE: 1
     9:
+      DIAMOND_BLOCK: 3
       ENDER_EYE: 20
+      GOLD_BLOCK: 10
       OBSIDIAN: 50
       SLIME_BLOCK: 1
       SPONGE: 1
     10:
       CHORUS_FLOWER: 20
+      ELYTRA: 1
 
-# Task: Obtain N items with a string in their name. List of item groups to obtain, including:
-# - String: String glob to search in its name
-# - Amount: Required amount of items from the materials needed to complete the task
-obtainItemWithStringTask:
+# Task: Obtain an item with an enchantment. List of enchantments to obtain
+obtainItemWithEnchantmentTask:
   maxTaskCount: 1
-  materials:
-    1:
-      COBBLESTONE:
-        string: 'cobblestone'
-        amount: 4
-    2:
-      DEEPSLATE:
-        string: 'deepslate'
-        amount: 4
-      NETHERITE_BLOCK:
-        string: 'block of'
-        amount: 3
-      OAK_LEAVES:
-        string: 'leaves'
-        amount: 3
-      STONE:
-        string: 'stone'
-        amount: 6
-    3:
-      BOOK:
-        string: 'book'
-        amount: 2
-      BRICK:
-        string: 'brick'
-        amount: 3
-      DIAMOND_BOOTS:
-        string: 'boots'
-        amount: 2
-      DIAMOND_CHESTPLATE:
-        string: 'chestplate'
-        amount: 2
-      DIAMOND_HELMET:
-        string: 'helmet'
-        amount: 2
-      DIAMOND_LEGGINGS:
-        string: 'leggings'
-        amount: 2
-      OAK_PRESSURE_PLATE:
-        string: 'plate'
-        amount: 4
-      SAND:
-        string: 'sand'
-        amount: 4
-      STICK:
-        string: 'stick'
-        amount: 2
-      WHEAT_SEEDS:
-        string: 'seed'
-        amount: 3 
-    4:
-      BLACK_WOOL:
-        string: 'black'
-        amount: 4
-      BRAIN_CORAL:
-        string: 'coral'
-        amount: 2
-      CARROT:
-        string: 'carrot'
-        amount: 2
-      DIAMOND_SWORD:
-        string: 'sword'
-        amount: 4
-      DIRT:
-        string: 'dirt'
-        amount: 2
-      FIRE_CHARGE:
-        string: 'fire'
-        amount: 2
-      SNOWBALL:
-        string: 'ball'
-        amount: 1
-    5:
-      RED_DYE:
-        string: 'red'
-        amount: 3
-      WHITE_WOOL:
-        string: 'wool'
-        amount: 5
+  enchantments:
     6:
-      GLOWSTONE:
-        string: 'glow'
-        amount: 2
+    - PROTECTION
+    - SHARPNESS
+    - EFFICIENCY
+    - POWER
+    8:
+    - FEATHER_FALLING
+    - FIRE_PROTECTION
+    - PROJECTILE_PROTECTION
+    - BANE_OF_ARTHROPODS
+    - KNOCKBACK
+    - SMITE
+    - UNBREAKING
+    - QUICK_CHARGE
+    9:
+    - AQUA_AFFINITY
+    - BLAST_PROTECTION
+    - RESPIRATION
+    - DEPTH_STRIDER
+    - FIRE_ASPECT
+    - LOOTING
+    - SWEEPING_EDGE
+    - FORTUNE
+    - FLAME
+    - PUNCH
+    - LUCK_OF_THE_SEA
+    - LURE
+    - LOYALTY
+    - MULTISHOT
+    - MENDING
     
 # Task: Place a flower in a pot. Possible items to place in pot
 placeFlowerInPotTask:
@@ -1248,7 +1231,7 @@ placeItemsTask:
       WARPED_FENCE_GATE: 1
       OBSERVER: 1
     8:
-      HONEYCOMB_BLOCK: 1
+      #HONEYCOMB_BLOCK: 1
       RED_SANDSTONE_SLAB: 1
 
 # Task: Punch an entity with an item. Possible entities to punch, and the items to punch them with
@@ -1301,6 +1284,27 @@ punchAnEntityWithItemTask:
     - TROPICAL_FISH
     6:
     - GLOW_BERRIES
+
+# Task: Punch player with an item. Possible items to punch them with
+punchPlayerWithItemTask:
+  maxTaskCount: 1
+  materials:
+    1:
+    - STICK
+    2:
+    - COAL
+    - IRON_INGOT
+    3:
+    - COPPER_INGOT
+    - EMERALD
+    - LAPIS_LAZULI
+    4:
+    - GOLD_INGOT
+    5:
+    - DIAMOND
+    6:
+    - AMETHYST_SHARD
+    - QUARTZ
 
 # Task: Reach a velocity of N blocks/second. Define the min/max of the random number generator for target max velocity
 reachVelocityTask:
@@ -1495,6 +1499,8 @@ smeltItemsTask:
       COOKED_RABBIT: 3
       SMOOTH_BASALT: 10
       SMOOTH_QUARTZ: 1
+    8:
+      NETHERITE_SCRAP: 1
 
 # Task: Sneak on a block. Possible items to sneak on
 sneakOnBlockTask:

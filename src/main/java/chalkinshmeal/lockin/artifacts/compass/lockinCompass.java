@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -46,6 +47,7 @@ public class LockinCompass {
     private boolean isActive;
     private boolean debug = false;
     private final Set<UUID> clickedPlayers = new HashSet<>();
+    private final Map<UUID, Location> lastKnownLocation = new HashMap<>();
 
     private final Component compassDisplayName = Component.text(
         "Lockin", NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.ITALIC, false);
@@ -82,6 +84,13 @@ public class LockinCompass {
     public int getMaxSlots() {return (this.isActive) ? this.tasksPerTier : this.lockinTeamHandler.getNumTeams(); }
     public Inventory getTaskInv(Player player) { return this.tasksInvs.get(this.lockinTeamHandler.getTeamName(player)); }
     public void SetIsActive(boolean isActive) { this.isActive = isActive; }
+    public void addTeam(String teamName) {
+        Inventory newInv = Bukkit.createInventory(null, this.tasksPerTier, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
+        this.tasksInvs.put(teamName, newInv);
+    }
+    public void setLastKnownLocation(Player player) {
+        this.lastKnownLocation.put(player.getUniqueId(), player.getLocation());
+    }
 
     //---------------------------------------------------------------------------------------------
     // Inventory methods

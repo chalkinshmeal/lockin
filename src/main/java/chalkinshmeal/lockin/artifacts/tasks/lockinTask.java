@@ -17,7 +17,6 @@ import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.data.ConfigHandler;
-import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -162,13 +161,10 @@ public abstract class LockinTask {
     public void complete(Player player) {
         String teamName = lockinTeamHandler.getTeamName(player);
         if (this.hasCompleted(teamName)) return;
+        if (lockinTeamHandler.isCatchUpTeam(teamName) && !this.isCatchUpTask) return;
         if (this.isCatchUpTask && lockinTeamHandler.isCatchUpTeam(teamName)) {
-            LoggerUtils.info("Giving reward!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             this.completed.add(teamName);
             lockinTaskHandler.complete(this, player);
-            LoggerUtils.info("  Task: " + this.name);
-            LoggerUtils.info("  Reward: " + this.reward);
-            LoggerUtils.info("  Player: " + player);
             if (this.reward != null) this.reward.giveReward(player);
             this.setLore();
             return;

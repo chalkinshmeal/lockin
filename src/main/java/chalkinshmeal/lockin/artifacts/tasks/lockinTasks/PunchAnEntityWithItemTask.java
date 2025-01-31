@@ -62,7 +62,7 @@ public class PunchAnEntityWithItemTask extends LockinTask {
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         List<String> entityTypeStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey1 + "." + tier), taskCount);
         List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey2 + "." + tier), taskCount);
-        int loopCount = Math.min(taskCount, entityTypeStrs.size());
+        int loopCount = Math.min(taskCount, Math.min(entityTypeStrs.size(), materialStrs.size()));
 
         Collections.shuffle(materialStrs);
 

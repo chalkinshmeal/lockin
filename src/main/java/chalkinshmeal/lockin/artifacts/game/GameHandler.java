@@ -2,7 +2,6 @@ package chalkinshmeal.lockin.artifacts.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
@@ -41,7 +40,7 @@ public class GameHandler {
     private final int multipleCompleteTeamTimeLimit;
     private final int multipleTeamTimeLimit;
     private final int maxTier;
-    private final boolean debug = true;
+    private final boolean debug = false;
 
     // Temporary status
     public GameState state = GameState.INACTIVE;
@@ -118,7 +117,7 @@ public class GameHandler {
 
         // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-            player.sendMessage(Component.text("Lockin game starting.", NamedTextColor.GOLD));
+            player.sendMessage(Component.text("Lockin game starting. Complete " + this.lockinTaskHandler.tasksToCompletePerTier + "/" + this.lockinTaskHandler.tasksPerTier + " tasks to complete a tier", NamedTextColor.GOLD));
         }
     }
 
@@ -126,12 +125,46 @@ public class GameHandler {
         this.currentTier += 1;
         this.multipleTeamOnePlayerHasCompleted = false;
 
-        // Subtract lives
         if (this.currentTier != 1) {
-            for (LockinTask task : this.lockinTaskHandler.getTasks()) {
-                for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-                    if (this.lockinScoreboard.getScore(teamName) <= 0) continue;
-                    if (!task.hasCompleted(teamName)) this.lockinScoreboard.subtractScore(teamName, 1);
+            // Calculate tasks completed by the leading team
+            int maxCompletedTasks = 0;
+            for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+                int completedTasks = 0;
+                for (LockinTask task : this.lockinTaskHandler.getTasks()) {
+                    if (task.hasCompleted(teamName)) completedTasks += 1;
+                }
+                if (completedTasks > maxCompletedTasks) maxCompletedTasks = completedTasks;
+            }
+
+            // Subtract score
+            for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+                LoggerUtils.info("Subtracting score for team: " + teamName);
+                LoggerUtils.info("  Current lives, before: " + this.lockinScoreboard.getScore(teamName));
+                if (this.lockinScoreboard.getScore(teamName) <= 0) continue;
+                LoggerUtils.info("  HERE1");
+                if (this.lockinTeamHandler.isCatchUpTeam(teamName)) {
+                    LoggerUtils.info("  Is a catch up team!");
+                    this.lockinTeamHandler.removeCatchUpTeam(teamName);
+                    LoggerUtils.info("  Removing catch up team!");
+                    continue;
+                }
+                LoggerUtils.info("  HERE2");
+
+                int completedTasks = 0;
+                for (LockinTask task : this.lockinTaskHandler.getTasks()) {
+                    if (task.hasCompleted(teamName)) completedTasks += 1;
+                }
+
+                int lostScore = Math.max(0, Math.min(maxCompletedTasks, this.lockinTaskHandler.tasksToCompletePerTier) - completedTasks);
+                if (this.state == GameState.SUDDEN_DEATH) lostScore = 1;
+
+                LoggerUtils.info("  Subtracting score for team: " + teamName);
+                this.lockinScoreboard.subtractScore(teamName, lostScore);
+
+                LoggerUtils.info("  Current lives, after subtraction: " + this.lockinScoreboard.getScore(teamName));
+                if (this.lockinScoreboard.getScore(teamName) <= 0) {
+                    LoggerUtils.info("  Adding catch up team: " + teamName);
+                    this.lockinTeamHandler.addCatchUpTeam(teamName);
                 }
             }
 
@@ -215,21 +248,12 @@ public class GameHandler {
 
     @SuppressWarnings("deprecation")
     public void suddenDeath() {
+        this.state = GameState.SUDDEN_DEATH;
         // Set world state (set all teams with <= 0 points to Spectator Mode)
-        LoggerUtils.info("In sudden death");
         for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-            LoggerUtils.info("  Checking team name: " + teamName);
-            LoggerUtils.info("    Display Name:     " + this.lockinTeamHandler.getDisplayTeamName(teamName));
-            LoggerUtils.info("    Score:            " + this.lockinScoreboard.getScore(this.lockinTeamHandler.getDisplayTeamName(teamName)));
-            LoggerUtils.info("    Teams:            ");
-            for (String _teamName : this.lockinScoreboard.getTeamNames()) {
-                LoggerUtils.info("      " + _teamName);
-            }
-            if (this.lockinScoreboard.getScore(teamName) <= 0) {
-                for (UUID uuid : this.lockinTeamHandler.getTeamPlayers(teamName)) {
-                    Player player = EntityUtils.getPlayer(uuid);
-                    if (player != null) player.setGameMode(GameMode.SPECTATOR);
-                }
+            // Set non-winning-teams to spectator mode
+            for (Player player : this.lockinTeamHandler.getNonLeadingTeamPlayers()) {
+                player.setGameMode(GameMode.SPECTATOR);
             }
         }
 
@@ -329,22 +353,16 @@ public class GameHandler {
 
         // Make task to increment if tasks are completed
         taskID = TaskUtils.runRepeatingTask(this.plugin, () -> {
-            LoggerUtils.info("In repeating task");
-            if (lockinTaskHandler.hasOneTeamCompletedAllTasks() && this.gameType == GameType.SINGLE_TEAM) {
+            if (lockinTaskHandler.hasOneTeamCompletedTheTier() && this.gameType == GameType.SINGLE_TEAM) {
                 incrementTier();
             }
-            else if (lockinTaskHandler.haveAllTeamsCompletedAllTasks() && this.gameType == GameType.MULTIPLE_TEAM) {
-                LoggerUtils.info("Multiple team incrementing tier");
+            else if (lockinTaskHandler.haveAllTeamsCompletedTheTier() && this.gameType == GameType.MULTIPLE_TEAM) {
                 incrementTier();
             }
-            else if (lockinTaskHandler.hasOneTeamCompletedAllTasks() && this.gameType == GameType.MULTIPLE_TEAM && !this.multipleTeamOnePlayerHasCompleted) {
-                LoggerUtils.info("HERE!!!!!!!!!!!!!!!!!!!!!!!!");
+            else if (lockinTaskHandler.hasOneTeamCompletedTheTier() && this.gameType == GameType.MULTIPLE_TEAM && !this.multipleTeamOnePlayerHasCompleted) {
                 this.multipleTeamOnePlayerHasCompleted = true;
                 int newTime = Math.min(this.countdownBossBar.getTime(), this.multipleCompleteTeamTimeLimit);
                 boolean reduceTime = this.multipleCompleteTeamTimeLimit < this.countdownBossBar.getTime();
-                LoggerUtils.info("Current time: " + this.countdownBossBar.getTime());
-                LoggerUtils.info("Multiple timelimit: " + this.multipleCompleteTeamTimeLimit);
-                LoggerUtils.info("New time: " + newTime);
                 this.countdownBossBar.setTime(newTime);
                 int newTaskID = TaskUtils.runDelayedTask(this.plugin, this::incrementTier, (long) newTime*20);
                 this.incrementTierTaskIDs.add(newTaskID);

@@ -38,7 +38,7 @@ public class EatTask extends LockinTask {
     }
 
     public void addListeners() {
-		this.listeners.add(new EatItemsTaskPlayerItemConsumeEventListener(this));
+		this.listeners.add(new EatTaskPlayerItemConsumeEventListener(this));
     }
 
     //---------------------------------------------------------------------------------------------
@@ -70,10 +70,10 @@ public class EatTask extends LockinTask {
 //---------------------------------------------------------------------------------------------
 // Private classes - any listeners that this task requires
 //---------------------------------------------------------------------------------------------
-class EatItemsTaskPlayerItemConsumeEventListener implements Listener {
+class EatTaskPlayerItemConsumeEventListener implements Listener {
     private final EatTask task;
 
-    public EatItemsTaskPlayerItemConsumeEventListener(EatTask task) {
+    public EatTaskPlayerItemConsumeEventListener(EatTask task) {
         this.task = task;
     }
 

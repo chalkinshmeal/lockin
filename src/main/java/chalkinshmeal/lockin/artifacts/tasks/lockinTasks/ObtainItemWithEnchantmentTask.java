@@ -1,9 +1,11 @@
 package chalkinshmeal.lockin.artifacts.tasks.lockinTasks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,21 +17,19 @@ import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class ObtainItemsTask extends LockinTask {
-    private static final String configKey = "obtainItemsTask";
-    private static final String normalKey = "materials";
-    private final Material material;
-    private final int amount;
+public class ObtainItemWithEnchantmentTask extends LockinTask {
+    private static final String configKey = "obtainItemWithEnchantmentTask";
+    private static final String normalKey = "enchantments";
+    private Enchantment enchantment;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public ObtainItemsTask(Material material, int amount) {
+    public ObtainItemWithEnchantmentTask(Enchantment enchantment) {
         super();
-        this.material = material;
-        this.amount = amount;
-        this.name = "Obtain " + ((this.amount == 1 ? "a" : this.amount)) + " " + Utils.getReadableMaterialName(material);
-        this.item = new ItemStack(this.material);
+        this.enchantment = enchantment;
+        this.name = "Obtain an item with " + Utils.getReadableEnchantmentName(this.enchantment);
+        this.item = new ItemStack(Material.ENCHANTING_TABLE);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -38,31 +38,32 @@ public class ObtainItemsTask extends LockinTask {
     public void validateConfig() {
         for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
             for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
-                Material.valueOf(valueStr);
+                Enchantment enchantment = Utils.getEnchantmentByString(valueStr);
+                if (enchantment == null) {
+                    LoggerUtils.info("ERROR: Invalid enchantment found: " + valueStr);
+                }
             }
         }
     }
 
     public void addListeners() {
-		this.listeners.add(new ObtainItemsTaskEntityPickupItemEventListener(this));
-		this.listeners.add(new ObtainItemsTaskInventoryClickEventListener(this));
+		this.listeners.add(new ObtainItemWithEnchantmentTaskEntityPickupItemEventListener(this));
+		this.listeners.add(new ObtainItemWithEnchantmentTaskInventoryClickEventListener(this));
     }
 
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<ObtainItemsTask> getTasks(int tier) {
-        List<ObtainItemsTask> tasks = new ArrayList<>();
+    public static List<ObtainItemWithEnchantmentTask> getTasks(int tier) {
+        List<ObtainItemWithEnchantmentTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
-        String subKey = normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
-        int loopCount = Math.min(taskCount, materialStrs.size());
+        List<String> enchantmentStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + normalKey + "." + tier), taskCount);
+        int loopCount = Math.min(taskCount, enchantmentStrs.size());
+        Collections.shuffle(enchantmentStrs);
 
-        for (int i = 0; i < Math.min(loopCount, materialStrs.size()); i++) {
-            String materialStr = materialStrs.get(i);
-            Material material = Material.valueOf(materialStrs.get(i));
-            int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr, 1);
-            tasks.add(new ObtainItemsTask(material, amount));
+        for (int i = 0; i < Math.min(loopCount, enchantmentStrs.size()); i++) {
+            Enchantment enchantment = Utils.getEnchantmentByString(enchantmentStrs.get(i));
+            tasks.add(new ObtainItemWithEnchantmentTask(enchantment));
         }
         return tasks;
     }
@@ -71,24 +72,26 @@ public class ObtainItemsTask extends LockinTask {
     // Any listeners. Upon completion, lockinTaskHandler.CompleteTask(player);
     //---------------------------------------------------------------------------------------------
     public void onEntityPickupItemEvent(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
-        Material itemType = event.getItem().getItemStack().getType();
-        if (itemType != this.material) return;
-        if (!Utils.hasMaterial(player, this.material, this.amount, event.getItem().getItemStack())) return;
+        // Return if not a player
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        // Return if item doesn't contain target enchantment
+        ItemStack item = event.getItem().getItemStack();
+        if (!item.getEnchantments().containsKey(this.enchantment)) return;
 
         this.complete(player);
     }
-    public void onInventoryClickEvent(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
 
-        Player player = (Player) event.getWhoClicked();
+    public void onInventoryClickEvent(InventoryClickEvent event) {
+        // Return if not a player
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+
+        // Return if no item clicked
         if (event.getCurrentItem() == null) return;
 
-        Material itemType = event.getCurrentItem().getType();
-        if (itemType != this.material) return;
-        //if (!Utils.hasMaterial(player, this.material, this.amount, event.getCurrentItem())) return;
-        if (!Utils.hasMaterial(player, this.material, this.amount, null)) return;
+        // Return if item doesn't contain target enchantment
+        ItemStack item = event.getCurrentItem();
+        if (!item.getEnchantments().containsKey(this.enchantment)) return;
 
         this.complete(player);
     }
@@ -97,10 +100,10 @@ public class ObtainItemsTask extends LockinTask {
 //---------------------------------------------------------------------------------------------
 // Private classes - any listeners that this task requires
 //---------------------------------------------------------------------------------------------
-class ObtainItemsTaskEntityPickupItemEventListener implements Listener {
-    private final ObtainItemsTask task;
+class ObtainItemWithEnchantmentTaskEntityPickupItemEventListener implements Listener {
+    private final ObtainItemWithEnchantmentTask task;
 
-    public ObtainItemsTaskEntityPickupItemEventListener(ObtainItemsTask task) {
+    public ObtainItemWithEnchantmentTaskEntityPickupItemEventListener(ObtainItemWithEnchantmentTask task) {
         this.task = task;
     }
 
@@ -112,10 +115,10 @@ class ObtainItemsTaskEntityPickupItemEventListener implements Listener {
     }
 }
 
-class ObtainItemsTaskInventoryClickEventListener implements Listener {
-    private final ObtainItemsTask task;
+class ObtainItemWithEnchantmentTaskInventoryClickEventListener implements Listener {
+    private final ObtainItemWithEnchantmentTask task;
 
-    public ObtainItemsTaskInventoryClickEventListener(ObtainItemsTask task) {
+    public ObtainItemWithEnchantmentTaskInventoryClickEventListener(ObtainItemWithEnchantmentTask task) {
         this.task = task;
     }
 

@@ -20,6 +20,7 @@ public class StandOnCoordinateTask extends LockinTask {
     private static final String configKey = "standOnCoordinateTask";
     private static final String normalKey = "radius";
     private final Location targetLocation;
+    private final float graceDistance = 2;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -62,9 +63,10 @@ public class StandOnCoordinateTask extends LockinTask {
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Location location = player.getLocation();
-        int currentX = location.getBlockX();
-        int currentZ = location.getBlockZ();
-        if (currentX != (int) this.targetLocation.getX() || currentZ != (int) this.targetLocation.getZ()) return;
+        if (player.getLocation().getWorld() != location.getWorld()) return;
+        Location targetLocationDummy = new Location(targetLocation.getWorld(), targetLocation.getX(), location.getY(), targetLocation.getZ());
+
+        if (location.distance(targetLocationDummy) > graceDistance) return;
 
         this.complete(player);
     }

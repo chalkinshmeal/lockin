@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ public class LockinTeamHandler {
     private JavaPlugin plugin;
     private LockinScoreboard lockinScoreboard;
     private LinkedHashMap<String, HashSet<UUID>> teams = new LinkedHashMap<>();
+    private Set<String> catchUpTeams = new HashSet<>();
     private LinkedHashMap<String, Material> teamMaterials = new LinkedHashMap<>();
     private boolean debug = false;
 
@@ -222,6 +224,23 @@ public class LockinTeamHandler {
         return leadingTeamPlayers;
     }
 
+    public List<Player> getNonLeadingTeamPlayers() {
+        List<Player> nonLeadingTeamPlayers = new ArrayList<>();
+        if (debug) LoggerUtils.info("Getting non leading team players");
+        for (String teamName : this.lockinScoreboard.getNonWinningTeams()) {
+            if (debug) LoggerUtils.info("  Checking non-winning team: " + teamName);
+            for (UUID uuid : this.getTeamPlayers(teamName)) {
+                Player player = EntityUtils.getPlayer(uuid);
+                if (player == null) continue;
+
+                nonLeadingTeamPlayers.add(player);
+                if (debug) LoggerUtils.info("    Adding player: " + player.getName());
+            }
+        }
+
+        return nonLeadingTeamPlayers;
+    }
+
     public List<Player> getTeamPlayersWithNoLives() {
         List<Player> noLifePlayers = new ArrayList<>();
         for (String teamName : this.getTeamNames()) {
@@ -253,7 +272,15 @@ public class LockinTeamHandler {
         return nonCatchUpTeamNames;
     }
 
+    public void addCatchUpTeam(String teamName) {
+        this.catchUpTeams.add(teamName);
+    }
+
+    public void removeCatchUpTeam(String teamName) {
+        this.catchUpTeams.remove(teamName);
+    }
+
     public boolean isCatchUpTeam(String teamName) {
-        return this.getNumTeams() >= 3 && this.lockinScoreboard.getScore(teamName) <= 0;
+        return this.catchUpTeams.contains(teamName);
     }
 }

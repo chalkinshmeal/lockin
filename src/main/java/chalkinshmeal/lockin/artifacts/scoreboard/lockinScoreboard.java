@@ -81,19 +81,37 @@ public class LockinScoreboard {
     // Get the names of the winning teams
     // This should be the actual team names, not the display names
     public List<String> getWinningTeams() {
-        LoggerUtils.info("Getting winning teams:----------------------------------");
+        if (debug) LoggerUtils.info("Getting winning teams:----------------------------------");
         List<String> winningTeams = new ArrayList<>();
         int maxScore = this.getMaxScore();
-        LoggerUtils.info("Max score: " + maxScore);
+        if (debug) LoggerUtils.info("Max score: " + maxScore);
         for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-            LoggerUtils.info("Team: " + teamName);
+            if (debug) LoggerUtils.info("Team: " + teamName);
             String displayTeamName = this.lockinTeamHandler.getDisplayTeamName(teamName);
-            LoggerUtils.info("Display Name: " + displayTeamName);
-            LoggerUtils.info("Score with team name: " + this.getScore(teamName));
-            LoggerUtils.info("Score with display team name: " + this.getScore(displayTeamName));
+            if (debug) LoggerUtils.info("Display Name: " + displayTeamName);
+            if (debug) LoggerUtils.info("Score with team name: " + this.getScore(teamName));
+            if (debug) LoggerUtils.info("Score with display team name: " + this.getScore(displayTeamName));
             if (this.getScore(teamName) == maxScore) winningTeams.add(teamName);
         }
         return winningTeams;
+    }
+
+    // Get the names of the not-winning teams
+    // This should be the actual team names, not the display names
+    public List<String> getNonWinningTeams() {
+        if (debug) LoggerUtils.info("Getting non-winning teams:----------------------------------");
+        List<String> nonWinningTeams = new ArrayList<>();
+        int maxScore = this.getMaxScore();
+        if (debug) LoggerUtils.info("Max score: " + maxScore);
+        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            if (debug) LoggerUtils.info("Team: " + teamName);
+            String displayTeamName = this.lockinTeamHandler.getDisplayTeamName(teamName);
+            if (debug) LoggerUtils.info("Display Name: " + displayTeamName);
+            if (debug) LoggerUtils.info("Score with team name: " + this.getScore(teamName));
+            if (debug) LoggerUtils.info("Score with display team name: " + this.getScore(displayTeamName));
+            if (this.getScore(teamName) < maxScore) nonWinningTeams.add(teamName);
+        }
+        return nonWinningTeams;
     }
 
     public int getMaxScore() {

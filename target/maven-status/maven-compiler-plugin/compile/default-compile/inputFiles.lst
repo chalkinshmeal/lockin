@@ -9,7 +9,9 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\ReceivePotionEffectTypeTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\countdown\CountdownBossBar.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\KillLeftySkeletonTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\CraftItemsTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\StandOnCoordinateTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\ObtainItemWithEnchantmentTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\KillBabyEntitiesTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\PlaceFlowerInPotTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\ShearSheepTask.java
@@ -58,6 +60,8 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\WearFullDyedLeatherArmorTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\ShootBlockTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\TaskUtils.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\EatItemsTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\PunchPlayerWithItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\Particles.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\commands\StartCommand.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\DrinkMilkToCurePoisonTask.java
@@ -88,7 +92,6 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\LockinTaskState.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\PlayerInteractListener.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\LightTNTTask.java
-C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\CraftItemTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\SmeltItemsTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\ItemUtils.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\utils\cmdframework\command\ArgCommand.java
@@ -99,7 +102,7 @@ C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\ar
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\game\GameType.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\rewards\LockinReward.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\BlockArrowWithShieldTask.java
-C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\EatItemTask.java
+C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\PlayerChangedWorldListener.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\PlaceBookOnLecternTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\artifacts\tasks\lockinTasks\SleepInColoredBedTask.java
 C:\Users\Charles\Desktop\MC Plugins\lockin\src\main\java\chalkinshmeal\lockin\listeners\server\EntityDamageByEntityListener.java

@@ -18,6 +18,7 @@ import chalkinshmeal.lockin.data.ConfigHandler;
 import chalkinshmeal.lockin.listeners.server.EntityDamageByEntityListener;
 import chalkinshmeal.lockin.listeners.server.InventoryClickListener;
 import chalkinshmeal.lockin.listeners.server.InventoryDragListener;
+import chalkinshmeal.lockin.listeners.server.PlayerChangedWorldListener;
 import chalkinshmeal.lockin.listeners.server.PlayerInteractListener;
 import chalkinshmeal.lockin.listeners.server.PlayerJoinListener;
 import chalkinshmeal.lockin.utils.WorldUtils;
@@ -71,7 +72,7 @@ public class Plugin extends JavaPlugin implements Listener {
         lockinCmd.addChild(new CompassCommand(this, cmdHandler, lockinCompass));
         lockinCmd.addChild(new StartCommand(this, cmdHandler, gameHandler));
         lockinCmd.addChild(new StopCommand(this, cmdHandler, gameHandler));
-        lockinCmd.addChild(new TeamCommand(this, cmdHandler, lockinTeamHandler));
+        lockinCmd.addChild(new TeamCommand(this, cmdHandler, lockinTeamHandler, lockinCompass));
 		lockinCmd.addChild(new HelpCommand(this, cmdHandler));
 
 		// Register command -> command handler
@@ -86,6 +87,7 @@ public class Plugin extends JavaPlugin implements Listener {
 		manager.registerEvents(new EntityDamageByEntityListener(this.gameHandler), this);
 		manager.registerEvents(new InventoryClickListener(this.lockinCompass), this);
 		manager.registerEvents(new InventoryDragListener(this.lockinCompass), this);
+		manager.registerEvents(new PlayerChangedWorldListener(this.lockinCompass, this.gameHandler), this);
 		manager.registerEvents(new PlayerJoinListener(this.lockinCompass, this.lockinScoreboard, this.gameHandler), this);
 		manager.registerEvents(new PlayerInteractListener(this.lockinCompass), this);
 	}

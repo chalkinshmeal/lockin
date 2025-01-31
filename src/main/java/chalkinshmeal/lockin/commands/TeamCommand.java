@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.lockin.utils.cmdframework.argument.ArgType;
 import chalkinshmeal.lockin.utils.cmdframework.argument.ArgValue;
@@ -22,9 +23,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 public class TeamCommand extends ArgCommand {
     private final LockinTeamHandler lockinTeamHandler;
+    private final LockinCompass lockinCompass;
 
     // Constructor
-    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, LockinTeamHandler lockinTeamHandler) {
+    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, LockinTeamHandler lockinTeamHandler, LockinCompass lockinCompass) {
         super("team", false);
         this.setPlayerRequired(true);
         this.setHelpMsg(Component.text()
@@ -33,6 +35,7 @@ public class TeamCommand extends ArgCommand {
             .build());
         
         this.lockinTeamHandler = lockinTeamHandler;
+        this.lockinCompass = lockinCompass;
         this.addArg(new Argument("team", ArgType.STRING, this.lockinTeamHandler.getTeamNames()));
         this.addArg(new Argument("material", ArgType.STRING, Stream.of(Material.values()).map(Material::name).collect(Collectors.toList())));
     }
@@ -61,5 +64,6 @@ public class TeamCommand extends ArgCommand {
                 .append(Component.text(" to the game", NamedTextColor.GRAY)));
 
         this.lockinTeamHandler.addTeam(teamName, material);
+        this.lockinCompass.addTeam(teamName);
     }
 }

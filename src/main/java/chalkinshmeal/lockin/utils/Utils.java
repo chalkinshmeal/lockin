@@ -63,12 +63,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -1015,6 +1012,26 @@ public class Utils {
     }
 
     //---------------------------------------------------------------------------------------------
+    // Enchantments
+    //---------------------------------------------------------------------------------------------
+    public static Enchantment getEnchantmentByString(String enchantmentName) {
+        // Convert input to lowercase to handle both namespaced keys and legacy names
+        String normalizedInput = enchantmentName.toLowerCase();
+        NamespacedKey key = NamespacedKey.minecraft(normalizedInput);
+
+        // Iterate over all enchantments to find a match
+        for (Enchantment enchantment : Enchantment.values()) {
+            // Match against the enchantment's key or its legacy name
+            if (enchantment.getKey().equals(key) || enchantment.getName().equalsIgnoreCase(normalizedInput)) {
+                return enchantment;
+            }
+        }
+
+        // Return null if no match is found
+        return null;
+    }
+
+    //---------------------------------------------------------------------------------------------
     // Strings 
     //---------------------------------------------------------------------------------------------
     public static String getReadableBiomeName(Biome biome) {
@@ -1027,6 +1044,10 @@ public class Utils {
 
     public static String getReadableDyeColorName(DyeColor dyeColor) {
         return dyeColor.name().replace("_", " ").toLowerCase();
+    }
+
+    public static String getReadableEnchantmentName(Enchantment enchantment) {
+        return enchantment.getKey().asMinimalString().replace("_", " ").toLowerCase();
     }
 
     public static String getReadableEntityTypeName(EntityType entityType) {

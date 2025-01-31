@@ -1,7 +1,9 @@
 package chalkinshmeal.lockin.artifacts.tasks.lockinTasks;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,22 +11,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
-
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
 
-public class CraftItemTask extends LockinTask {
-    private static final String configKey = "craftItemTask";
+public class CraftItemsTask extends LockinTask {
+    private static final String configKey = "craftItemsTask";
     private static final String normalKey = "materials";
     private final Material material;
+    private final int amount;
+    private final Map<String, Integer> craftedItems;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
     //---------------------------------------------------------------------------------------------
-    public CraftItemTask(Material material) {
+    public CraftItemsTask(Material material, int amount) {
         super();
         this.material = material;
-        this.name = "Craft a " + Utils.getReadableMaterialName(material);
+        this.amount = amount;
+        this.craftedItems = new HashMap<>();
+        this.name = "Craft " + this.amount + " " + Utils.getReadableMaterialName(material);
         this.item = new ItemStack(this.material);
     }
 
@@ -33,29 +38,31 @@ public class CraftItemTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void validateConfig() {
         for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
-            for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
-                Material.valueOf(valueStr);
+            for (String materialStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
+                Material.valueOf(materialStr);
             }
         }
     }
 
     public void addListeners() {
-		this.listeners.add(new CraftItemTaskPlayerCraftListener(this));
+		this.listeners.add(new CraftItemsTaskCraftItemEventListener(this));
     }
 
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
-    public static List<CraftItemTask> getTasks(int tier) {
-        List<CraftItemTask> tasks = new ArrayList<>();
+    public static List<CraftItemsTask> getTasks(int tier) {
+        List<CraftItemsTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
         String subKey = normalKey;
-        List<String> materialStrs = Utils.getRandomItems(configHandler.getListFromKey(configKey + "." + subKey + "." + tier), taskCount);
+        List<String> materialStrs = Utils.getRandomItems(configHandler.getKeyListFromKey(configKey + "." + subKey + "." + tier), taskCount);
         int loopCount = Math.min(taskCount, materialStrs.size());
 
         for (int i = 0; i < loopCount; i++) {
+            String materialStr = materialStrs.get(i);
             Material material = Material.valueOf(materialStrs.get(i));
-            tasks.add(new CraftItemTask(material));
+            int amount = configHandler.getInt(configKey + "." + subKey + "." + tier + "." + materialStr, 1);
+            tasks.add(new CraftItemsTask(material, amount));
         }
         return tasks;
     }
@@ -64,13 +71,16 @@ public class CraftItemTask extends LockinTask {
     // Any listeners. Upon completion, lockinTaskHandler.CompleteTask(player);
     //---------------------------------------------------------------------------------------------
     public void onCraftItemEvent(CraftItemEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        // Return if player did not craft
+        if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        Player player = (Player) event.getWhoClicked();
-        Material craftedItem = event.getRecipe().getResult().getType();
+        // Return if material does not match
+        ItemStack craftedItem = event.getRecipe().getResult();
+        if (craftedItem.getType() != this.material) return;
 
-        if (craftedItem != this.material) return;
-
+        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        this.craftedItems.put(teamName, this.craftedItems.getOrDefault(teamName, 0) + craftedItem.getAmount());
+        if (this.craftedItems.get(teamName) < this.amount) return;
         this.complete(player);
     }
 }
@@ -78,10 +88,10 @@ public class CraftItemTask extends LockinTask {
 //---------------------------------------------------------------------------------------------
 // Private classes - any listeners that this task requires
 //---------------------------------------------------------------------------------------------
-class CraftItemTaskPlayerCraftListener implements Listener {
-    private final CraftItemTask task;
+class CraftItemsTaskCraftItemEventListener implements Listener {
+    private final CraftItemsTask task;
 
-    public CraftItemTaskPlayerCraftListener(CraftItemTask task) {
+    public CraftItemsTaskCraftItemEventListener(CraftItemsTask task) {
         this.task = task;
     }
 
@@ -92,4 +102,3 @@ class CraftItemTaskPlayerCraftListener implements Listener {
         this.task.onCraftItemEvent(event);
     }
 }
-
