@@ -63,7 +63,7 @@ public class StandOnCoordinateTask extends LockinTask {
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Location location = player.getLocation();
-        if (player.getLocation().getWorld() != location.getWorld()) return;
+        if (player.getLocation().getWorld() != targetLocation.getWorld()) return;
         Location targetLocationDummy = new Location(targetLocation.getWorld(), targetLocation.getX(), location.getY(), targetLocation.getZ());
 
         if (location.distance(targetLocationDummy) > graceDistance) return;

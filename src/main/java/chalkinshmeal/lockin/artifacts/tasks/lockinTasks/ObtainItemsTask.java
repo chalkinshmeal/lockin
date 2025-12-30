@@ -12,7 +12,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
 
 public class ObtainItemsTask extends LockinTask {

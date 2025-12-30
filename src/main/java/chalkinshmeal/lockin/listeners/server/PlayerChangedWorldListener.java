@@ -6,7 +6,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.game.GameHandler;
-import chalkinshmeal.lockin.utils.LoggerUtils;
 
 public class PlayerChangedWorldListener implements Listener {
     private final LockinCompass lockinCompass;

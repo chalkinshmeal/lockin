@@ -79,6 +79,7 @@ public class GameHandler {
     public void queue() {
         this.state = GameState.QUEUE;
         this.currentTier = 0;
+        this.lockinTaskHandler.setCurrentTier(this.currentTier);
 
         // Set world state
         this.resetWorldState();
@@ -117,12 +118,13 @@ public class GameHandler {
 
         // Cosmetics
         for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-            player.sendMessage(Component.text("Lockin game starting. Complete " + this.lockinTaskHandler.tasksToCompletePerTier + "/" + this.lockinTaskHandler.tasksPerTier + " tasks to complete a tier", NamedTextColor.GOLD));
+            player.sendMessage(Component.text("Lockin game starting. Complete " + this.lockinTaskHandler.getTasksToCompletePerTier(this.currentTier) + "/" + this.lockinTaskHandler.tasksPerTier + " tasks to complete a tier", NamedTextColor.GOLD));
         }
     }
 
     public void incrementTier() {
         this.currentTier += 1;
+        this.lockinTaskHandler.setCurrentTier(this.currentTier);
         this.multipleTeamOnePlayerHasCompleted = false;
 
         if (this.currentTier != 1) {
@@ -138,32 +140,23 @@ public class GameHandler {
 
             // Subtract score
             for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-                LoggerUtils.info("Subtracting score for team: " + teamName);
-                LoggerUtils.info("  Current lives, before: " + this.lockinScoreboard.getScore(teamName));
                 if (this.lockinScoreboard.getScore(teamName) <= 0) continue;
-                LoggerUtils.info("  HERE1");
                 if (this.lockinTeamHandler.isCatchUpTeam(teamName)) {
-                    LoggerUtils.info("  Is a catch up team!");
                     this.lockinTeamHandler.removeCatchUpTeam(teamName);
-                    LoggerUtils.info("  Removing catch up team!");
                     continue;
                 }
-                LoggerUtils.info("  HERE2");
 
                 int completedTasks = 0;
                 for (LockinTask task : this.lockinTaskHandler.getTasks()) {
                     if (task.hasCompleted(teamName)) completedTasks += 1;
                 }
 
-                int lostScore = Math.max(0, Math.min(maxCompletedTasks, this.lockinTaskHandler.tasksToCompletePerTier) - completedTasks);
+                int lostScore = Math.max(0, Math.min(maxCompletedTasks, this.lockinTaskHandler.getTasksToCompletePerTier(this.currentTier - 1)) - completedTasks);
                 if (this.state == GameState.SUDDEN_DEATH) lostScore = 1;
 
-                LoggerUtils.info("  Subtracting score for team: " + teamName);
                 this.lockinScoreboard.subtractScore(teamName, lostScore);
 
-                LoggerUtils.info("  Current lives, after subtraction: " + this.lockinScoreboard.getScore(teamName));
                 if (this.lockinScoreboard.getScore(teamName) <= 0) {
-                    LoggerUtils.info("  Adding catch up team: " + teamName);
                     this.lockinTeamHandler.addCatchUpTeam(teamName);
                 }
             }
@@ -249,12 +242,9 @@ public class GameHandler {
     @SuppressWarnings("deprecation")
     public void suddenDeath() {
         this.state = GameState.SUDDEN_DEATH;
-        // Set world state (set all teams with <= 0 points to Spectator Mode)
-        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-            // Set non-winning-teams to spectator mode
-            for (Player player : this.lockinTeamHandler.getNonLeadingTeamPlayers()) {
-                player.setGameMode(GameMode.SPECTATOR);
-            }
+        // Set non-winning-teams to spectator mode
+        for (Player player : this.lockinTeamHandler.getNonLeadingTeamPlayers()) {
+            player.setGameMode(GameMode.SPECTATOR);
         }
 
         // Clear incrementTier tasks

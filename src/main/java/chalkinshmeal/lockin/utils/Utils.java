@@ -913,8 +913,6 @@ public class Utils {
         int totalAmount = 0;
         if (amount == 0) return true;
 
-        LoggerUtils.info("Checking if player has material " + material);
-
         List<ItemStack> items = new ArrayList<>();
         for (ItemStack item : player.getInventory().getContents()) {
             if (item == null) continue;

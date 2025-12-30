@@ -71,11 +71,10 @@ public class EatItemsTask extends LockinTask {
     // Any listeners. Upon completion, lockinTaskHandler.CompleteTask(player);
     //---------------------------------------------------------------------------------------------
     public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
-        // Return if player did not eat
-        if (!(event.getPlayer() instanceof Player player)) return;
+        Player player = event.getPlayer();
+        ItemStack eatenItem = event.getItem();
 
         // Return if material does not match
-        ItemStack eatenItem = event.getItem();
         if (eatenItem.getType() != this.material) return;
 
         String teamName = LockinTask.lockinTeamHandler.getTeamName(player);

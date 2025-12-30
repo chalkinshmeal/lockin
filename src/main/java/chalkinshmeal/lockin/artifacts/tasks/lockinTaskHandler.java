@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.s;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
@@ -16,10 +15,8 @@ import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ActivateBlockTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BlockArrowWithShieldTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BreakItemsTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BreedEntitiesTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BrewPotionTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.CatchFishTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.CraftItemsTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.CreateEntityTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.DestroyItemTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.DieTask;
@@ -38,7 +35,6 @@ import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.InteractItemTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillALeaderPlayerTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillBabyEntitiesTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillEntitiesTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillEntityWithItemTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillEntityWithStatusEffectTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillLeftySkeletonTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillOpposingTeamTask;
@@ -91,8 +87,9 @@ public class LockinTaskHandler {
     private LockinTeamHandler lockinTeamHandler;
     private final LockinScoreboard lockinScoreboard;
     public int tasksPerTier;
-    public int tasksToCompletePerTier;
+    private int tasksToCompletePerTier;
     public int taskTierLowerRange;
+    private int currentTier;
     private List<LockinTask> tasks;
     private List<LockinTask> catchUpTasks;
     private final boolean debug = false;
@@ -118,6 +115,18 @@ public class LockinTaskHandler {
     //---------------------------------------------------------------------------------------------
     // Accessor/Mutator methods
     //---------------------------------------------------------------------------------------------
+    public void setCurrentTier(int currentTier) { this.currentTier = currentTier; }
+    public int getTasksToCompletePerTier(int tier) {
+        if (tier >= 10) {
+            return 1;
+        }
+        else if (tier >= 6) {
+            return 2;
+        }
+        else {
+            return this.tasksToCompletePerTier;
+        }
+    }
     public void setTasksPerTier(int tasksPerTier) { this.tasksPerTier = tasksPerTier; }
     public List<LockinTask> getTasks() { return new ArrayList<>(this.tasks); }
     public List<LockinTask> getCatchUpTasks() { return new ArrayList<>(this.catchUpTasks); }
@@ -127,7 +136,7 @@ public class LockinTaskHandler {
             for (LockinTask task : this.tasks) {
                 if (task.hasCompleted(teamName)) tasksCompleted += 1;
             }
-            if (tasksCompleted < this.tasksToCompletePerTier) return false;
+            if (tasksCompleted < this.getTasksToCompletePerTier(this.currentTier)) return false;
         }
         return true;
     }
@@ -137,7 +146,7 @@ public class LockinTaskHandler {
             for (LockinTask task : this.tasks) {
                 if (task.hasCompleted(teamName)) tasksCompleted += 1;
             }
-            if (tasksCompleted >= this.tasksToCompletePerTier) return true;
+            if (tasksCompleted >= this.getTasksToCompletePerTier(this.currentTier)) return true;
         }
         return false;
     }
