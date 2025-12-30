@@ -1,5 +1,5 @@
 # Description
-lockin is a Minecraft mini-game plugin based on SmallAnt's lockin challenge.
+Lockin is a game mode where you compete against other teams to complete groups of tasks called tiers. After a team completes a tier’s tasks, a countdown will start, after which a tier completes. Once a tier completes, other teams lose lives equal to the amount of tasks they could not complete, and the next tier opens. Once all but one team runs out of lives, the game ends.
 
 Each team races to complete a series of tasks within a time limit. Once a task is completed, it is locked out so that no other team can complete the task. The team with the most points at the end of the time limit wins. In the event of a tie, a sudden death round is held to determine the winner. Tasks are chosen randomly from a programmed list, limited by the `maxTaskCount` field.
 
@@ -8,7 +8,7 @@ Each team races to complete a series of tasks within a time limit. Once a task i
 - `/lockin help` - Shows a help message
 - `/lockin start` - Starts a lockin game
 - `/lockin stop` - Stops a lockin game
-- `/lockin team <team name> <material name>` - Creates a team
+- `/lockin team <team name> <material name>` - Creates a team. Valid material names include any material in minecraft, such as BEEF or WATER_BUCKET
 
 # Config
 A `config.yml` file is auto-generated if there is none. Global and task-specific settings can be found here.  Some tasks may not have a config entry.
@@ -32,6 +32,4 @@ breakItemsTask:
 If you find any issues, please file a GitHub issue.
 
 # Credit
-- SmallAnt, for the idea: https://www.youtube.com/@Smallant
-- mr_stretch, for initial implementation ideas: https://www.spigotmc.org/resources/lockin.112607/
 - Lobster13, for task ideas + testing
