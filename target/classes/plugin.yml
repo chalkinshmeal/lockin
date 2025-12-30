@@ -1,6 +1,6 @@
 name: lockin
 main: chalkinshmeal.lockin.Plugin
-version: 1.0.0
+version: 1.0.1
 api-version: 1.21.4
 author: chalkinshmeal
 commands:

@@ -47,6 +47,7 @@ public class TeamCommand extends ArgCommand {
         Material material;
         try {
             material = Material.valueOf(argValues.get(1).get());
+            @SuppressWarnings("unused")
             ItemStack item = new ItemStack(material);
         }
         catch (Exception e) {

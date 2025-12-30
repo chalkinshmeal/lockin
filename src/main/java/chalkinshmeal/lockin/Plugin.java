@@ -87,7 +87,7 @@ public class Plugin extends JavaPlugin implements Listener {
 		manager.registerEvents(new EntityDamageByEntityListener(this.gameHandler), this);
 		manager.registerEvents(new InventoryClickListener(this.lockinCompass), this);
 		manager.registerEvents(new InventoryDragListener(this.lockinCompass), this);
-		manager.registerEvents(new PlayerChangedWorldListener(this.lockinCompass, this.gameHandler), this);
+		manager.registerEvents(new PlayerChangedWorldListener(this.gameHandler), this);
 		manager.registerEvents(new PlayerJoinListener(this.lockinCompass, this.lockinScoreboard, this.gameHandler), this);
 		manager.registerEvents(new PlayerInteractListener(this.lockinCompass), this);
 	}

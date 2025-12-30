@@ -4,15 +4,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.game.GameHandler;
 
 public class PlayerChangedWorldListener implements Listener {
-    private final LockinCompass lockinCompass;
     private final GameHandler gameHandler;
 
-    public PlayerChangedWorldListener(LockinCompass lockinCompass, GameHandler gameHandler) {
-        this.lockinCompass = lockinCompass;
+    public PlayerChangedWorldListener(GameHandler gameHandler) {
         this.gameHandler = gameHandler;
     }
 

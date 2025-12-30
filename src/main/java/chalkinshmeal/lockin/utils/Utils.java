@@ -1012,6 +1012,7 @@ public class Utils {
     //---------------------------------------------------------------------------------------------
     // Enchantments
     //---------------------------------------------------------------------------------------------
+    @SuppressWarnings({ "deprecation", "removal" })
     public static Enchantment getEnchantmentByString(String enchantmentName) {
         // Convert input to lowercase to handle both namespaced keys and legacy names
         String normalizedInput = enchantmentName.toLowerCase();
@@ -1032,6 +1033,7 @@ public class Utils {
     //---------------------------------------------------------------------------------------------
     // Strings 
     //---------------------------------------------------------------------------------------------
+    @SuppressWarnings("removal")
     public static String getReadableBiomeName(Biome biome) {
         return biome.name().replace("_", " ").toLowerCase();
     }

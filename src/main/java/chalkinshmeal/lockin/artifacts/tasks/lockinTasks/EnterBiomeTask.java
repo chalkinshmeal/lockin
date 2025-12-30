@@ -32,6 +32,7 @@ public class EnterBiomeTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Abstract methods
     //---------------------------------------------------------------------------------------------
+    @SuppressWarnings("removal")
     public void validateConfig() {
         for (String tierStr : configHandler.getKeyListFromKey(configKey + "." + normalKey)) {
             for (String valueStr : configHandler.getListFromKey(configKey + "." + normalKey + "." + tierStr)) {
@@ -50,6 +51,7 @@ public class EnterBiomeTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     // Task getter
     //---------------------------------------------------------------------------------------------
+    @SuppressWarnings("removal")
     public static List<EnterBiomeTask> getTasks(int tier) {
         List<EnterBiomeTask> tasks = new ArrayList<>();
         int taskCount = configHandler.getInt(configKey + "." + maxTaskCount, 1);
