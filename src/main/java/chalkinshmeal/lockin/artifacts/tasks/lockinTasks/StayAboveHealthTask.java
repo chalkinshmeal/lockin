@@ -15,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
 
 public class StayAboveHealthTask extends LockinTask {
     private static final String configKey = "stayAboveHealthTask";

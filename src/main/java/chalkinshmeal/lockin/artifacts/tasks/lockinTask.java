@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

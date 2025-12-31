@@ -17,7 +17,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
 import chalkinshmeal.lockin.utils.LoggerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

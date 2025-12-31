@@ -1,0 +1,3 @@
+[submodule "src/main/java/chalkinshmeal/mc_plugin_lib"]
+	path = src/main/java/chalkinshmeal/mc_plugin_lib
+	url = https://github.com/chalkinshmeal/mc-plugin-lib.git

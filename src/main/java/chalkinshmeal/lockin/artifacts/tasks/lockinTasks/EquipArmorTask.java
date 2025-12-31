@@ -15,7 +15,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
 
 public class EquipArmorTask extends LockinTask {
     //---------------------------------------------------------------------------------------------

@@ -73,7 +73,7 @@ import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.UseSpyglassTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.WearFullDyedLeatherArmorTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.WearFullIronArmorTask;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
 import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;

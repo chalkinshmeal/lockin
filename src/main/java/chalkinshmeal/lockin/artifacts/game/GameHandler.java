@@ -17,7 +17,7 @@ import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
-import chalkinshmeal.lockin.data.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
 import chalkinshmeal.lockin.utils.EntityUtils;
 import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.TaskUtils;
