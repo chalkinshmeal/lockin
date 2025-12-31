@@ -60,13 +60,6 @@
 	</build>
 
 	<repositories>
-        <!-- This adds the Spigot Maven repository to the build -->
-        <!--
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        -->
         <!-- This adds the Paper Maven repository to the build -->
 		<repository>
 			<id>papermc-repo</id>
@@ -76,20 +69,32 @@
 			<id>sonatype</id>
 			<url>https://oss.sonatype.org/content/groups/public/</url>
 		</repository>
-
+        <!-- This adds the Spigot Maven repository to the build -->
+        <!--
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        -->
 	</repositories>
 
 	<dependencies>
+        <!-- Paper - versions can be found at: -->
+        <!-- https://artifactory.papermc.io/ui/native/universe/io/papermc/paper/paper-api/ -->
+        <!-- Alternatively, you can type /version on the server to find the version -->
 		<dependency>
 			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-api</artifactId>
-			<version>1.21.4-R0.1-SNAPSHOT</version>
+			<version>1.21.10-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+        <!-- Spigot -->
+        <!--
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.21.4-R0.1-SNAPSHOT</version>
         </dependency>
+        -->
     </dependencies>
 </project>

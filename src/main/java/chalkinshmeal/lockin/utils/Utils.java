@@ -16,7 +16,6 @@ import static org.bukkit.enchantments.Enchantment.SOUL_SPEED;
 import static org.bukkit.enchantments.Enchantment.SWEEPING_EDGE;
 import static org.bukkit.enchantments.Enchantment.SWIFT_SNEAK;
 import static org.bukkit.enchantments.Enchantment.THORNS;
-import static org.bukkit.entity.EntityType.POTION;
 import static org.bukkit.event.block.Action.LEFT_CLICK_AIR;
 import static org.bukkit.event.block.Action.LEFT_CLICK_BLOCK;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
@@ -54,7 +53,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.ThrowableProjectile;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Trident;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.block.Action;
@@ -485,11 +483,11 @@ public class Utils {
         return potion;
     }
 
-    public static void spawnPotion(Location loc, PotionEffectType type, int duration, int amplifier, Color color) {
-        ItemStack potion = getPotion(type, duration, amplifier, true, color);
-        ThrownPotion thrownPotion = (ThrownPotion) loc.getWorld().spawnEntity(loc, POTION);
-        thrownPotion.setItem(potion);
-    }
+    //public static void spawnPotion(Location loc, PotionEffectType type, int duration, int amplifier, Color color) {
+    //    ItemStack potion = getPotion(type, duration, amplifier, true, color);
+    //    ThrownPotion thrownPotion = (ThrownPotion) loc.getWorld().spawnEntity(loc, POTION);
+    //    thrownPotion.setItem(potion);
+    //}
 
     // Vectors
     public static Vector getVectorFromPlayerToEntity(Player player, Entity entity) {

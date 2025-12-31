@@ -1085,11 +1085,7 @@ obtainItemsTask:
       NETHER_WART: 1
       RABBIT_FOOT: 1
     8:
-      MAGENTA_CANDLE: 1
-      PINK_CANDLE: 1
       SPONGE: 1
-      TURTLE_SCUTE: 1
-      WHITE_CANDLE: 1
     9:
       DIAMOND_BLOCK: 3
       ENDER_EYE: 20
@@ -1478,7 +1474,7 @@ smeltItemsTask:
       CHARCOAL: 10
       GLASS: 32
     3:
-      BEEF: 10
+      COOKED_BEEF: 10
       COOKED_COD: 10
       COOKED_CHICKEN: 10
       COOKED_MUTTON: 10
@@ -1640,7 +1636,6 @@ tameEntityTask:
     - FOX
     - MULE
     7:
-    - AXOLOTL
     - CAMEL
     - LLAMA
 
