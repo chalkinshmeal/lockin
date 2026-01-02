@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 
 public class SmeltItemsTask extends LockinTask {
@@ -20,7 +21,7 @@ public class SmeltItemsTask extends LockinTask {
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<String, Integer> smeltedCounts;
+    private final Map<Team, Integer> smeltedCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -72,12 +73,12 @@ public class SmeltItemsTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void onFurnaceExtractEvent(FurnaceExtractEvent event) {
         var player = event.getPlayer();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        Team team = LockinTask.teamHandler.getTeam(player);
         var itemsExtracted = event.getItemAmount();
         if (event.getItemType() != this.material) return;
 
-        smeltedCounts.put(teamName, smeltedCounts.getOrDefault(teamName, 0) + itemsExtracted);
-        if (this.smeltedCounts.get(teamName) < this.amount) return;
+        smeltedCounts.put(team, smeltedCounts.getOrDefault(team, 0) + itemsExtracted);
+        if (this.smeltedCounts.get(team) < this.amount) return;
 
         this.complete(player);
     }

@@ -14,12 +14,13 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 public class ShearSheepTask extends LockinTask {
     private static final String configKey = "shearSheepTask";
     private static final String normalKey = "shears";
     private final int targetShears;
-    private final Map<String, Integer> shearCounts;
+    private final Map<Team, Integer> shearCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -60,10 +61,10 @@ public class ShearSheepTask extends LockinTask {
     public void onPlayerShearEntityEvent(PlayerShearEntityEvent event) {
         if (!(event.getEntity() instanceof Sheep)) return;
         Player player = event.getPlayer();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        Team team = LockinTask.teamHandler.getTeam(player);
 
-        shearCounts.put(teamName, shearCounts.getOrDefault(teamName, 0) + 1);
-        if (shearCounts.get(teamName) < this.targetShears) return;
+        shearCounts.put(team, shearCounts.getOrDefault(team, 0) + 1);
+        if (shearCounts.get(team) < this.targetShears) return;
 
         this.complete(player);
     }

@@ -69,7 +69,7 @@ public class PunchPlayerWithItemTask extends LockinTask {
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player damager)) return;
         if (!(event.getEntity() instanceof Player victim)) return;
-        if (LockinTask.lockinTeamHandler.getTeamName(damager) == LockinTask.lockinTeamHandler.getTeamName(victim)) return;
+        if (LockinTask.teamHandler.getTeam(damager) == LockinTask.teamHandler.getTeam(victim)) return;
 
         Material itemInHand = damager.getInventory().getItemInMainHand().getType();
         if (itemInHand != this.material) return;

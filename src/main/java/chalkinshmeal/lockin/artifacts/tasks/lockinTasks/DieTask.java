@@ -13,12 +13,13 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 public class DieTask extends LockinTask {
     private static final String configKey = "deathTask";
     private static final String normalKey = "deaths";
     private final int targetDeaths;
-    private Map<String, Integer> deathCounts;
+    private Map<Team, Integer> deathCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -58,10 +59,10 @@ public class DieTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         Player player = event.getPlayer();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        Team team = LockinTask.teamHandler.getTeam(player);
 
-        this.deathCounts.put(teamName, this.deathCounts.getOrDefault(teamName, 0) + 1);
-        if (this.deathCounts.get(teamName) < this.targetDeaths) return;
+        this.deathCounts.put(team, this.deathCounts.getOrDefault(team, 0) + 1);
+        if (this.deathCounts.get(team) < this.targetDeaths) return;
 
         this.complete(player);
     }

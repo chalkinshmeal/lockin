@@ -13,13 +13,14 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 public class CraftItemsTask extends LockinTask {
     private static final String configKey = "craftItemsTask";
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<String, Integer> craftedItems;
+    private final Map<Team, Integer> craftedItems;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -78,9 +79,9 @@ public class CraftItemsTask extends LockinTask {
         ItemStack craftedItem = event.getRecipe().getResult();
         if (craftedItem.getType() != this.material) return;
 
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
-        this.craftedItems.put(teamName, this.craftedItems.getOrDefault(teamName, 0) + craftedItem.getAmount());
-        if (this.craftedItems.get(teamName) < this.amount) return;
+        Team team = LockinTask.teamHandler.getTeam(player);
+        this.craftedItems.put(team, this.craftedItems.getOrDefault(team, 0) + craftedItem.getAmount());
+        if (this.craftedItems.get(team) < this.amount) return;
         this.complete(player);
     }
 }

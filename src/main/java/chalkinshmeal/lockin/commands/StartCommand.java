@@ -4,16 +4,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.game.GameHandler;
-import chalkinshmeal.lockin.utils.cmdframework.command.BaseCommand;
-import chalkinshmeal.lockin.utils.cmdframework.handler.CommandHandler;
+import chalkinshmeal.mc_plugin_lib.commands.command.BaseCommand;
+import chalkinshmeal.mc_plugin_lib.commands.handler.CommandHandler;
+import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class StartCommand extends BaseCommand {
     private final GameHandler gameHandler;
+    private final TeamHandler teamHandler;
 
     // Constructor
-    public StartCommand(JavaPlugin plugin, CommandHandler cmdHandler, GameHandler gameHandler) {
+    public StartCommand(JavaPlugin plugin, CommandHandler cmdHandler, GameHandler gameHandler, TeamHandler teamHandler) {
         super("start");
         this.setPlayerRequired(false);
         this.setHelpMsg(Component.text()
@@ -22,6 +24,7 @@ public class StartCommand extends BaseCommand {
             .build());
         
         this.gameHandler = gameHandler;
+        this.teamHandler = teamHandler;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class StartCommand extends BaseCommand {
                 Component.text("Create at least 1 team to start a lockin game", NamedTextColor.RED));
             return;
         }
-        if (this.gameHandler.lockinTeamHandler.getAllPlayers().size() <= 0) {
+        if (this.teamHandler.getAllPlayers().size() <= 0) {
             sender.sendMessage(
                 Component.text("Must join a team to start a game. Type /lockin compass and join a team", NamedTextColor.RED));
             return;

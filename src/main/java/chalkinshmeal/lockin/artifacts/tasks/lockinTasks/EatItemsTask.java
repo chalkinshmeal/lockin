@@ -13,13 +13,14 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 public class EatItemsTask extends LockinTask {
     private static final String configKey = "eatItemsTask";
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<String, Integer> eatenItems;
+    private final Map<Team, Integer> eatenItems;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -77,9 +78,9 @@ public class EatItemsTask extends LockinTask {
         // Return if material does not match
         if (eatenItem.getType() != this.material) return;
 
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
-        this.eatenItems.put(teamName, this.eatenItems.getOrDefault(teamName, 0) + 1);
-        if (this.eatenItems.get(teamName) < this.amount) return;
+        Team team = LockinTask.teamHandler.getTeam(player);
+        this.eatenItems.put(team, this.eatenItems.getOrDefault(team, 0) + 1);
+        if (this.eatenItems.get(team) < this.amount) return;
         this.complete(player);
 
     }

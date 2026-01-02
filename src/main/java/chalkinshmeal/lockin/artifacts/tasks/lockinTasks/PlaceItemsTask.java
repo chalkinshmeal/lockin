@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 
 
@@ -22,7 +23,7 @@ public class PlaceItemsTask extends LockinTask {
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<String, Integer> placedItems;
+    private final Map<Team, Integer> placedItems;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -80,9 +81,9 @@ public class PlaceItemsTask extends LockinTask {
 
         // Return if 
         Player player = event.getPlayer();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
-        this.placedItems.put(teamName, this.placedItems.getOrDefault(teamName, 0) + 1);
-        if (this.placedItems.get(teamName) < this.amount) return;
+        Team team = LockinTask.teamHandler.getTeam(player);
+        this.placedItems.put(team, this.placedItems.getOrDefault(team, 0) + 1);
+        if (this.placedItems.get(team) < this.amount) return;
         this.complete(player);
     }
 }

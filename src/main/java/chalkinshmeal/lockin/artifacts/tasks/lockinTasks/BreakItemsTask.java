@@ -13,13 +13,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 public class BreakItemsTask extends LockinTask {
     private static final String configKey = "breakItemsTask";
     private static final String normalKey = "materials";
     private final Material material;
     private final int amount;
-    private final Map<String, Integer> brokenItems;
+    private final Map<Team, Integer> brokenItems;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -77,13 +78,9 @@ public class BreakItemsTask extends LockinTask {
 
         // Return if 
         Player player = event.getPlayer();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
-        System.out.println("HERE");
-        System.out.println("Team: " + teamName);
-        System.out.println("Broken items: " + this.brokenItems.getOrDefault(teamName, 0));
-        this.brokenItems.put(teamName, this.brokenItems.getOrDefault(teamName, 0) + 1);
-        System.out.println("Broken items after: " + this.brokenItems.getOrDefault(teamName, 0));
-        if (this.brokenItems.get(teamName) < this.amount) return;
+        Team team = LockinTask.teamHandler.getTeam(player);
+        this.brokenItems.put(team, this.brokenItems.getOrDefault(team, 0) + 1);
+        if (this.brokenItems.get(team) < this.amount) return;
         this.complete(player);
     }
 }

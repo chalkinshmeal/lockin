@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ActivateBlockTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BlockArrowWithShieldTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BreakItemsTask;
@@ -32,12 +31,10 @@ import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.GetExpLevelTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.GetSpecificHealthTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.GrowWheatWithBonemealTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.InteractItemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillALeaderPlayerTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillBabyEntitiesTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillEntitiesTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillEntityWithStatusEffectTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillLeftySkeletonTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillOpposingTeamTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.LaunchFireworkTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.LightTNTTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ObtainItemGroupTask;
@@ -72,9 +69,10 @@ import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.UseNametagTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.UseSpyglassTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.WearFullDyedLeatherArmorTask;
 import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.WearFullIronArmorTask;
-import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
-import chalkinshmeal.lockin.utils.LoggerUtils;
+import chalkinshmeal.mc_plugin_lib.logging.LoggerUtils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
+import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -84,8 +82,7 @@ public class LockinTaskHandler {
     private final ConfigHandler configHandler;
     private final LockinCompass lockinCompass;
     private LockinRewardHandler lockinRewardHandler;
-    private LockinTeamHandler lockinTeamHandler;
-    private final LockinScoreboard lockinScoreboard;
+    private final TeamHandler teamHandler;
     public int tasksPerTier;
     private int tasksToCompletePerTier;
     public int taskTierLowerRange;
@@ -96,20 +93,19 @@ public class LockinTaskHandler {
     private final int maxTier = 10;
 
     public LockinTaskHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass,
-                                LockinScoreboard lockinScoreboard, LockinTeamHandler lockinTeamHandler) {
+                                TeamHandler teamHandler) {
         this.plugin = plugin;
         this.configHandler = configHandler;
         this.lockinCompass = lockinCompass;
         this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
-        this.lockinTeamHandler = lockinTeamHandler;
-        this.lockinScoreboard = lockinScoreboard;
+        this.teamHandler = teamHandler;
         this.tasks = new ArrayList<>();
         this.catchUpTasks = new ArrayList<>();
         this.tasksPerTier = this.configHandler.getInt("tasksPerTier", 5);
         this.tasksToCompletePerTier = this.configHandler.getInt("tasksToCompletePerTier", 3);
         this.taskTierLowerRange = this.configHandler.getInt("tasksTierLowerRange", 0);
 
-        LockinTask.initStaticVariables(plugin, configHandler, this, lockinRewardHandler, lockinTeamHandler);
+        LockinTask.initStaticVariables(plugin, configHandler, this, lockinRewardHandler, teamHandler);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -131,45 +127,45 @@ public class LockinTaskHandler {
     public List<LockinTask> getTasks() { return new ArrayList<>(this.tasks); }
     public List<LockinTask> getCatchUpTasks() { return new ArrayList<>(this.catchUpTasks); }
     public boolean haveAllTeamsCompletedTheTier() {
-        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+        for (Team team : this.teamHandler.getTeams()) {
             int tasksCompleted = 0;
             for (LockinTask task : this.tasks) {
-                if (task.hasCompleted(teamName)) tasksCompleted += 1;
+                if (task.hasCompleted(team.getKey())) tasksCompleted += 1;
             }
             if (tasksCompleted < this.getTasksToCompletePerTier(this.currentTier)) return false;
         }
         return true;
     }
     public boolean hasOneTeamCompletedTheTier() {
-        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+        for (Team team : this.teamHandler.getTeams()) {
             int tasksCompleted = 0;
             for (LockinTask task : this.tasks) {
-                if (task.hasCompleted(teamName)) tasksCompleted += 1;
+                if (task.hasCompleted(team.getKey())) tasksCompleted += 1;
             }
             if (tasksCompleted >= this.getTasksToCompletePerTier(this.currentTier)) return true;
         }
         return false;
     }
     public boolean hasOneTeamCompletedAllTasks() {
-        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+        for (Team team : this.teamHandler.getTeams()) {
             boolean hasCompletedAllTasks = true;
             for (LockinTask task : this.tasks) {
-                if (!task.hasCompleted(teamName)) hasCompletedAllTasks = false;
+                if (!task.hasCompleted(team.getKey())) hasCompletedAllTasks = false;
             }
             if (hasCompletedAllTasks) return true;
         }
         return false;
     }
-    public boolean hasTeamCompletedAllTasks(String teamName) {
+    public boolean hasTeamCompletedAllTasks(Team team) {
         for (LockinTask task : this.tasks) {
-            if (!task.hasCompleted(teamName)) return false;
+            if (!task.hasCompleted(team.getKey())) return false;
         }
         return true;
     }
     public boolean haveAllTeamsCompletedAllTasks() {
-        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+        for (Team team : this.teamHandler.getTeams()) {
             for (LockinTask task : this.tasks) {
-                if (!task.hasCompleted(teamName)) {
+                if (!task.hasCompleted(team.getKey())) {
                     return false;
                 }
             }
@@ -192,24 +188,6 @@ public class LockinTaskHandler {
 
     public void stopCurrentCatchUpTasks() {
         for (LockinTask task : this.catchUpTasks) { task.stop(); }
-    }
-
-    public void updateSuddenDeathTaskList() {
-        this.stopCurrentTasks();
-        this.unRegisterListeners();
-
-        this.tasks = new ArrayList<>();
-        this.tasks.addAll(KillOpposingTeamTask.getTasks(this.lockinTeamHandler));
-        for (LockinTask task : this.tasks) task.init();
-    }
-
-    public void updateCatchupTaskList() {
-        this.stopCurrentCatchUpTasks();
-        this.unRegisterCatchUpListeners();
-
-        this.catchUpTasks = new ArrayList<>();
-        this.catchUpTasks.addAll(KillALeaderPlayerTask.getTasks(this.lockinTeamHandler, this.lockinScoreboard));
-        for (LockinTask task : this.catchUpTasks) task.init();
     }
 
     // Update the list of tasks for this lockin challenge

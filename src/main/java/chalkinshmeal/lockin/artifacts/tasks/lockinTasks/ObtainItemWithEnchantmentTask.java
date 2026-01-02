@@ -14,8 +14,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.logging.LoggerUtils;
 
 public class ObtainItemWithEnchantmentTask extends LockinTask {
     private static final String configKey = "obtainItemWithEnchantmentTask";

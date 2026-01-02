@@ -15,13 +15,14 @@ import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 public class BreedEntitiesTask extends LockinTask {
     private static final String configKey = "breedEntitiesTask";
     private static final String normalKey = "entityTypes";
     private final EntityType entityType;
     private final int amount;
-    private final Map<String, Integer> bredEntities;
+    private final Map<Team, Integer> bredEntities;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -75,12 +76,12 @@ public class BreedEntitiesTask extends LockinTask {
         // Check if the breeding was initiated by a player
         if (!(event.getBreeder() instanceof Player)) return;
         Player player = (Player) event.getBreeder();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        Team team = LockinTask.teamHandler.getTeam(player);
         
         if (event.getMother().getType() != this.entityType) return;
-        this.bredEntities.put(teamName, this.bredEntities.getOrDefault(teamName, 0) + 1);
+        this.bredEntities.put(team, this.bredEntities.getOrDefault(team, 0) + 1);
 
-        if (this.bredEntities.get(teamName) < this.amount) return;
+        if (this.bredEntities.get(team) < this.amount) return;
         this.complete(player);
     }
 }

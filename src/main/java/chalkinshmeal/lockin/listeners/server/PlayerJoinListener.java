@@ -7,16 +7,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.game.GameHandler;
-import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 
 public class PlayerJoinListener implements Listener {
     private final LockinCompass lockinCompass;
-    private final LockinScoreboard lockinScoreboard;
     private final GameHandler gameHandler;
 
-    public PlayerJoinListener(LockinCompass lockinCompass, LockinScoreboard lockinScoreboard, GameHandler gameHandler) {
+    public PlayerJoinListener(LockinCompass lockinCompass, GameHandler gameHandler) {
         this.lockinCompass = lockinCompass;
-        this.lockinScoreboard = lockinScoreboard;
         this.gameHandler = gameHandler;
     }
 
@@ -24,10 +21,7 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         this.lockinCompass.giveCompass(event.getPlayer());
-        if (this.gameHandler.isActive()) {
-            this.lockinScoreboard.showToPlayer(event.getPlayer());
-        }
-        else {
+        if (!this.gameHandler.isActive()) {
             event.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation());
         }
     }

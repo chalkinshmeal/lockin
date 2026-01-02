@@ -3,8 +3,8 @@ package chalkinshmeal.lockin.artifacts.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.GameMode;
 import org.bukkit.GameRule;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -13,13 +13,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.countdown.CountdownBossBar;
-import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.logging.LoggerUtils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
+import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import chalkinshmeal.lockin.utils.EntityUtils;
-import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.TaskUtils;
 import chalkinshmeal.lockin.utils.Utils;
 import chalkinshmeal.lockin.utils.WorldUtils;
@@ -33,8 +33,7 @@ public class GameHandler {
     private final LockinCompass lockinCompass;
     private final LockinTaskHandler lockinTaskHandler;
     private CountdownBossBar countdownBossBar;
-    private final LockinScoreboard lockinScoreboard;
-    public final LockinTeamHandler lockinTeamHandler;
+    private final TeamHandler teamHandler;
     private final int queueTime;
     private final int singleTeamTimeLimit;
     private final int multipleCompleteTeamTimeLimit;
@@ -53,49 +52,61 @@ public class GameHandler {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public GameHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass, LockinTaskHandler lockinTaskHandler, LockinScoreboard lockinScoreboard, LockinTeamHandler lockinTeamHandler) {
+    public GameHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass, LockinTaskHandler lockinTaskHandler, TeamHandler teamHandler) {
         this.plugin = plugin;
         this.configHandler = configHandler;
         this.lockinCompass = lockinCompass;
         this.lockinTaskHandler = lockinTaskHandler;
-        this.lockinScoreboard = lockinScoreboard;
-        this.lockinTeamHandler = lockinTeamHandler;
+        this.teamHandler = teamHandler;
         this.queueTime = this.configHandler.getInt("queueTime", 120);
         this.singleTeamTimeLimit = this.configHandler.getInt("singleTeamTimeLimit", 600);
         this.multipleCompleteTeamTimeLimit = this.configHandler.getInt("multipleCompletedTeamTimeLimit", 600);
         this.multipleTeamTimeLimit = this.configHandler.getInt("multipleTeamTimeLimit", 600);
         this.maxTier = 10;
+        this.init();
     }
 
     //---------------------------------------------------------------------------------------------
     // Accessor/Mutator methods
     //---------------------------------------------------------------------------------------------
-    public int getNumTeams() { return this.lockinTeamHandler.getNumTeams(); }
+    public int getNumTeams() { return this.teamHandler.getNumTeams(); }
     public boolean isActive() { return this.state != GameState.INACTIVE; }
 
     //---------------------------------------------------------------------------------------------
     // Game methods
     //---------------------------------------------------------------------------------------------
-    public void queue() {
-        this.state = GameState.QUEUE;
-        this.currentTier = 0;
-        this.lockinTaskHandler.setCurrentTier(this.currentTier);
+    public void init() {
+        int maxLives = this.configHandler.getInt("maxLives", 5);
+        this.teamHandler.addTeam("Blue Team", Component.text("Blue Team"), Material.BLUE_WOOL, maxLives);
+        this.teamHandler.addTeam("Green Team", Component.text("Green Team"), Material.GREEN_WOOL, maxLives);
+        this.teamHandler.addTeam("Red Team", Component.text("Red Team"), Material.RED_WOOL, maxLives);
+        this.teamHandler.addTeam("Magenta Team", Component.text("Magenta Team"), Material.MAGENTA_WOOL, maxLives);
+        this.lockinCompass.addTeam(this.teamHandler.getTeam("Blue Team"));
+        this.lockinCompass.addTeam(this.teamHandler.getTeam("Green Team"));
+        this.lockinCompass.addTeam(this.teamHandler.getTeam("Red Team"));
+        this.lockinCompass.addTeam(this.teamHandler.getTeam("Magenta Team"));
+    }
 
+    public void queue() {
         // Set world state
         this.resetWorldState();
 
         // Set game state
-        this.lockinTeamHandler.init();
-        this.lockinScoreboard.init(this.lockinTeamHandler);
+        this.state = GameState.QUEUE;
+        this.currentTier = 0;
+        this.teamHandler.removeEmptyTeams();
+        this.teamHandler.setScoreboardVisible(true);
+        this.teamHandler.showScoreboardToAllPlayers();
+        this.lockinTaskHandler.setCurrentTier(this.currentTier);
         this.lockinCompass.SetIsActive(true);
         this.incrementTier();
-        this.gameType = this.lockinTeamHandler.getNumTeams() <= 1 ? GameType.SINGLE_TEAM : GameType.MULTIPLE_TEAM;
+        this.gameType = this.teamHandler.getNumTeams() <= 1 ? GameType.SINGLE_TEAM : GameType.MULTIPLE_TEAM;
 
         // Delayed start
         this.taskIDs.add(TaskUtils.runDelayedTask(this.plugin, this::start, this.queueTime*20));
 
         // Cosmetics
-        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+        for (Player player : this.teamHandler.getAllOnlinePlayers()) {
             this.displayCountdownTask(plugin, player, this.queueTime);
         }
     }
@@ -115,11 +126,6 @@ public class GameHandler {
         }
         this.countdownBossBar.start();
         this.resetIncrementTierTasks();
-
-        // Cosmetics
-        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-            player.sendMessage(Component.text("Lockin game starting. Complete " + this.lockinTaskHandler.getTasksToCompletePerTier(this.currentTier) + "/" + this.lockinTaskHandler.tasksPerTier + " tasks to complete a tier", NamedTextColor.GOLD));
-        }
     }
 
     public void incrementTier() {
@@ -130,52 +136,33 @@ public class GameHandler {
         if (this.currentTier != 1) {
             // Calculate tasks completed by the leading team
             int maxCompletedTasks = 0;
-            for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+            for (Team team : this.teamHandler.getTeams()) {
                 int completedTasks = 0;
                 for (LockinTask task : this.lockinTaskHandler.getTasks()) {
-                    if (task.hasCompleted(teamName)) completedTasks += 1;
+                    if (task.hasCompleted(team.getKey())) completedTasks += 1;
                 }
                 if (completedTasks > maxCompletedTasks) maxCompletedTasks = completedTasks;
             }
 
             // Subtract score
-            for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-                if (this.lockinScoreboard.getScore(teamName) <= 0) continue;
-                if (this.lockinTeamHandler.isCatchUpTeam(teamName)) {
-                    this.lockinTeamHandler.removeCatchUpTeam(teamName);
-                    continue;
-                }
+            for (Team team : this.teamHandler.getTeams()) {
+                if (this.teamHandler.getScore(team) <= 0) continue;
 
                 int completedTasks = 0;
                 for (LockinTask task : this.lockinTaskHandler.getTasks()) {
-                    if (task.hasCompleted(teamName)) completedTasks += 1;
+                    if (task.hasCompleted(team.getKey())) completedTasks += 1;
                 }
 
                 int lostScore = Math.max(0, Math.min(maxCompletedTasks, this.lockinTaskHandler.getTasksToCompletePerTier(this.currentTier - 1)) - completedTasks);
                 if (this.state == GameState.SUDDEN_DEATH) lostScore = 1;
 
-                this.lockinScoreboard.subtractScore(teamName, lostScore);
-
-                if (this.lockinScoreboard.getScore(teamName) <= 0) {
-                    this.lockinTeamHandler.addCatchUpTeam(teamName);
-                }
-            }
-
-            // Check sudden death conditions
-            if (this.gameType == GameType.MULTIPLE_TEAM && this.currentTier > this.maxTier ||
-                this.lockinScoreboard.noTeamHasPositiveLives() && this.lockinScoreboard.getWinningTeams().size() > 1) {
-                this.suddenDeath();
-                return;
+                this.teamHandler.subtractScore(team, lostScore);
             }
 
             // Check end game conditions
-            if (this.gameType == GameType.MULTIPLE_TEAM && this.lockinScoreboard.atMostOneTeamHasPositiveLives() && this.currentTier > 1 ||
+            if (this.gameType == GameType.MULTIPLE_TEAM && this.teamHandler.atMostOneTeamHasPositiveLives() && this.currentTier > 1 ||
                 this.gameType == GameType.SINGLE_TEAM && this.currentTier > this.maxTier ||
-                this.gameType == GameType.SINGLE_TEAM && !this.lockinScoreboard.atLeastOneTeamHasPositiveLives() && this.currentTier > 1) {
-                if (debug) LoggerUtils.info("End conditions met.");
-                if (debug) LoggerUtils.info("  Game Type: " + this.gameType);
-                if (debug) LoggerUtils.info("  Does at least one team have positive lives?: " + this.lockinScoreboard.atLeastOneTeamHasPositiveLives());
-                if (debug) LoggerUtils.info("  Current Tier: " + this.currentTier);
+                this.gameType == GameType.SINGLE_TEAM && !this.teamHandler.atLeastOneTeamHasPositiveLives() && this.currentTier > 1) {
                 this.stop();
                 return;
             }
@@ -185,11 +172,6 @@ public class GameHandler {
         this.lockinTaskHandler.unRegisterListeners();
         this.lockinTaskHandler.updateTaskList(this.currentTier);
         this.lockinTaskHandler.registerListeners();
-        if (this.gameType == GameType.MULTIPLE_TEAM) {
-            this.lockinTaskHandler.unRegisterCatchUpListeners();
-            this.lockinTaskHandler.updateCatchupTaskList();
-            this.lockinTaskHandler.registerCatchUpListeners();
-        }
         this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
 
         // Reset increment tier checker
@@ -198,88 +180,40 @@ public class GameHandler {
         }
 
         // Cosmetics
-        if (this.currentTier != 1) {
-            this.countdownBossBar.reset();
+        if (this.currentTier != 1) this.countdownBossBar.reset();
 
-            for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-                player.sendMessage(Component.text()
-                    .append(Component.text("Advancing to ", NamedTextColor.GRAY))
-                    .append(Component.text("Tier " + this.currentTier, NamedTextColor.BLUE)));
-                Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME);
-            }
+        for (Player player : this.teamHandler.getAllOnlinePlayers()) {
+            player.sendMessage(Component.text()
+                .append(Component.text("Advancing to ", NamedTextColor.GRAY))
+                .append(Component.text("Tier " + this.currentTier + " ", NamedTextColor.BLUE))
+                .append(Component.text("(Need to complete " + this.lockinTaskHandler.getTasksToCompletePerTier(this.currentTier) + " tasks)", NamedTextColor.GRAY))
+            );
+            Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME);
         }
     }
 
     @SuppressWarnings("deprecation")
     public void stop() {
-        if (debug) LoggerUtils.info("Stopping game");
-        // Get winner
-        List<String> winningTeams = this.lockinScoreboard.getWinningTeams();
-        if (debug) LoggerUtils.info("Winning teams (Size: " + winningTeams.size() + ")");
-        for (String _winningTeam : winningTeams) if (debug) LoggerUtils.info("  " + _winningTeam);
+        // Note, at this point, there should only be one winning team
+        Team winningTeam = this.teamHandler.getWinningTeams().iterator().next();
+        int maxLives = this.teamHandler.getMaxScore();
 
         // Per-player operations
-        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-            String winOrLose = " won!";
-            if (this.gameType == GameType.SINGLE_TEAM && this.lockinScoreboard.getScore(winningTeams.get(0)) <= 0) winOrLose = " lost!";
+        for (Player player : this.teamHandler.getAllOnlinePlayers()) {
+            boolean inWinningTeam = (
+                this.gameType == GameType.MULTIPLE_TEAM && winningTeam.hasPlayer(player) ||
+                this.gameType == GameType.SINGLE_TEAM && maxLives <= 0);
+            String winOrLose = (inWinningTeam) ? " won!" : " lost!";
             player.showTitle(Title.title(
-                Component.text(winningTeams.get(0) + winOrLose, NamedTextColor.GOLD),
+                Component.text(winningTeam.getDisplayName() + winOrLose, NamedTextColor.GOLD),
                 Component.empty(), // No subtitle
                 Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(5), java.time.Duration.ofSeconds(1))
             ));
-            if (this.lockinTeamHandler.getTeamPlayers(winningTeams.get(0)).contains(player.getUniqueId()) &&
-                !(this.gameType == GameType.SINGLE_TEAM && winOrLose.equals(" lost!"))) {
-                Utils.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_1);
-            }
-            else {
-                Utils.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_6);
-            }
+            if (inWinningTeam) Utils.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_1);
+            else Utils.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_6);
         }
 
         this.end();
-    }
-
-    @SuppressWarnings("deprecation")
-    public void suddenDeath() {
-        this.state = GameState.SUDDEN_DEATH;
-        // Set non-winning-teams to spectator mode
-        for (Player player : this.lockinTeamHandler.getNonLeadingTeamPlayers()) {
-            player.setGameMode(GameMode.SPECTATOR);
-        }
-
-        // Clear incrementTier tasks
-        for (int taskID : this.incrementTierTaskIDs) {
-            this.taskIDs.remove(Integer.valueOf(taskID));
-            TaskUtils.cancelTask(taskID);
-        }
-
-        // Set game state
-        this.incrementTierTaskIDs.clear();
-        this.countdownBossBar.stop();
-        this.lockinTaskHandler.unRegisterListeners();
-        this.lockinTaskHandler.updateSuddenDeathTaskList();
-        this.lockinTaskHandler.registerListeners();
-        this.lockinCompass.updateTasksInventory(this.lockinTaskHandler);
-        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
-            if (this.lockinScoreboard.getScore(teamName) > 0) {
-                this.lockinScoreboard.setScore(teamName, 1);
-            }
-        }
-
-        // Run repeating task to check if any one team has completed all tasks (kill opposing player)
-        int taskID = TaskUtils.runRepeatingTask(this.plugin, () -> {
-            if (lockinTaskHandler.hasOneTeamCompletedAllTasks()) this.stop();
-        }, 0f, 0.5f*20);
-        this.taskIDs.add(taskID);
-
-        // Cosmetics
-        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
-            player.showTitle(Title.title(
-                Component.text("Sudden Death", NamedTextColor.GOLD),
-                Component.text("Kill all opposing players", NamedTextColor.GOLD),
-                Title.Times.of(java.time.Duration.ZERO, java.time.Duration.ofSeconds(5), java.time.Duration.ofSeconds(1))
-            ));
-        }
     }
 
     public void end() {
@@ -293,7 +227,7 @@ public class GameHandler {
         for (int taskID : this.taskIDs) TaskUtils.cancelTask(taskID);
 
         // Cosmetics
-        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+        for (Player player : this.teamHandler.getAllOnlinePlayers()) {
             player.sendMessage(Component.text("Lockin game ended.", NamedTextColor.GOLD));
         }
     }
@@ -301,7 +235,7 @@ public class GameHandler {
     private void resetWorldState() {
         WorldUtils.resetWorldState();
         WorldUtils.setGameRule(GameRule.KEEP_INVENTORY, true);
-        for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+        for (Player player : this.teamHandler.getAllOnlinePlayers()) {
             EntityUtils.resetPlayerState(player, true);
             this.lockinCompass.giveCompass(player);
         }
@@ -359,7 +293,7 @@ public class GameHandler {
                 this.taskIDs.add(newTaskID);
 
                 if (reduceTime) {
-                    for (Player player : this.lockinTeamHandler.getAllOnlinePlayers()) {
+                    for (Player player : this.teamHandler.getAllOnlinePlayers()) {
                         player.sendMessage(Component.text()
                             .append(Component.text("Time limit reduced to ", NamedTextColor.GRAY))
                             .append(Component.text(newTime, NamedTextColor.BLUE))

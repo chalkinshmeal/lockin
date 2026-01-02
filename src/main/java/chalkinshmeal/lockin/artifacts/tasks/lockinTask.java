@@ -15,8 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.rewards.LockinReward;
 import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
+import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -24,15 +25,15 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
 public abstract class LockinTask {
-    public static String maxTaskCount = "maxTaskCount";
+    protected static String maxTaskCount = "maxTaskCount";
     protected static JavaPlugin plugin;
     protected static ConfigHandler configHandler;
-    private static LockinTaskHandler lockinTaskHandler;
-    private static LockinRewardHandler lockinRewardHandler;
-    protected static LockinTeamHandler lockinTeamHandler;
+    protected static LockinTaskHandler lockinTaskHandler;
+    protected static LockinRewardHandler lockinRewardHandler;
+    protected static TeamHandler teamHandler;
     protected List<Listener> listeners;
-    private List<String> completed;
-    public NamedTextColor nameColor;
+    protected List<String> completed;
+    protected NamedTextColor nameColor;
 
     protected String name;
     protected ItemStack item;
@@ -69,12 +70,12 @@ public abstract class LockinTask {
     }
 
     public static void initStaticVariables(JavaPlugin plugin, ConfigHandler configHandler, LockinTaskHandler lockinTaskHandler,
-                                            LockinRewardHandler lockinRewardHandler, LockinTeamHandler lockinTeamHandler) {
+                                            LockinRewardHandler lockinRewardHandler, TeamHandler teamHandler) {
         LockinTask.plugin = plugin;
         LockinTask.configHandler = configHandler;
         LockinTask.lockinTaskHandler = lockinTaskHandler;
         LockinTask.lockinRewardHandler = lockinRewardHandler;
-        LockinTask.lockinTeamHandler = lockinTeamHandler;
+        LockinTask.teamHandler = teamHandler;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -124,32 +125,19 @@ public abstract class LockinTask {
             .decoration(TextDecoration.ITALIC, false);
         this.item = Utils.addLore(this.item, teamLore);
 
-        for (int i = 0; i < LockinTask.lockinTeamHandler.getNumTeams(); i++) {
-            String teamName = LockinTask.lockinTeamHandler.getTeamName(i);
-            String displayTeamName = LockinTask.lockinTeamHandler.getDisplayTeamName(i);
-            NamedTextColor teamColor = this.completed.contains(teamName) ? NamedTextColor.GREEN : NamedTextColor.RED;
-            String completeText = this.completed.contains(teamName) ? ":)" : ":(";
-            Component individualTeamLore = Component.text(" " + displayTeamName, NamedTextColor.DARK_AQUA)
+        for (Team team : LockinTask.teamHandler.getTeams()) {
+            NamedTextColor teamColor = this.completed.contains(team.getKey()) ? NamedTextColor.GREEN : NamedTextColor.RED;
+            String completeText = this.completed.contains(team.getKey()) ? ":)" : ":(";
+            Component individualTeamLore = Component.text(" " + team.getKey(), NamedTextColor.DARK_AQUA)
                 .decoration(TextDecoration.ITALIC, false)
                 .append(Component.text(" " + completeText, teamColor));
             this.item = Utils.addLore(this.item, individualTeamLore);
         }
-
-        //Component valueLore = Component.text("Value: ", NamedTextColor.GRAY)
-        //    .decoration(TextDecoration.ITALIC, false)
-        //    .append(Component.text(String.valueOf(this.value), NamedTextColor.GOLD));
-        //this.item = Utils.addLore(this.item, valueLore);
-
-        if (this.reward != null) {
-            Component rewardLore = Component.text((this.isPunishment) ? "Punishment: " : "Reward: ", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)
-                    .append(Component.text(this.reward.getDescription(), NamedTextColor.LIGHT_PURPLE));
-            this.item = Utils.addLore(this.item, rewardLore);
-        }
     }
+
     public boolean haveAllTeamsCompleted() {
-        List<String> teamNames = (this.isCatchUpTask) ? lockinTeamHandler.getCatchUpTeamNames() : lockinTeamHandler.getNonCatchUpTeamNames();
-        for (String teamName : teamNames) {
-            if (!this.completed.contains(teamName)) return false;
+        for (Team team : LockinTask.teamHandler.getTeamsWithPositiveLives()) {
+            if (!this.completed.contains(team.getKey())) return false;
         }
         return true;
     }
@@ -159,28 +147,17 @@ public abstract class LockinTask {
     // Task methods
     //---------------------------------------------------------------------------------------------
     public void complete(Player player) {
-        String teamName = lockinTeamHandler.getTeamName(player);
-        if (this.hasCompleted(teamName)) return;
-        if (lockinTeamHandler.isCatchUpTeam(teamName) && !this.isCatchUpTask) return;
-        if (this.isCatchUpTask && lockinTeamHandler.isCatchUpTeam(teamName)) {
-            this.completed.add(teamName);
-            lockinTaskHandler.complete(this, player);
-            if (this.reward != null) this.reward.giveReward(player);
-            this.setLore();
-            return;
-        }
-
-        this.completed.add(teamName);
+        Team team = LockinTask.teamHandler.getTeam(player);
+        if (this.hasCompleted(team.getKey())) return;
+        this.completed.add(team.getKey());
         lockinTaskHandler.complete(this, player);
-        if (this.reward != null) this.reward.giveReward(player);
         this.setLore();
 
         // Check if team has completed all tasks
-        if (lockinTaskHandler.hasTeamCompletedAllTasks(teamName)) {
-            for (Player _player : lockinTeamHandler.getAllOnlinePlayers()) {
-                String displayTeamName = lockinTeamHandler.getDisplayTeamName(_player);
+        if (lockinTaskHandler.hasTeamCompletedAllTasks(team)) {
+            for (Player _player : teamHandler.getAllOnlinePlayers()) {
                 player.sendMessage(Component.text()
-                    .append(Component.text(displayTeamName, NamedTextColor.GOLD))
+                    .append(Component.text(team.getKey(), NamedTextColor.GOLD))
                     .append(Component.text(" has completed the tier", NamedTextColor.GRAY)));
                 Utils.playSound(_player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
             }

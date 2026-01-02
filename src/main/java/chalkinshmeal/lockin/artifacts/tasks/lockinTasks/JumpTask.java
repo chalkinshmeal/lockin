@@ -14,12 +14,13 @@ import org.bukkit.inventory.ItemStack;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 public class JumpTask extends LockinTask {
     private static final String configKey = "jumpTask";
     private static final String normalKey = "jumps";
     private final int targetJumps;
-    private Map<String, Integer> jumpCounts;
+    private Map<Team, Integer> jumpCounts;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -59,10 +60,10 @@ public class JumpTask extends LockinTask {
     //---------------------------------------------------------------------------------------------
     public void onPlayerJumpEvent(PlayerJumpEvent event) {
         Player player = event.getPlayer();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        Team team = LockinTask.teamHandler.getTeam(player);
 
-        this.jumpCounts.put(teamName, this.jumpCounts.getOrDefault(teamName, 0) + 1);
-        if (this.jumpCounts.get(teamName) < this.targetJumps) return;
+        this.jumpCounts.put(team, this.jumpCounts.getOrDefault(team, 0) + 1);
+        if (this.jumpCounts.get(team) < this.targetJumps) return;
 
         this.complete(player);
     }

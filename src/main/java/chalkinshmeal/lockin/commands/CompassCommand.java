@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
-import chalkinshmeal.lockin.utils.cmdframework.command.BaseCommand;
-import chalkinshmeal.lockin.utils.cmdframework.handler.CommandHandler;
+import chalkinshmeal.mc_plugin_lib.commands.command.BaseCommand;
+import chalkinshmeal.mc_plugin_lib.commands.handler.CommandHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 

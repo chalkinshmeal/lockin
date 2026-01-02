@@ -3,9 +3,9 @@ package chalkinshmeal.lockin.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import chalkinshmeal.lockin.utils.cmdframework.command.BaseCommand;
-import chalkinshmeal.lockin.utils.cmdframework.command.ParentCommand;
-import chalkinshmeal.lockin.utils.cmdframework.handler.CommandHandler;
+import chalkinshmeal.mc_plugin_lib.commands.command.BaseCommand;
+import chalkinshmeal.mc_plugin_lib.commands.command.ParentCommand;
+import chalkinshmeal.mc_plugin_lib.commands.handler.CommandHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 

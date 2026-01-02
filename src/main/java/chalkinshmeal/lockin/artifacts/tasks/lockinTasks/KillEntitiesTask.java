@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.utils.Utils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
 
 
 
@@ -23,7 +24,7 @@ public class KillEntitiesTask extends LockinTask {
     private static final String normalKey = "entityTypes";
     private final EntityType entityType;
     private final int amount;
-    private final Map<String, Integer> killedEntities;
+    private final Map<Team, Integer> killedEntities;
 
     //---------------------------------------------------------------------------------------------
     // Constructor, which takes lockintaskhandler
@@ -80,10 +81,10 @@ public class KillEntitiesTask extends LockinTask {
 
         if (!(event.getEntity().getKiller() instanceof Player)) return;
         Player player = event.getEntity().getKiller();
-        String teamName = LockinTask.lockinTeamHandler.getTeamName(player);
+        Team team = LockinTask.teamHandler.getTeam(player);
 
-        this.killedEntities.put(teamName, this.killedEntities.getOrDefault(teamName, 0) + 1);
-        if (this.killedEntities.get(teamName) < this.amount) return;
+        this.killedEntities.put(team, this.killedEntities.getOrDefault(team, 0) + 1);
+        if (this.killedEntities.get(team) < this.amount) return;
         this.complete(player);
     }
 }

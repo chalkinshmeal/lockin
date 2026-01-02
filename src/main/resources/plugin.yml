@@ -1,7 +1,8 @@
 name: lockin
 main: chalkinshmeal.lockin.Plugin
 version: ${project.version}
-api-version: 1.21.4
+api-version: 1.21.10
 author: chalkinshmeal
 commands:
   lockin:
+  lockin-reload:

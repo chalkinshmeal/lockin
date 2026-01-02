@@ -1,5 +1,8 @@
 package chalkinshmeal.lockin.commands;
 
+import static chalkinshmeal.mc_plugin_lib.strings.StringUtils.stringToComponent;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,21 +15,23 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
-import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
-import chalkinshmeal.lockin.utils.cmdframework.argument.ArgType;
-import chalkinshmeal.lockin.utils.cmdframework.argument.ArgValue;
-import chalkinshmeal.lockin.utils.cmdframework.argument.Argument;
-import chalkinshmeal.lockin.utils.cmdframework.command.ArgCommand;
-import chalkinshmeal.lockin.utils.cmdframework.handler.CommandHandler;
+import chalkinshmeal.mc_plugin_lib.commands.argument.ArgType;
+import chalkinshmeal.mc_plugin_lib.commands.argument.ArgValue;
+import chalkinshmeal.mc_plugin_lib.commands.argument.Argument;
+import chalkinshmeal.mc_plugin_lib.commands.command.ArgCommand;
+import chalkinshmeal.mc_plugin_lib.commands.handler.CommandHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class TeamCommand extends ArgCommand {
-    private final LockinTeamHandler lockinTeamHandler;
+    private final ConfigHandler configHandler;
+    private final TeamHandler teamHandler;
     private final LockinCompass lockinCompass;
 
     // Constructor
-    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, LockinTeamHandler lockinTeamHandler, LockinCompass lockinCompass) {
+    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, ConfigHandler configHandler, TeamHandler teamHandler, LockinCompass lockinCompass) {
         super("team", false);
         this.setPlayerRequired(true);
         this.setHelpMsg(Component.text()
@@ -34,9 +39,10 @@ public class TeamCommand extends ArgCommand {
             .append(Component.text("Creates a team for lockin", NamedTextColor.WHITE))
             .build());
         
-        this.lockinTeamHandler = lockinTeamHandler;
+        this.configHandler = configHandler;
+        this.teamHandler = teamHandler;
         this.lockinCompass = lockinCompass;
-        this.addArg(new Argument("team", ArgType.STRING, this.lockinTeamHandler.getTeamNames()));
+        this.addArg(new Argument("team", ArgType.STRING, new ArrayList<>(this.teamHandler.getTeamNames())));
         this.addArg(new Argument("material", ArgType.STRING, Stream.of(Material.values()).map(Material::name).collect(Collectors.toList())));
     }
 
@@ -64,7 +70,8 @@ public class TeamCommand extends ArgCommand {
                 .append(Component.text(teamName, NamedTextColor.GOLD))
                 .append(Component.text(" to the game", NamedTextColor.GRAY)));
 
-        this.lockinTeamHandler.addTeam(teamName, material);
-        this.lockinCompass.addTeam(teamName);
+        int maxLives = this.configHandler.getInt("maxLives", 5);
+        this.teamHandler.addTeam(teamName, stringToComponent(teamName), material, maxLives);
+        this.lockinCompass.addTeam(this.teamHandler.getTeam(teamName));
     }
 }

@@ -1,5 +1,6 @@
 package chalkinshmeal.lockin.artifacts.compass;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,15 +23,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import chalkinshmeal.lockin.artifacts.scoreboard.LockinScoreboard;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.lockin.artifacts.team.LockinTeamHandler;
 import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.logging.LoggerUtils;
+import chalkinshmeal.mc_plugin_lib.teams.Team;
+import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import chalkinshmeal.lockin.utils.Utils;
 import chalkinshmeal.lockin.utils.EntityUtils;
 import chalkinshmeal.lockin.utils.ItemUtils;
-import chalkinshmeal.lockin.utils.LoggerUtils;
 import chalkinshmeal.lockin.utils.TaskUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -38,14 +39,12 @@ import net.kyori.adventure.text.format.TextDecoration;
 
 public class LockinCompass {
     private final JavaPlugin plugin;
-    private final LockinTeamHandler lockinTeamHandler;
-    private final LockinScoreboard lockinScoreboard;
+    private final TeamHandler teamHandler;
     private final Inventory teamsInv;
     private final Map<String, Inventory> tasksInvs; 
     private final int tasksPerTier;
     private final Map<UUID, UUID> targets;
     private boolean isActive;
-    private boolean debug = false;
     private final Set<UUID> clickedPlayers = new HashSet<>();
     private final Map<UUID, Location> lastKnownLocation = new HashMap<>();
 
@@ -57,16 +56,15 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public LockinCompass(JavaPlugin plugin, ConfigHandler configHandler, LockinTeamHandler lockinTeamHandler, LockinScoreboard lockinScoreboard) {
+    public LockinCompass(JavaPlugin plugin, ConfigHandler configHandler, TeamHandler teamHandler) {
         this.plugin = plugin;
-        this.lockinTeamHandler = lockinTeamHandler;
-        this.lockinScoreboard = lockinScoreboard;
+        this.teamHandler = teamHandler;
         this.tasksPerTier = Utils.getHighestMultiple((int) configHandler.getInt("tasksPerTier", 27), 9);
         this.teamsInv = Bukkit.createInventory(null, 9, Component.text(this.teamsInvName, NamedTextColor.LIGHT_PURPLE));
         this.tasksInvs = new HashMap<>();
-        for (String teamName : this.lockinTeamHandler.getTeamNames()) {
+        for (Team team : this.teamHandler.getTeams()) {
             Inventory newInv = Bukkit.createInventory(null, this.tasksPerTier, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
-            this.tasksInvs.put(teamName, newInv);
+            this.tasksInvs.put(team.getKey(), newInv);
         }
         this.targets = new HashMap<>();
         this.isActive = false;
@@ -79,14 +77,14 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     // Accessor/Mutator methods 
     //---------------------------------------------------------------------------------------------
-    public int getMaxTeams() { return this.lockinTeamHandler.getNumTeams(); }
+    public int getMaxTeams() { return this.teamHandler.getNumTeams(); }
     public String getInvName() { return (this.isActive) ? Utils.stripColor(this.tasksInvName) : Utils.stripColor(this.teamsInvName); }
-    public int getMaxSlots() {return (this.isActive) ? this.tasksPerTier : this.lockinTeamHandler.getNumTeams(); }
-    public Inventory getTaskInv(Player player) { return this.tasksInvs.get(this.lockinTeamHandler.getTeamName(player)); }
+    public int getMaxSlots() {return (this.isActive) ? this.tasksPerTier : this.teamHandler.getNumTeams(); }
+    public Inventory getTaskInv(Player player) { return this.tasksInvs.get(this.teamHandler.getTeam(player).getKey()); }
     public void SetIsActive(boolean isActive) { this.isActive = isActive; }
-    public void addTeam(String teamName) {
+    public void addTeam(Team team) {
         Inventory newInv = Bukkit.createInventory(null, this.tasksPerTier, Component.text(this.tasksInvName, NamedTextColor.LIGHT_PURPLE));
-        this.tasksInvs.put(teamName, newInv);
+        this.tasksInvs.put(team.getKey(), newInv);
     }
     public void setLastKnownLocation(Player player) {
         this.lastKnownLocation.put(player.getUniqueId(), player.getLocation());
@@ -97,30 +95,28 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     public void updateTeamsInventory() {
         this.teamsInv.clear();
-        for (int i = 0; i < this.lockinTeamHandler.getNumTeams(); i++) {
-            List<String> playerNames = this.lockinTeamHandler.getPlayerNames(i);
-            this.teamsInv.addItem(this.constructTeamItem(i, playerNames));
+        int i = 0;
+        for (Team team : this.teamHandler.getTeams()) {
+            this.teamsInv.addItem(this.constructTeamItem(i, team));
+            i++;
         }
     }
 
     public void updateTasksInventory(LockinTaskHandler lockinTaskHandler) {
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory] Updating task inventories");
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]   Clearing inventories");
         for (Inventory tasksInv : this.tasksInvs.values()) {
             tasksInv.clear();
         }
         if (lockinTaskHandler == null) return;
 
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]   Populating with tasks");
-        for (String teamName : this.tasksInvs.keySet()) {
-            boolean catchUpTeam = this.lockinTeamHandler.getNumTeams() >= 3 && this.lockinScoreboard.getScore(teamName) <= 0;
-            List<LockinTask> tasks = (catchUpTeam) ? lockinTaskHandler.getCatchUpTasks() : lockinTaskHandler.getTasks();
-            for (LockinTask task : tasks) {
-                if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::updateTasksInventory]     Task: " + task.getName() + ", Team: " + teamName);
+        for (Team team : this.teamHandler.getTeams()) {
+            for (LockinTask task : lockinTaskHandler.getTasks()) {
                 task.setLore();
-                Inventory tasksInv = this.tasksInvs.get(teamName);
+                Inventory tasksInv = this.tasksInvs.get(team.getKey());
+                if (tasksInv == null) {
+                    throw new IllegalArgumentException("Team '" + team.getKey() + "' does not have a valid task inventory.");
+                }
                 ItemStack taskItem = task.getItem();
-                if (task.hasCompleted(teamName)) {
+                if (task.hasCompleted(team.getKey())) {
                     taskItem = Utils.setMaterial(taskItem, Material.GRAY_STAINED_GLASS_PANE);
                 }
                 tasksInv.addItem(taskItem);
@@ -129,9 +125,6 @@ public class LockinCompass {
     }
 
     public void openInventory(Player player) {
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::openInventory] Opening inventory to player " + player.getName());
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::openInventory]   Current Inventory Count: " + this.tasksInvs.size());
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::openInventory]   Task Inventory: " + this.getTaskInv(player));
         if (this.isActive) player.openInventory(this.getTaskInv(player));
         else player.openInventory(this.teamsInv);
     }
@@ -152,8 +145,6 @@ public class LockinCompass {
     // Listener methods
     //---------------------------------------------------------------------------------------------
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerInteractEvent] --- Get Team (Before) ---");
-        if (debug) this.lockinTeamHandler.getTeamName(event.getPlayer());
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (event.getItem() == null) return;
         if (event.getItem().getItemMeta().displayName() == null) return;
@@ -162,8 +153,6 @@ public class LockinCompass {
         if (Utils.isRightClick(event.getAction())) {
             this.updateTeamsInventory();
             this.openInventory(event.getPlayer());
-            if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerInteractEvent] --- Get Team (After) ---");
-            if (debug) this.lockinTeamHandler.getTeamName(event.getPlayer());
         }
         else if (Utils.isLeftClick(event.getAction())) {
             this.setTarget(event.getPlayer(), event.getItem());
@@ -171,74 +160,52 @@ public class LockinCompass {
             TaskUtils.runDelayedTask(this.plugin, () -> {
                 clickedPlayers.remove(event.getPlayer().getUniqueId());
             }, 0.2f*20);
-
-            if (debug) {
-                LoggerUtils.info("Players in clickedPlayers:");
-                for (UUID uuid : this.clickedPlayers) {
-                    LoggerUtils.info("  " + EntityUtils.getPlayerName(uuid));
-                }
-            }
         }
     }
 
     public void onInventoryClickEvent(InventoryClickEvent event) {
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent] --- Get Team --- (Before)");
-        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
         // Check that inventory name matches
         String invName = Utils.asString(event.getView().title());
         if (!invName.equals(this.getInvName())) return;
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Inventory name matches");
 
         // Prevent movement
         if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)
             event.setCancelled(true);
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Preventing movement");
 
         // Check that slot is valid
         int slot = event.getRawSlot();
         if (slot < 0 || slot >= this.getMaxSlots()) return;
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Slot is valid");
 
         event.setCancelled(true);
 
         if (this.isActive) return;
 
         // Change team of player
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent]   Changing team of player");
         Player player = (Player) event.getWhoClicked();
-        this.lockinTeamHandler.removePlayer(player);
-        this.lockinTeamHandler.addPlayer(player, slot);
+        this.teamHandler.removePlayerIfExists(player);
+        this.teamHandler.addPlayer(player, slot);
         this.updateTeamsInventory();
         player.updateInventory();
-
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerClickEvent] --- Get Team (After) ---");
-        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
     }
 
     public void onInventoryDragEvent(InventoryDragEvent event) {
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerDragEvent] --- Get Team --- (Before)");
-        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
         // Check that inventory name matches
         String invName = Utils.asString(event.getView().title());
         if (!invName.equals(this.getInvName())) return;
 
         event.setCancelled(true);
-
-        if (debug) Bukkit.getServer().getLogger().info("[LockinCompass::onPlayerDragEvent] --- Get Team --- (After)");
-        if (debug) this.lockinTeamHandler.getTeamName((Player) event.getWhoClicked());
     }
 
     //---------------------------------------------------------------------------------------------
     // Target methods
     //---------------------------------------------------------------------------------------------
     private void setTarget(Player player, ItemStack compass) {
-        if (debug) LoggerUtils.info("Setting target for player: " + player.getName());
         // Populate targets map if the UUID is new
         UUID uuid = player.getUniqueId();
         if (!this.targets.containsKey(uuid)) this.targets.put(uuid, null);
 
         // Get all online player UUIDs, excluding the current player
-        List<UUID> allUUIDsInGame = this.lockinTeamHandler.getAllOnlinePlayerUUIDs();
+        List<UUID> allUUIDsInGame = new ArrayList<>(this.teamHandler.getAllOnlineUUIDs());
         if (allUUIDsInGame.size() == 0) return;
 
         // Get old target
@@ -264,13 +231,6 @@ public class LockinCompass {
         // Set new target
         UUID newTarget = allUUIDsInGame.get(newTargetIndex);
         LoggerUtils.info("  New Target: " + newTarget + "(" + EntityUtils.getPlayerName(newTarget) + ")");
-
-        if (debug) {
-            LoggerUtils.info("  Players in allUUIDsInGame:");
-            for (UUID _uuid : allUUIDsInGame) {
-                LoggerUtils.info("    " + EntityUtils.getPlayerName(_uuid));
-            }
-        }
 
         // Update target
         this.targets.put(uuid, newTarget);
@@ -329,11 +289,11 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     // Utility methods
     //---------------------------------------------------------------------------------------------
-    private ItemStack constructTeamItem(int teamIndex, List<String> playerNames) {
-        ItemStack item = new ItemStack(this.lockinTeamHandler.getTeamMaterials().get(teamIndex));
-        item = Utils.setDisplayName(item, Component.text(this.lockinTeamHandler.getTeamName(teamIndex), NamedTextColor.AQUA));
-        item = Utils.addLore(item, Component.text(playerNames.size() + " players", NamedTextColor.DARK_PURPLE));
-        for (String playerName : playerNames) {
+    private ItemStack constructTeamItem(int teamIndex, Team team) {
+        ItemStack item = new ItemStack(team.getMaterial());
+        item = Utils.setDisplayName(item, Component.text(team.getKey(), NamedTextColor.AQUA));
+        item = Utils.addLore(item, Component.text(team.getNumPlayers() + " players", NamedTextColor.DARK_PURPLE));
+        for (String playerName : team.getPlayerNames()) {
             item = Utils.addLore(item, Component.text(" " + playerName, NamedTextColor.DARK_AQUA));
         }
         return item;
