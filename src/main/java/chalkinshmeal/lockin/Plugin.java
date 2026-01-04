@@ -11,7 +11,6 @@ import chalkinshmeal.lockin.artifacts.game.GameHandler;
 import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
 import chalkinshmeal.lockin.commands.CompassCommand;
 import chalkinshmeal.lockin.commands.HelpCommand;
-import chalkinshmeal.lockin.commands.SoftReloadCommand;
 import chalkinshmeal.lockin.commands.StartCommand;
 import chalkinshmeal.lockin.commands.StopCommand;
 import chalkinshmeal.lockin.commands.TeamCommand;
@@ -42,18 +41,6 @@ public class Plugin extends JavaPlugin implements Listener {
     //-------------------------------------------------------------------------
 	@Override
 	public void onEnable() {
-        this.load();
-    }
-
-	@Override
-	public void onDisable() {
-        this.unload();
-    }
-
-    //-------------------------------------------------------------------------
-    // Plugin methods
-    //-------------------------------------------------------------------------
-    public void load() {
 		this.cmdHandler = new CommandHandler(this);
         this.configHandler = new ConfigHandler(this);
         this.teamHandler = new TeamHandler(this, "Lives");
@@ -73,16 +60,12 @@ public class Plugin extends JavaPlugin implements Listener {
             .append(Component.text("lockin successfully loaded", NamedTextColor.GOLD))
             .build();
 		this.getServer().getConsoleSender().sendMessage(welcomeMsg);
-	}
-
-    public void unload() {
-        this.unregisterListeners();
-        Bukkit.getScheduler().cancelTasks(this);
     }
 
-    public void reload() {
-        this.unload();
-        this.load();
+	@Override
+	public void onDisable() {
+        this.unregisterListeners();
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     //-------------------------------------------------------------------------
@@ -97,7 +80,6 @@ public class Plugin extends JavaPlugin implements Listener {
         lockinCmd.addChild(new StartCommand(this, cmdHandler, gameHandler, teamHandler));
         lockinCmd.addChild(new StopCommand(this, cmdHandler, gameHandler));
         lockinCmd.addChild(new TeamCommand(this, cmdHandler, configHandler, teamHandler, lockinCompass));
-        lockinCmd.addChild(new SoftReloadCommand(this));
 
 		// Register command -> command handler
 		this.cmdHandler.registerCommand(lockinCmd);
