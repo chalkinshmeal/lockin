@@ -3,7 +3,7 @@ package chalkinshmeal.lockin.artifacts.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.GameRule;
+import org.bukkit.GameRules;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -234,7 +234,7 @@ public class GameHandler {
 
     private void resetWorldState() {
         WorldUtils.resetWorldState();
-        WorldUtils.setGameRule(GameRule.KEEP_INVENTORY, true);
+        WorldUtils.setGameRule(GameRules.KEEP_INVENTORY, true);
         for (Player player : this.teamHandler.getAllOnlinePlayers()) {
             EntityUtils.resetPlayerState(player, true);
             this.lockinCompass.giveCompass(player);

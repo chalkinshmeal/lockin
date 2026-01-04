@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.GameRules;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,7 +30,7 @@ public class WorldUtils {
 
     public static void setGameRule(@SuppressWarnings("rawtypes") GameRule gameRule, boolean state) {
         for (World world : WorldUtils.getAllWorlds()) {
-            world.setGameRule(GameRule.KEEP_INVENTORY, true);
+            world.setGameRule(GameRules.KEEP_INVENTORY, true);
         }
     }
 
