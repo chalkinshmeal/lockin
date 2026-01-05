@@ -23,9 +23,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.lockin.artifacts.tasks.CustomTaskHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigFile;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.CustomTask;
+import chalkinshmeal.mc_plugin_lib.items.ItemStackUtils;
 import chalkinshmeal.mc_plugin_lib.logging.LoggerUtils;
 import chalkinshmeal.mc_plugin_lib.teams.Team;
 import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
@@ -56,10 +57,10 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public LockinCompass(JavaPlugin plugin, ConfigHandler configHandler, TeamHandler teamHandler) {
+    public LockinCompass(JavaPlugin plugin, ConfigFile config, TeamHandler teamHandler) {
         this.plugin = plugin;
         this.teamHandler = teamHandler;
-        this.tasksPerTier = Utils.getHighestMultiple((int) configHandler.getInt("tasksPerTier", 27), 9);
+        this.tasksPerTier = Utils.getHighestMultiple((int) config.getInt("tasksPerTier", 27), 9);
         this.teamsInv = Bukkit.createInventory(null, 9, Component.text(this.teamsInvName, NamedTextColor.LIGHT_PURPLE));
         this.tasksInvs = new HashMap<>();
         for (Team team : this.teamHandler.getTeams()) {
@@ -102,20 +103,20 @@ public class LockinCompass {
         }
     }
 
-    public void updateTasksInventory(LockinTaskHandler lockinTaskHandler) {
+    public void updateTasksInventory(CustomTaskHandler lockinTaskHandler) {
         for (Inventory tasksInv : this.tasksInvs.values()) {
             tasksInv.clear();
         }
         if (lockinTaskHandler == null) return;
 
         for (Team team : this.teamHandler.getTeams()) {
-            for (LockinTask task : lockinTaskHandler.getTasks()) {
-                task.setLore();
+            for (CustomTask task : lockinTaskHandler.getTasks()) {
+                task.updateStatus();
                 Inventory tasksInv = this.tasksInvs.get(team.getKey());
                 if (tasksInv == null) {
                     throw new IllegalArgumentException("Team '" + team.getKey() + "' does not have a valid task inventory.");
                 }
-                ItemStack taskItem = task.getItem();
+                ItemStack taskItem = task.getDisplayItem();
                 if (task.hasCompleted(team.getKey())) {
                     taskItem = Utils.setMaterial(taskItem, Material.GRAY_STAINED_GLASS_PANE);
                 }
@@ -291,11 +292,14 @@ public class LockinCompass {
     //---------------------------------------------------------------------------------------------
     private ItemStack constructTeamItem(int teamIndex, Team team) {
         ItemStack item = new ItemStack(team.getMaterial());
-        item = Utils.setDisplayName(item, Component.text(team.getKey(), NamedTextColor.AQUA));
-        item = Utils.addLore(item, Component.text(team.getNumPlayers() + " players", NamedTextColor.DARK_PURPLE));
+        List<Component> loreLines = new ArrayList<>();
         for (String playerName : team.getPlayerNames()) {
-            item = Utils.addLore(item, Component.text(" " + playerName, NamedTextColor.DARK_AQUA));
+            loreLines.add(Component.text(" " + playerName, NamedTextColor.DARK_AQUA));
         }
+        loreLines.add(Component.text(team.getNumPlayers() + " players", NamedTextColor.DARK_PURPLE));
+
+        item = ItemStackUtils.setDisplayName(item, Component.text(team.getKey(), NamedTextColor.AQUA));
+        item = ItemStackUtils.setLore(item, loreLines);
         return item;
     }
 }

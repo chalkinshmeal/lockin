@@ -20,18 +20,18 @@ import chalkinshmeal.mc_plugin_lib.commands.argument.ArgValue;
 import chalkinshmeal.mc_plugin_lib.commands.argument.Argument;
 import chalkinshmeal.mc_plugin_lib.commands.command.ArgCommand;
 import chalkinshmeal.mc_plugin_lib.commands.handler.CommandHandler;
-import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigFile;
 import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class TeamCommand extends ArgCommand {
-    private final ConfigHandler configHandler;
+    private final ConfigFile config;
     private final TeamHandler teamHandler;
     private final LockinCompass lockinCompass;
 
     // Constructor
-    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, ConfigHandler configHandler, TeamHandler teamHandler, LockinCompass lockinCompass) {
+    public TeamCommand(JavaPlugin plugin, CommandHandler cmdHandler, ConfigFile config, TeamHandler teamHandler, LockinCompass lockinCompass) {
         super("team", false);
         this.setPlayerRequired(true);
         this.setHelpMsg(Component.text()
@@ -39,7 +39,7 @@ public class TeamCommand extends ArgCommand {
             .append(Component.text("Creates a team for lockin", NamedTextColor.WHITE))
             .build());
         
-        this.configHandler = configHandler;
+        this.config = config;
         this.teamHandler = teamHandler;
         this.lockinCompass = lockinCompass;
         this.addArg(new Argument("team", ArgType.STRING, new ArrayList<>(this.teamHandler.getTeamNames())));
@@ -70,7 +70,7 @@ public class TeamCommand extends ArgCommand {
                 .append(Component.text(teamName, NamedTextColor.GOLD))
                 .append(Component.text(" to the game", NamedTextColor.GRAY)));
 
-        int maxLives = this.configHandler.getInt("maxLives", 5);
+        int maxLives = this.config.getInt("maxLives", 5);
         this.teamHandler.addTeam(teamName, stringToComponent(teamName), material, maxLives);
         this.lockinCompass.addTeam(this.teamHandler.getTeam(teamName));
     }

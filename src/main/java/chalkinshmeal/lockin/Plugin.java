@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.game.GameHandler;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
+import chalkinshmeal.lockin.artifacts.tasks.CustomTaskHandler;
 import chalkinshmeal.lockin.commands.CompassCommand;
 import chalkinshmeal.lockin.commands.HelpCommand;
 import chalkinshmeal.lockin.commands.StartCommand;
@@ -23,17 +23,17 @@ import chalkinshmeal.lockin.listeners.server.PlayerJoinListener;
 import chalkinshmeal.lockin.utils.WorldUtils;
 import chalkinshmeal.mc_plugin_lib.commands.command.ParentCommand;
 import chalkinshmeal.mc_plugin_lib.commands.handler.CommandHandler;
-import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigFile;
 import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class Plugin extends JavaPlugin implements Listener {
 	private CommandHandler cmdHandler;
-    private ConfigHandler configHandler;
+    private ConfigFile config;
     private GameHandler gameHandler;
     private TeamHandler teamHandler;
-    private LockinTaskHandler lockinTaskHandler;
+    private CustomTaskHandler lockinTaskHandler;
     private LockinCompass lockinCompass;
 
     //-------------------------------------------------------------------------
@@ -42,11 +42,11 @@ public class Plugin extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		this.cmdHandler = new CommandHandler(this);
-        this.configHandler = new ConfigHandler(this);
+        this.config = new ConfigFile(this, "plugins/lockin/config.yml");
         this.teamHandler = new TeamHandler(this, "Lives");
-        this.lockinCompass = new LockinCompass(this, this.configHandler, this.teamHandler);
-        this.lockinTaskHandler = new LockinTaskHandler(this, this.configHandler, this.lockinCompass, this.teamHandler);
-        this.gameHandler = new GameHandler(this, this.configHandler, this.lockinCompass, this.lockinTaskHandler, this.teamHandler);
+        this.lockinCompass = new LockinCompass(this, this.config, this.teamHandler);
+        this.lockinTaskHandler = new CustomTaskHandler(this, this.config, this.lockinCompass, this.teamHandler);
+        this.gameHandler = new GameHandler(this, this.config, this.lockinCompass, this.lockinTaskHandler, this.teamHandler);
 
 		// Register commands + listeners
 		registerCommands();
@@ -79,7 +79,7 @@ public class Plugin extends JavaPlugin implements Listener {
 		lockinCmd.addChild(new HelpCommand(this, cmdHandler));
         lockinCmd.addChild(new StartCommand(this, cmdHandler, gameHandler, teamHandler));
         lockinCmd.addChild(new StopCommand(this, cmdHandler, gameHandler));
-        lockinCmd.addChild(new TeamCommand(this, cmdHandler, configHandler, teamHandler, lockinCompass));
+        lockinCmd.addChild(new TeamCommand(this, cmdHandler, config, teamHandler, lockinCompass));
 
 		// Register command -> command handler
 		this.cmdHandler.registerCommand(lockinCmd);

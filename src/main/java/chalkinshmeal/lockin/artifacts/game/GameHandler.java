@@ -13,9 +13,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
 import chalkinshmeal.lockin.artifacts.countdown.CountdownBossBar;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTask;
-import chalkinshmeal.lockin.artifacts.tasks.LockinTaskHandler;
-import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.lockin.artifacts.tasks.CustomTaskHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigFile;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.CustomTask;
 import chalkinshmeal.mc_plugin_lib.logging.LoggerUtils;
 import chalkinshmeal.mc_plugin_lib.teams.Team;
 import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
@@ -29,9 +29,9 @@ import net.kyori.adventure.title.Title;
 
 public class GameHandler {
     private final JavaPlugin plugin;
-    private final ConfigHandler configHandler;
+    private final ConfigFile config;
     private final LockinCompass lockinCompass;
-    private final LockinTaskHandler lockinTaskHandler;
+    private final CustomTaskHandler lockinTaskHandler;
     private CountdownBossBar countdownBossBar;
     private final TeamHandler teamHandler;
     private final int queueTime;
@@ -52,16 +52,16 @@ public class GameHandler {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public GameHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass, LockinTaskHandler lockinTaskHandler, TeamHandler teamHandler) {
+    public GameHandler(JavaPlugin plugin, ConfigFile config, LockinCompass lockinCompass, CustomTaskHandler lockinTaskHandler, TeamHandler teamHandler) {
         this.plugin = plugin;
-        this.configHandler = configHandler;
+        this.config = config;
         this.lockinCompass = lockinCompass;
         this.lockinTaskHandler = lockinTaskHandler;
         this.teamHandler = teamHandler;
-        this.queueTime = this.configHandler.getInt("queueTime", 120);
-        this.singleTeamTimeLimit = this.configHandler.getInt("singleTeamTimeLimit", 600);
-        this.multipleCompleteTeamTimeLimit = this.configHandler.getInt("multipleCompletedTeamTimeLimit", 600);
-        this.multipleTeamTimeLimit = this.configHandler.getInt("multipleTeamTimeLimit", 600);
+        this.queueTime = this.config.getInt("queueTime", 120);
+        this.singleTeamTimeLimit = this.config.getInt("singleTeamTimeLimit", 600);
+        this.multipleCompleteTeamTimeLimit = this.config.getInt("multipleCompletedTeamTimeLimit", 600);
+        this.multipleTeamTimeLimit = this.config.getInt("multipleTeamTimeLimit", 600);
         this.maxTier = 10;
         this.init();
     }
@@ -76,7 +76,7 @@ public class GameHandler {
     // Game methods
     //---------------------------------------------------------------------------------------------
     public void init() {
-        int maxLives = this.configHandler.getInt("maxLives", 5);
+        int maxLives = this.config.getInt("maxLives", 5);
         this.teamHandler.addTeam("Blue Team", Component.text("Blue Team"), Material.BLUE_WOOL, maxLives);
         this.teamHandler.addTeam("Green Team", Component.text("Green Team"), Material.GREEN_WOOL, maxLives);
         this.teamHandler.addTeam("Red Team", Component.text("Red Team"), Material.RED_WOOL, maxLives);
@@ -119,10 +119,10 @@ public class GameHandler {
 
         // Set game state
         if (this.gameType == GameType.SINGLE_TEAM) {
-            this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.singleTeamTimeLimit);
+            this.countdownBossBar = new CountdownBossBar(this.plugin, this.config, this.singleTeamTimeLimit);
         }
         else if (this.gameType == GameType.MULTIPLE_TEAM) {
-            this.countdownBossBar = new CountdownBossBar(this.plugin, this.configHandler, this.multipleTeamTimeLimit);
+            this.countdownBossBar = new CountdownBossBar(this.plugin, this.config, this.multipleTeamTimeLimit);
         }
         this.countdownBossBar.start();
         this.resetIncrementTierTasks();
@@ -138,7 +138,7 @@ public class GameHandler {
             int maxCompletedTasks = 0;
             for (Team team : this.teamHandler.getTeams()) {
                 int completedTasks = 0;
-                for (LockinTask task : this.lockinTaskHandler.getTasks()) {
+                for (CustomTask task : this.lockinTaskHandler.getTasks()) {
                     if (task.hasCompleted(team.getKey())) completedTasks += 1;
                 }
                 if (completedTasks > maxCompletedTasks) maxCompletedTasks = completedTasks;
@@ -149,7 +149,7 @@ public class GameHandler {
                 if (this.teamHandler.getScore(team) <= 0) continue;
 
                 int completedTasks = 0;
-                for (LockinTask task : this.lockinTaskHandler.getTasks()) {
+                for (CustomTask task : this.lockinTaskHandler.getTasks()) {
                     if (task.hasCompleted(team.getKey())) completedTasks += 1;
                 }
 

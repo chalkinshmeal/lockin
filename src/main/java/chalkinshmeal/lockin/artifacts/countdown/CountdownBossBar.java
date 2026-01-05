@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.config.ConfigFile;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -24,7 +24,7 @@ public class CountdownBossBar {
     //---------------------------------------------------------------------------------------------
     // Constructor
     //---------------------------------------------------------------------------------------------
-    public CountdownBossBar(JavaPlugin plugin, ConfigHandler configHandler, int totalTime) {
+    public CountdownBossBar(JavaPlugin plugin, ConfigFile config, int totalTime) {
         this.plugin = plugin;
         this.bossBar = BossBar.bossBar(Component.text("Initializing...", NamedTextColor.WHITE), (float) 1.0, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
         this.playerBossBars = new HashMap<>();

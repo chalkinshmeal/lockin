@@ -21,7 +21,6 @@ import static org.bukkit.event.block.Action.LEFT_CLICK_BLOCK;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_AIR;
 import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
 import static org.bukkit.event.entity.EntityPotionEffectEvent.Cause.AREA_EFFECT_CLOUD;
-import static org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.CUSTOM;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -276,22 +274,6 @@ public class Utils {
     }
 
     // Health
-    public static void addHealth(LivingEntity e, int health) {
-        addHealth(e, health, CUSTOM);
-    }
-    @SuppressWarnings("deprecation")
-    public static void addHealth(LivingEntity e, int health, EntityRegainHealthEvent.RegainReason reason) {
-        //EntityRegainHealthEvent event = new EntityRegainHealthEvent(e, health, reason);
-        //Bukkit.getPluginManager().callEvent(event);
-        e.setHealth(Math.min(e.getHealth() + health, e.getMaxHealth()));
-    }
-    public static void subtractHealth(LivingEntity e, int health) { e.damage(health); }
-    public static void subtractHealth(LivingEntity e, int health, boolean hurt) {
-        if (hurt)
-            e.damage(health);
-        else
-            e.setHealth(Math.max(e.getHealth() - health, 0));
-    }
     public static void addAir(LivingEntity e, int air) {
         int remainingAir = Math.min(roundToNearestMultiple(e.getRemainingAir() + air, 30), e.getMaximumAir()-30);
         e.setRemainingAir(remainingAir);
@@ -627,29 +609,6 @@ public class Utils {
     //---------------------------------------------------------------------------------------------
     // Items 
     //---------------------------------------------------------------------------------------------
-    public static ItemStack resetLore(ItemStack item) {
-
-        ItemMeta meta = item.getItemMeta();
-        List<Component> loreList = meta.lore();
-        if (loreList == null) return item;
-
-        loreList.clear();
-        meta.lore(loreList);
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    public static ItemStack addLore(ItemStack item, Component lore) {
-        ItemMeta meta = item.getItemMeta();
-        List<Component> loreList = meta.lore();
-        if (loreList == null) loreList = new ArrayList<>();
-
-        loreList.add(lore);
-        meta.lore(loreList);
-        item.setItemMeta(meta);
-        return item;
-    }
-
     public static Material getBedMaterial(DyeColor color) {
         switch (color) {
             case WHITE:
@@ -811,13 +770,6 @@ public class Utils {
         
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
         return meta.getColor() != Bukkit.getItemFactory().getDefaultLeatherColor(); // Check if color is set
-    }
-
-    public static ItemStack setDisplayName(ItemStack item, Component displayName) {
-        ItemMeta meta = item.getItemMeta();
-        meta.displayName(displayName);
-        item.setItemMeta(meta);
-        return item;
     }
 
     public static ItemStack setMaterial(ItemStack originalItem, Material newMaterial) {

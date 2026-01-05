@@ -5,71 +5,72 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import chalkinshmeal.lockin.artifacts.compass.LockinCompass;
-import chalkinshmeal.lockin.artifacts.rewards.LockinRewardHandler;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ActivateBlockTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BlockArrowWithShieldTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BreakItemsTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.BrewPotionTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.CatchFishTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.CreateEntityTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.DestroyItemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.DieTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.DrinkMilkToCurePoisonTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.EatItemsTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.EatTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.EnchantItemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.EnterBiomeTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.EnterBoatWithPassengerTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.EnterNetherTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.EquipItemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.GetExpLevelTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.GetSpecificHealthTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.GrowWheatWithBonemealTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.InteractItemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillBabyEntitiesTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillEntitiesTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillEntityWithStatusEffectTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.KillLeftySkeletonTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.LaunchFireworkTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.LightTNTTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ObtainItemGroupTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ObtainItemWithEnchantmentTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ObtainItemWithStringTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ObtainItemsTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.PlaceBookOnLecternTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.PlaceFlowerInPotTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.PlaceItemInItemFrameTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.PlaceItemsTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.PunchAnEntityWithItemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.PunchPlayerWithItemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ReceivePotionEffectTypeTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.RepairIronGolemTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.RideEntityTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ShearColoredSheepTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ShearSheepTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ShootBlockTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.ShootProjectileTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.SleepInColoredBedTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.SmeltItemsTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.SneakOnBlockTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.SpecificDeathTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.StandOnBlockTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.StandOnCoordinateTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.StayStillTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.TameEntityTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.TeleportWithAnEnderpearlTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.TouchBlockTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.UseEyeOfEnderTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.UseNametagTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.UseSpyglassTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.WearFullDyedLeatherArmorTask;
-import chalkinshmeal.lockin.artifacts.tasks.lockinTasks.WearFullIronArmorTask;
-import chalkinshmeal.mc_plugin_lib.config.ConfigHandler;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.CustomTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ActivateBlockTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.BlockArrowWithShieldTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.BreakItemsTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.BrewPotionTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.CatchFishTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.CreateEntityTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.DestroyItemTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.DieTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.DrinkMilkToCurePoisonTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.EatItemsTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.EatTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.EnchantItemTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.EnterBiomeTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.EnterBoatWithPassengerTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.EnterNetherTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.EquipItemTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.GetExpLevelTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.GetSpecificHealthTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.GrowWheatWithBonemealTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.InteractItemTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.KillBabyEntitiesTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.KillEntitiesTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.KillEntityWithStatusEffectTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.KillLeftySkeletonTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.LaunchFireworkTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.LightTNTTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ObtainItemGroupTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ObtainItemWithEnchantmentTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ObtainItemWithStringTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ObtainItemsTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.PlaceBookOnLecternTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.PlaceFlowerInPotTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.PlaceItemInItemFrameTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.PlaceItemsTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.PunchAnEntityWithItemTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.PunchPlayerWithItemTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ReceivePotionEffectTypeTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.RepairIronGolemTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.RideEntityTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ShearColoredSheepTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ShearSheepTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ShootBlockTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.ShootProjectileTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.SleepInColoredBedTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.SmeltItemsTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.SneakOnBlockTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.SpecificDeathTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.StandOnBlockTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.StandOnCoordinateTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.StayStillTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.TameEntityTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.TeleportWithAnEnderpearlTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.TouchBlockTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.UseEyeOfEnderTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.UseNametagTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.UseSpyglassTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.WearFullDyedLeatherArmorTask;
+import chalkinshmeal.mc_plugin_lib.custom_tasks.tasks.WearFullIronArmorTask;
+import chalkinshmeal.mc_plugin_lib.config.ConfigFile;
 import chalkinshmeal.mc_plugin_lib.logging.LoggerUtils;
 import chalkinshmeal.mc_plugin_lib.teams.Team;
 import chalkinshmeal.mc_plugin_lib.teams.TeamHandler;
@@ -77,35 +78,34 @@ import chalkinshmeal.lockin.utils.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-public class LockinTaskHandler {
+public class CustomTaskHandler {
     private final JavaPlugin plugin;
-    private final ConfigHandler configHandler;
+    private final ConfigFile config;
     private final LockinCompass lockinCompass;
-    private LockinRewardHandler lockinRewardHandler;
     private final TeamHandler teamHandler;
     public int tasksPerTier;
     private int tasksToCompletePerTier;
     public int taskTierLowerRange;
     private int currentTier;
-    private List<LockinTask> tasks;
-    private List<LockinTask> catchUpTasks;
+    private List<CustomTask> tasks;
     private final boolean debug = false;
     private final int maxTier = 10;
 
-    public LockinTaskHandler(JavaPlugin plugin, ConfigHandler configHandler, LockinCompass lockinCompass,
+    public CustomTaskHandler(JavaPlugin plugin, ConfigFile config, LockinCompass lockinCompass,
                                 TeamHandler teamHandler) {
         this.plugin = plugin;
-        this.configHandler = configHandler;
+        this.config = config;
         this.lockinCompass = lockinCompass;
-        this.lockinRewardHandler = new LockinRewardHandler(this.plugin);
         this.teamHandler = teamHandler;
         this.tasks = new ArrayList<>();
-        this.catchUpTasks = new ArrayList<>();
-        this.tasksPerTier = this.configHandler.getInt("tasksPerTier", 5);
-        this.tasksToCompletePerTier = this.configHandler.getInt("tasksToCompletePerTier", 3);
-        this.taskTierLowerRange = this.configHandler.getInt("tasksTierLowerRange", 0);
+        this.tasksPerTier = this.config.getInt("tasksPerTier", 5);
+        this.tasksToCompletePerTier = this.config.getInt("tasksToCompletePerTier", 3);
+        this.taskTierLowerRange = this.config.getInt("tasksTierLowerRange", 0);
 
-        LockinTask.initStaticVariables(plugin, configHandler, this, lockinRewardHandler, teamHandler);
+        CustomTask.setPlugin(this.plugin);
+        CustomTask.setConfig(this.config);
+        CustomTask.setTeamHandler(this.teamHandler);
+        CustomTask.setCustomTaskHandler(this);
     }
 
     //---------------------------------------------------------------------------------------------
@@ -124,12 +124,11 @@ public class LockinTaskHandler {
         }
     }
     public void setTasksPerTier(int tasksPerTier) { this.tasksPerTier = tasksPerTier; }
-    public List<LockinTask> getTasks() { return new ArrayList<>(this.tasks); }
-    public List<LockinTask> getCatchUpTasks() { return new ArrayList<>(this.catchUpTasks); }
+    public List<CustomTask> getTasks() { return new ArrayList<>(this.tasks); }
     public boolean haveAllTeamsCompletedTheTier() {
         for (Team team : this.teamHandler.getTeams()) {
             int tasksCompleted = 0;
-            for (LockinTask task : this.tasks) {
+            for (CustomTask task : this.tasks) {
                 if (task.hasCompleted(team.getKey())) tasksCompleted += 1;
             }
             if (tasksCompleted < this.getTasksToCompletePerTier(this.currentTier)) return false;
@@ -139,7 +138,7 @@ public class LockinTaskHandler {
     public boolean hasOneTeamCompletedTheTier() {
         for (Team team : this.teamHandler.getTeams()) {
             int tasksCompleted = 0;
-            for (LockinTask task : this.tasks) {
+            for (CustomTask task : this.tasks) {
                 if (task.hasCompleted(team.getKey())) tasksCompleted += 1;
             }
             if (tasksCompleted >= this.getTasksToCompletePerTier(this.currentTier)) return true;
@@ -149,7 +148,7 @@ public class LockinTaskHandler {
     public boolean hasOneTeamCompletedAllTasks() {
         for (Team team : this.teamHandler.getTeams()) {
             boolean hasCompletedAllTasks = true;
-            for (LockinTask task : this.tasks) {
+            for (CustomTask task : this.tasks) {
                 if (!task.hasCompleted(team.getKey())) hasCompletedAllTasks = false;
             }
             if (hasCompletedAllTasks) return true;
@@ -157,14 +156,14 @@ public class LockinTaskHandler {
         return false;
     }
     public boolean hasTeamCompletedAllTasks(Team team) {
-        for (LockinTask task : this.tasks) {
+        for (CustomTask task : this.tasks) {
             if (!task.hasCompleted(team.getKey())) return false;
         }
         return true;
     }
     public boolean haveAllTeamsCompletedAllTasks() {
         for (Team team : this.teamHandler.getTeams()) {
-            for (LockinTask task : this.tasks) {
+            for (CustomTask task : this.tasks) {
                 if (!task.hasCompleted(team.getKey())) {
                     return false;
                 }
@@ -173,7 +172,7 @@ public class LockinTaskHandler {
         return true;
     }
     public boolean areAllTasksDone() { 
-        for (LockinTask task : this.tasks) {
+        for (CustomTask task : this.tasks) {
             if (!task.haveAllTeamsCompleted()) return false;
         }
         return true;
@@ -183,11 +182,7 @@ public class LockinTaskHandler {
 	// Task methods
     //---------------------------------------------------------------------------------------------
     public void stopCurrentTasks() {
-        for (LockinTask task : this.tasks) { task.stop(); }
-    }
-
-    public void stopCurrentCatchUpTasks() {
-        for (LockinTask task : this.catchUpTasks) { task.stop(); }
+        for (CustomTask task : this.tasks) { task.stop(); }
     }
 
     // Update the list of tasks for this lockin challenge
@@ -196,7 +191,7 @@ public class LockinTaskHandler {
         this.stopCurrentTasks();
         this.unRegisterListeners();
 
-        List<LockinTask> allTasks = new ArrayList<>();
+        List<CustomTask> allTasks = new ArrayList<>();
         int tierUpperRange = targetTier;
         int tierLowerRange = (targetTier == this.maxTier) ? targetTier : Math.max(1, targetTier - this.taskTierLowerRange);
         for (int tier = tierLowerRange; tier <= tierUpperRange; tier++) {
@@ -278,27 +273,38 @@ public class LockinTaskHandler {
         Collections.shuffle(this.tasks);
 
         // Initialize tasks (Generate rewards, set lore, etc.)
-        for (LockinTask task : this.tasks) {
-            task.init();
+        for (CustomTask task : this.tasks) {
+            task.start();
         }
 
         return true;
     }
 
-    public void complete(LockinTask task, Player completedPlayer) {
+    public void complete(CustomTask task, Player completedPlayer) {
+        Team team = this.teamHandler.getTeam(completedPlayer);
+
+        // Cosmetics
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(Component.text()
                 .append(Component.text(completedPlayer.getName(), NamedTextColor.GOLD))
                 .append(Component.text(" has completed the task ", NamedTextColor.GRAY))
-                .append(Component.text(task.name, task.nameColor)));
-            if (task.reward != null) {
-                player.sendMessage(Component.text()
-                    .append(Component.text("  Reward: ", NamedTextColor.GRAY))
-                    .append(Component.text(task.reward.getDescription(), NamedTextColor.LIGHT_PURPLE)));
-            }
+                .append(Component.text(task.getDescription(), task.getDisplayColor())));
             Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL);
         }
+        if (this.hasTeamCompletedAllTasks(team)) {
+            for (Player player : teamHandler.getAllOnlinePlayers()) {
+                player.sendMessage(Component.text()
+                    .append(Component.text(team.getKey(), NamedTextColor.GOLD))
+                    .append(Component.text(" has completed the tier", NamedTextColor.GRAY)));
+                Utils.playSound(player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
+            }
+        }
 
+        // Change item to gray stained glass pane, if completely done
+        if (task.haveAllTeamsCompleted()) {
+            task.setDisplayItem(Utils.setMaterial(task.getDisplayItem(), Material.GRAY_STAINED_GLASS_PANE));
+            task.stop();
+        }
         this.lockinCompass.updateTasksInventory(this);
     }
 
@@ -307,27 +313,17 @@ public class LockinTaskHandler {
     //---------------------------------------------------------------------------------------------
 	public void registerListeners() {
         if (debug) LoggerUtils.info("Registering tasks");
-        for (LockinTask task : this.tasks) {
-            if (debug) LoggerUtils.info("Registering task: " + task.name);
+        for (CustomTask task : this.tasks) {
+            if (debug) LoggerUtils.info("Registering task: " + task.getDescription());
             task.registerListeners();
         }
 	}
 
     public void unRegisterListeners() {
         if (debug) LoggerUtils.info("Unregistering tasks");
-        for (LockinTask task : this.tasks) {
-            if (debug) LoggerUtils.info("Unregistering task: " + task.name);
+        for (CustomTask task : this.tasks) {
+            if (debug) LoggerUtils.info("Unregistering task: " + task.getDescription());
             task.unRegisterListeners();
         }
-    }
-
-	public void registerCatchUpListeners() {
-        for (LockinTask task : this.catchUpTasks) {
-            task.registerListeners();
-        }
-	}
-
-    public void unRegisterCatchUpListeners() {
-        for (LockinTask task : this.catchUpTasks) { task.unRegisterListeners(); }
     }
 }
